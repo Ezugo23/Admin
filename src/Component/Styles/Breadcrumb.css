@@ -1,0 +1,26 @@
+.breadcrumb {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  align-items: center; /* Ensure the items are vertically centered */
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-item a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-icon {
+  margin: 0 5px; /* Add some margin to space out the icon */
+  color: #6c757d; /* Adjust color as needed */
+}

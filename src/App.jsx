@@ -1,12 +1,33 @@
-import './App.css'
+import React from 'react';
+import Sidebar from './Component/Sidebar';
+import Topnav from './Component/Topnav';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+import './App.css';
+import Profile from './Component/Profile/Profile'
 
 function App() {
-
-  return (
-    <>
-    <h1>Hello Worlds</h1>
-    </>
-  )
+  return(
+  <div className="app-background">
+  <Router>
+   
+    <div className="layout">
+      <Sidebar />
+      <Topnav />
+    </div>
+    <Routes>
+    <Route 
+            exact
+            path="/profile"
+            element={<Profile />}
+          />
+          </Routes>
+  </Router>
+</div>
+);
 }
 
-export default App
+export default App;
