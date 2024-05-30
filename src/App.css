@@ -1,0 +1,14 @@
+.app-background {
+  width: 100vw;
+  height: 100vh;
+  background-color: #F9F9F9;
+}
+
+.layout {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
