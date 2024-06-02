@@ -37,7 +37,10 @@ function App() {
       console.log('Driver location update received:', data);
 
       // Store the driver location update in localStorage
-      localStorage.setItem(`driverLocation_${data.driverId}`, JSON.stringify(data));
+      localStorage.setItem(
+        `driverLocation_${data.driverId}`,
+        JSON.stringify(data)
+      );
     });
 
     setSocket(newSocket);
@@ -54,23 +57,50 @@ function App() {
         <Sidebar />
         <Flex direction="column" flex="1">
           <TopNav />
-          <Box flex="1" p={4}>
+          <Box flex="1" p={2} overflowY="auto">
             <Box>
               <Routes>
                 <Route path="/" element={<Home socket={socket} />} />
                 <Route path="/profile" element={<Profile socket={socket} />} />
-                <Route path="/foodsellers" element={<Sellers socket={socket} />} />
-                <Route path="/foodsellers/list" element={<SellersList socket={socket} />} />
-                <Route path="/ordersHistory" element={<History socket={socket} />} />
+                <Route
+                  path="/foodsellers"
+                  element={<Sellers socket={socket} />}
+                />
+                <Route
+                  path="/foodsellers/list"
+                  element={<SellersList socket={socket} />}
+                />
+                <Route
+                  path="/ordersHistory"
+                  element={<History socket={socket} />}
+                />
                 <Route path="/users" element={<Users socket={socket} />} />
-                <Route path="/users/admin" element={<Admin socket={socket} />} />
-                <Route path="/users/allusers" element={<AllUsers socket={socket} />} />
+                <Route
+                  path="/users/admin"
+                  element={<Admin socket={socket} />}
+                />
+                <Route
+                  path="/users/allusers"
+                  element={<AllUsers socket={socket} />}
+                />
                 <Route path="/drivers" element={<Drivers socket={socket} />} />
-                <Route path="/drivers/settings" element={<DriverSettings socket={socket} />} />
-                <Route path="/drivers/list" element={<DriversList socket={socket} />} />
-                <Route path="/drivers/oweamount" element={<OweAmount socket={socket} />} />
+                <Route
+                  path="/drivers/settings"
+                  element={<DriverSettings socket={socket} />}
+                />
+                <Route
+                  path="/drivers/list"
+                  element={<DriversList socket={socket} />}
+                />
+                <Route
+                  path="/drivers/oweamount"
+                  element={<OweAmount socket={socket} />}
+                />
                 <Route path="/faq" element={<Faq socket={socket} />} />
-                <Route path="/settings" element={<Settings socket={socket} />} />
+                <Route
+                  path="/settings"
+                  element={<Settings socket={socket} />}
+                />
               </Routes>
             </Box>
           </Box>
