@@ -66,13 +66,13 @@ const Sidebar = () => {
             DASHBOARD
           </Flex>
         </RouterLink>
-        <RouterLink to="/profile" style={{ textDecoration: 'none' }}>
+        <RouterLink to="/profile/user" style={{ textDecoration: 'none' }}>
           <Flex
             alignItems="center"
             mb={4}
-            fontWeight={activeLink === '/profile' ? 'bold' : 'normal'}
-            color={activeLink === '/profile' ? 'white' : 'black'}
-            bg={activeLink === '/profile' ? '#4caf50' : 'transparent'}
+            fontWeight={activeLink === '/profile/user' ? 'bold' : 'normal'}
+            color={activeLink === '/profile/user' ? 'white' : 'black'}
+            bg={activeLink === '/profile/user' ? '#4caf50' : 'transparent'}
             p={2}
             borderRadius="md"
             _hover={{ bg: '#4caf50', color: 'white' }}
@@ -141,14 +141,14 @@ const Sidebar = () => {
             </AccordionPanel>
           </AccordionItem>
           <AccordionItem>
-            <RouterLink to="/foodsellers" style={{ textDecoration: 'none' }}>
+            <RouterLink to="/foodsellers/personal" style={{ textDecoration: 'none' }}>
               <AccordionButton
                 display="flex"
                 alignItems="center"
                 mb={2}
-                fontWeight={activeLink === '/foodsellers' ? 'bold' : 'normal'}
-                color={activeLink === '/foodsellers' ? 'white' : 'black'}
-                bg={activeLink === '/foodsellers' ? '#4caf50' : 'transparent'}
+                fontWeight={activeLink === '/foodsellers/personal' ? 'bold' : 'normal'}
+                color={activeLink === '/foodsellers/personal' ? 'white' : 'black'}
+                bg={activeLink === '/foodsellers/personal' ? '#4caf50' : 'transparent'}
                 p={2}
                 borderRadius="md"
                 _hover={{ bg: '#4caf50', color: 'white' }}
