@@ -38,8 +38,8 @@
 }
 
 .background {
-  width: 980px;
-  height: 496px;
+  width: 62vw;
+  height: 64vh;
   background-color: #FFFFFF;
   position: relative; /* To position the border-line within the white-background */
 }
