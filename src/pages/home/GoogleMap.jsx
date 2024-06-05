@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { Box } from '@chakra-ui/react';
 
 const GoogleMapComponent = () => {
   const [map, setMap] = useState(null);
@@ -7,7 +8,7 @@ const GoogleMapComponent = () => {
   const [center, setCenter] = useState(null);
 
   const mapStyles = {
-    height: '900px',
+    height: '750px',
     width: '100%',
   };
 
@@ -68,7 +69,7 @@ const GoogleMapComponent = () => {
 
   const apiKey = 'AIzaSyDE83Koe2R_WZ1oOAt5SDicYKUBcBFLwy0';
   return (
-    <div style={{ width: '700px' }}>
+    <Box minW={'650px'}>
       <LoadScript googleMapsApiKey={apiKey}>
         <GoogleMap
           mapContainerStyle={mapStyles}
@@ -108,7 +109,7 @@ const GoogleMapComponent = () => {
           })}
         </GoogleMap>
       </LoadScript>
-    </div>
+    </Box>
   );
 };
 
