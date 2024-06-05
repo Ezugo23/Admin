@@ -38,10 +38,14 @@
 }
 
 .background {
-  width: 62vw;
-  height: 64vh;
+  width: 60vw; /* 80% of the viewport width */
+  max-width: 100%; /* Ensure it doesn't exceed the viewport width */
+  height: 70vh; /* 50% of the viewport height */
+  max-height: 100%; /* Ensure it doesn't exceed the viewport height */
   background-color: #FFFFFF;
-  position: relative; /* To position the border-line within the white-background */
+  position: relative;
+  margin: auto; /* Center the background within the viewport */
+  overflow: hidden; /* Prevents content from overflowing */
 }
 .background2 {
   width: 980px;
