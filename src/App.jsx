@@ -17,6 +17,7 @@ import DriversList from './pages/drivers/DriversList';
 import OweAmount from './pages/drivers/OweAmount';
 import Sellers from './pages/FoodSellers/Sellers';
 import SellersList from './pages/FoodSellers/SellersList';
+import SideMenu from './Component/Profile/sideMenu';
 import { io } from 'socket.io-client';
 
 function App() {
@@ -75,9 +76,9 @@ function App() {
             <Box maxW="100%">
               <Routes>
                 <Route path="/" element={<Home socket={socket} />} />
-                <Route path="/profile" element={<Profile socket={socket} />} />
+                <Route path="/profile/*" element={<Profile socket={socket} />} />
                 <Route
-                  path="/foodsellers"
+                  path="/foodsellers/*"
                   element={<Sellers socket={socket} />}
                 />
                 <Route
@@ -114,6 +115,10 @@ function App() {
                 <Route
                   path="/settings"
                   element={<Settings socket={socket} />}
+                />
+                 <Route
+                  path="/sidemenu"
+                  element={<SideMenu socket={socket} />}
                 />
               </Routes>
             </Box>
