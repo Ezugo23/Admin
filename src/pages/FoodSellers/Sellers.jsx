@@ -1,20 +1,25 @@
 import React from 'react';
 import '../../style/user.css';
-import Menu from '../../Component/FoodMenu/Menu'
-import Personal from '../../Component/FoodMenu/Personal'
-import Password from '../../Component/FoodMenu/Password'
-import { Link, Routes, Route } from 'react-router-dom';
+import Menu from '../../Component/FoodMenu/Menu';
+import Personal from '../../Component/FoodMenu/Personal';
+import Table from '../../Component/FoodMenu/tableMenu';
+import Test from './test'
+import { Routes, Route, Link } from 'react-router-dom';
+
 export default function Sellers() {
   return (
     <>
-    <p className='main'>Resturant's Profile</p>
-    <div className="container">
-    <Menu />
-            <Routes>
-            <Route path="personal" element={<Personal />} />
-            <Route path="password" element={<Password />} />
-            </Routes>
-    </div>
+
+      {/* Define routes for Menu and Personal components */}
+      <Routes>
+        {/* Route for the Menu component */}
+        <Route path="/" element={<Table />} />
+        
+        <Route path="/personal" element={<Test />} />
+        
+        {/* Route for the Personal component */}
+        <Route path="personal" element={<Personal />} />
+      </Routes>
     </>
   );
 }
