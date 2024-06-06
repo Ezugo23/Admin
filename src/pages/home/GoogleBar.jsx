@@ -5,10 +5,8 @@ import {
   Image,
   VStack,
   Text,
-  Flex,
-  Button,
 } from '@chakra-ui/react';
-import { AiOutlineUp, AiOutlineDown } from 'react-icons/ai';
+// import { AiOutlineUp, AiOutlineDown } from 'react-icons/ai';
 
 const GoogleBar = () => {
   const [totalItems, setTotalItems] = useState(0);
@@ -56,17 +54,17 @@ const GoogleBar = () => {
       total: totalItems,
       label: 'Total Items',
       percentage: 33,
-      icon: AiOutlineUp,
+      // icon: AiOutlineUp,
       bgColor: '#3B5998',
     },
     {
       id: 2,
       imageUrl: '/orders.png',
-      vectorUrl: '/ordersvector.png',
+      // vectorUrl: '/ordersvector.png',
       total: totalOrders,
       label: 'Total Orders',
-      percentage: 2,
-      icon: AiOutlineDown,
+   
+      // icon: AiOutlineDown,
       bgColor: '#FF5252',
     },
     {
@@ -76,7 +74,7 @@ const GoogleBar = () => {
       total: totalRestaurants,
       label: 'Restaurants',
       percentage: 12,
-      icon: AiOutlineUp,
+      // icon: AiOutlineUp,
       bgColor: '#4DB6AC',
     },
     {
@@ -86,7 +84,7 @@ const GoogleBar = () => {
       total: totalUsers,
       label: 'Total Users',
       percentage: 21,
-      icon: AiOutlineUp,
+      // icon: AiOutlineUp,
       bgColor: '#40C4FF',
     },
     {
@@ -96,27 +94,27 @@ const GoogleBar = () => {
       total: totalDrivers,
       label: 'Total Drivers',
       percentage: 4,
-      icon: AiOutlineDown,
+      // icon: AiOutlineDown,
       bgColor: '#FF5252',
     },
   ];
 
   return (
-    <VStack spacing={4} ml={'7'}>
+    <VStack spacing={12} mx={2} >
       {barData.map((bar) => (
         <HStack
           key={bar.id}
           justifyContent="space-between"
-          minW="280px"
-          minH={'140px'}
-          p={3}
+          minW="200px"
+          minH={'120px'}
           bg="white"
+          p={4}
           borderRadius="md"
           boxShadow="md"
           _hover={{ boxShadow: 'lg' }}
         >
           <Box>
-            <Image src={bar.imageUrl} alt={`Icon ${bar.id}`} mb={'7'} />
+            <Image src={bar.imageUrl} alt={`Icon ${bar.id}`} mb={'5'} />
             <Box>
               <Text fontWeight="bold">{bar.total.toLocaleString()}</Text>
               <Text fontSize="sm" color="gray.600">
@@ -139,28 +137,21 @@ const GoogleBar = () => {
               minW="20px"
               transition="all 0.3s"
             >
-              <Text fontWeight="bold" fontSize="md">
+              {/* <Text fontWeight="bold" fontSize="md">
                 {bar.percentage}%
-              </Text>
-              <bar.icon size={24} style={{ marginRight: '8px' }} />
+              </Text> */}
+              {bar.icon && <bar.icon size={24} style={{ marginRight: '8px' }} />}
             </HStack>
-            <Image
+            {/* <Image
               src={bar.vectorUrl}
               alt={`Vector ${bar.id}`}
               mt={'5'}
               //   boxSize="50px"
-            />
+            /> */}
           </Box>
         </HStack>
       ))}
-      <Button
-        bg={'#3b5998'}
-        color={'white'}
-        minW={'280px'}
-        _hover={{ bg: '#4c70ba' }}
-      >
-        VIEW ALL
-      </Button>
+     
     </VStack>
   );
 };
