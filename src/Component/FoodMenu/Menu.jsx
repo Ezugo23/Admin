@@ -1,5 +1,9 @@
 import { Link } from 'react-router-dom';
 
+import { RiLockPasswordFill } from "react-icons/ri";
+import { IoMdInformationCircle } from 'react-icons/io';
+import { HiMenu } from 'react-icons/hi';
+
 export default function Menu() {
   return (
     <div style={{marginLeft:'2%'}}>
@@ -30,9 +34,7 @@ export default function Menu() {
             </li>
             <li className="my-2">
               <Link to="/food-seller-list/add-and-edit-food" className="flex items-center p-2 rounded hover:bg-blue-200">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M14 1.33334V14.6667H12.6667V10H10V5.33334C10 3.1242 11.7909 1.33334 14 1.33334ZM12.6667 3.02C12.1133 3.33334 11.3333 4.11334 11.3333 5.33334V8.66667H12.6667V3.02ZM6 14.6667V9.26667C7.55194 8.94935 8.66647 7.58405 8.66667 6V2H7.33333V6.66667H6V2H4.66667V6.66667H3.33333V2H2V6C2.00019 7.58405 3.11473 8.94935 4.66667 9.26667V14.6667H6Z" fill="black" />
-                </svg>
+          <RiLockPasswordFill />
                 <span className="pl-2">Change Password</span>
               </Link>
             </li>
@@ -47,17 +49,13 @@ export default function Menu() {
             <hr/>
             <li className="my-2">
               <Link to="/food-seller-list/coupons" className="flex items-center p-2 rounded hover:bg-blue-200">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M1.33337 2.66667V6.33333C2.25385 6.33333 3.00004 7.07953 3.00004 8C3.00004 8.92048 2.25385 9.66667 1.33337 9.66667V13.3333H5.00004C5.00004 12.4129 5.74623 11.6667 6.66671 11.6667C7.58719 11.6667 8.33337 12.4129 8.33337 13.3333H12V9.66667C10.5526 9.66667 9.33337 8.44738 9.33337 7C9.33337 5.55262 10.5526 4.33333 12 4.33333V0.666668H8.33337C8.33337 1.58715 7.58719 2.33333 6.66671 2.33333C5.74623 2.33333 5.00004 1.58715 5.00004 0.666668H1.33337V2.66667ZM6.66671 9.00001C7.58719 9.00001 8.33337 7.92048 8.33337 7.00001C8.33337 6.07953 7.58719 5.00001 6.66671 5.00001C5.74623 5.00001 5.00004 6.07953 5.00004 7.00001C5.00004 7.92048 5.74623 9.00001 6.66671 9.00001Z" fill="black" />
-                </svg>
-                <span className="pl-2">About Food Menu</span>
+              <HiMenu />
+                <span className="pl-2">Add Food Menu</span>
               </Link>
             </li>
             <li className="my-2">
               <Link to="/food-seller-list/coupons" className="flex items-center p-2 rounded hover:bg-blue-200">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M1.33337 2.66667V6.33333C2.25385 6.33333 3.00004 7.07953 3.00004 8C3.00004 8.92048 2.25385 9.66667 1.33337 9.66667V13.3333H5.00004C5.00004 12.4129 5.74623 11.6667 6.66671 11.6667C7.58719 11.6667 8.33337 12.4129 8.33337 13.3333H12V9.66667C10.5526 9.66667 9.33337 8.44738 9.33337 7C9.33337 5.55262 10.5526 4.33333 12 4.33333V0.666668H8.33337C8.33337 1.58715 7.58719 2.33333 6.66671 2.33333C5.74623 2.33333 5.00004 1.58715 5.00004 0.666668H1.33337V2.66667ZM6.66671 9.00001C7.58719 9.00001 8.33337 7.92048 8.33337 7.00001C8.33337 6.07953 7.58719 5.00001 6.66671 5.00001C5.74623 5.00001 5.00004 6.07953 5.00004 7.00001C5.00004 7.92048 5.74623 9.00001 6.66671 9.00001Z" fill="black" />
-                </svg>
+              <HiMenu />
                 <span className="pl-2">Discount</span>
               </Link>
             </li>
