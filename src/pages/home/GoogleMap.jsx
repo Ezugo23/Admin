@@ -72,7 +72,7 @@ const GoogleMapComponent = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v1/orders/');
+        const response = await fetch('https://swifdropp.onrender.com/api/v1/orders/');
         const data = await response.json();
         setOrders(data);
       } catch (error) {
