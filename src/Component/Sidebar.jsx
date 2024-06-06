@@ -141,14 +141,14 @@ const Sidebar = () => {
             </AccordionPanel>
           </AccordionItem>
           <AccordionItem>
-            <RouterLink to="/foodsellers/personal" style={{ textDecoration: 'none' }}>
+            <RouterLink to="/foodsellers" style={{ textDecoration: 'none' }}>
               <AccordionButton
                 display="flex"
                 alignItems="center"
                 mb={2}
-                fontWeight={activeLink === '/foodsellers/personal' ? 'bold' : 'normal'}
-                color={activeLink === '/foodsellers/personal' ? 'white' : 'black'}
-                bg={activeLink === '/foodsellers/personal' ? '#4caf50' : 'transparent'}
+                fontWeight={activeLink === '/foodsellers' ? 'bold' : 'normal'}
+                color={activeLink === '/foodsellers' ? 'white' : 'black'}
+                bg={activeLink === '/foodsellers' ? '#4caf50' : 'transparent'}
                 p={2}
                 borderRadius="md"
                 _hover={{ bg: '#4caf50', color: 'white' }}

@@ -5,7 +5,8 @@ import { IoMdCloseCircle } from "react-icons/io";
 export default function User() {
   return (
     <>
-      <div className="background">
+<div className="bg-white relative w-[980px] h-screen">
+  <div className="w-[500px] bg-white flex flex-col mt-2 rounded-md shadow-md px-4">
         <p className='edit'>Add/Edit Personal Information</p>
         <div className="border-line-bottom"></div>
         <div className='display'>
@@ -18,7 +19,7 @@ export default function User() {
         </div>
         </div>
       </div>
-   
+      </div>
     </>
   );
 }
