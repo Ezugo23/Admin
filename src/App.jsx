@@ -36,8 +36,6 @@ function App() {
 
     newSocket.on('driverLocationUpdate', (data) => {
       console.log('Driver location update received:', data);
-
-      // Store the driver location update in localStorage
       localStorage.setItem(
         `driverLocation_${data.driverId}`,
         JSON.stringify(data)
@@ -54,12 +52,28 @@ function App() {
 
   return (
     <Router>
-      <Flex h="100vh" direction="row" bg={'#f9f9f9'}>
-        <Sidebar />
-        <Flex direction="column" flex="1">
-          <TopNav />
-          <Box flex="1" p={2} overflowY="auto">
-            <Box>
+      <Flex
+        h="100vh"
+        direction="row"
+        backgroundColor="#f9f9f9"
+        overflow="hidden"
+      >
+        <Box as="nav" flex="0 0 auto">
+          <Sidebar />
+        </Box>
+        <Flex direction="column" flex="1" overflow="hidden">
+          <Box as="header" flex="0 0 auto">
+            <TopNav />
+          </Box>
+          <Box
+            as="main"
+            flex="1"
+            overflowY="auto"
+            overflowX="hidden"
+            p={4}
+            maxW="100%"
+          >
+            <Box maxW="100%">
               <Routes>
                 <Route path="/" element={<Home socket={socket} />} />
                 <Route path="/profile/*" element={<Profile socket={socket} />} />

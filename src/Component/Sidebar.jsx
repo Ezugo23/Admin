@@ -38,7 +38,7 @@ const Sidebar = () => {
       bg="white"
       color="black"
       p={4}
-      w="250px"
+      minW="250px"
       height="100vh"
       position="relative"
       overflowY="auto"
