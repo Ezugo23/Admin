@@ -34,16 +34,16 @@ export default function Personal() {
                     </div>
                   </div>
                   <div className="col-span-1 md:col-span-1" style={{ marginTop:'-2px'}}>
-                    <div className="grid grid-cols-1 gap-1">
+                    <div className="grid grid-cols-1 ">
                       <div className="col-span-1">
                         <label htmlFor="firstName" className="block mb-2">First Name</label>
                         <input
                           id="firstName"
                           type="text"
-                          className="input border border-gray-300 p-2 rounded w-full"
+                          className="input border border-gray-300 p-2 rounded"
                           name="firstName"
                           placeholder="Enter First Name"
-                          style={{width:'100%'}}
+                          style={{width:'80%'}}
                         />
                       </div>
                       <div className="col-span-1" style={{marginTop:'20px'}}>
@@ -54,7 +54,7 @@ export default function Personal() {
                           className="input border border-gray-300 p-2 rounded w-full"
                           name="lastname"
                           placeholder="Enter Last Name"
-                          style={{width:'100%'}}
+                          style={{width:'80%'}}
                         />
                       </div>
                       <div className="col-span-1" style={{marginTop:'20px'}}>
@@ -65,7 +65,7 @@ export default function Personal() {
                           className="input border border-gray-300 p-2 rounded w-full"
                           name="phonenumber"
                           placeholder="Enter Phone Number"
-                          style={{width:'100%'}}
+                          style={{width:'80%'}}
                         />
                       </div>
                       <div className="col-span-1" style={{marginTop:'20px'}}>
@@ -76,11 +76,11 @@ export default function Personal() {
                           className="input border border-gray-300 p-2 rounded w-full"
                           name="phoneNumber"
                           placeholder="Enter Email Address"
-                          style={{width:'100%'}}
+                          style={{width:'80%'}}
                         />
                       </div>
                     </div>
-                    <button type="submit" className=" text-white py-2 px-20 rounded" style={{marginTop:'20px', backgroundColor:'#4DB6AC', display:'flex', marginLeft:'220px'}}>
+                    <button type="submit" className=" text-white py-2 px-20 rounded" style={{marginTop:'20px', backgroundColor:'#4DB6AC', display:'flex', marginRight:'220px'}}>
   Submit
 </button>
                   </div>
