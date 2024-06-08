@@ -6,7 +6,7 @@ export default function User() {
   return (
     <>
       <div className="w-full max-w-4xl mx-auto">
-        <div className='border-none bg-white shadow-md mb-8 p-6' style={{ marginTop: '10px' }}>
+        <div className='border-none bg-white shadow-md mb-8 p-6' style={{ marginTop: '30px' }}>
           <p className="font-roboto font-bold text-lg leading-6 text-black">Add/Edit Personal Information</p>
           <hr className="mb-4 border-black" />
           <p className="font-medium text-gray-700 mb-2">Add Photo</p>

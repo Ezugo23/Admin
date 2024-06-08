@@ -22,11 +22,11 @@ export default function sideMenu() {
         <div className="border-line"></div>
         <div className="user-info-container">
           <FaUserTie className="user-icon" />
-          <a href="/personal-info" className="personal-info-link">Personal Information</a>
+          <a href="user" className="personal-info-link">Personal Information</a>
         </div>
         <div className="user-info-container">
           <RiLockPasswordFill className="user-icon" />
-          <a href="/change-password" className="personal-info-link">Change Password</a>
+          <a href="password" className="personal-info-link">Change Password</a>
         </div>
       </div>
   
