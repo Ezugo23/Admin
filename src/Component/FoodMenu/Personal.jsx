@@ -5,7 +5,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 export default function Personal() {
  return (
     <> 
-    <div className="flex justify-center " style={{marginTop:'2%'}}>
+    <div className="flex justify-center " style={{marginTop:'2%', marginLeft:'20px'}}>
     <div className="w-[100%] max-w-4xl">
       <form>
         <div className="border-none bg-white shadow-md"> {/* Fixed width for the background */}
@@ -33,7 +33,7 @@ export default function Personal() {
                       {/* <input type="file" value="Change Image" /> */}
                     </div>
                   </div>
-                  <div className="col-span-1 md:col-span-1" style={{marginLeft:'-110px', marginTop:'-2px'}}>
+                  <div className="col-span-1 md:col-span-1" style={{marginLeft:'-30%', marginTop:'-2px'}}>
                     <div className="grid grid-cols-1 gap-1">
                       <div className="col-span-1">
                         <label htmlFor="firstName" className="block mb-2">First Name</label>
