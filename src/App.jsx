@@ -78,18 +78,18 @@ function App() {
                 <Route path="/" element={<Home socket={socket} />} />
                 <Route path="/profile/*" element={<Profile socket={socket} />} />
                 <Route
-                  path="/foodsellers/*"
+                  path="/foodsellers/list"
                   element={<Sellers socket={socket} />}
                 />
                 <Route
-                  path="/foodsellers/list"
+                  path="/foodsellers/list/menu/personal"
                   element={<SellersList socket={socket} />}
                 />
                 <Route
                   path="/ordersHistory"
                   element={<History socket={socket} />}
                 />
-                <Route path="/users" element={<Users socket={socket} />} />
+                <Route path="/users/admin" element={<Users socket={socket} />} />
                 <Route
                   path="/users/admin"
                   element={<Admin socket={socket} />}
