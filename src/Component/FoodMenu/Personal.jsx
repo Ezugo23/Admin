@@ -5,7 +5,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 export default function Personal() {
  return (
     <> 
-    <div className="flex justify-center " style={{marginTop:'2%'}}>
+    <div className="flex justify-center " style={{marginTop:'2%', marginLeft:'20px'}}>
     <div className="w-[100%] max-w-4xl">
       <form>
         <div className="border-none bg-white shadow-md"> {/* Fixed width for the background */}
@@ -13,7 +13,7 @@ export default function Personal() {
                 Restaurant Information
               </div>
               <div className="p-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2">
                   <div className="flex flex-col items-start">
                     <label htmlFor="uploadImage" className="font-medium text-gray-700 mb-2">
                       Upload Image
@@ -33,7 +33,7 @@ export default function Personal() {
                       {/* <input type="file" value="Change Image" /> */}
                     </div>
                   </div>
-                  <div className="col-span-1 md:col-span-1" style={{marginLeft:'-110px', marginTop:'-2px'}}>
+                  <div className="col-span-1 md:col-span-1" style={{ marginTop:'-2px'}}>
                     <div className="grid grid-cols-1 gap-1">
                       <div className="col-span-1">
                         <label htmlFor="firstName" className="block mb-2">First Name</label>
@@ -80,7 +80,7 @@ export default function Personal() {
                         />
                       </div>
                     </div>
-                    <button type="submit" className=" text-white py-2 px-20 rounded" style={{marginTop:'20px', backgroundColor:'#4DB6AC', display:'flex', marginLeft:'272px'}}>
+                    <button type="submit" className=" text-white py-2 px-20 rounded" style={{marginTop:'20px', backgroundColor:'#4DB6AC', display:'flex', marginLeft:'220px'}}>
   Submit
 </button>
                   </div>

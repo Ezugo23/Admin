@@ -6,7 +6,7 @@ import { HiMenu } from 'react-icons/hi';
 
 export default function Menu() {
   return (
-    <div style={{marginLeft:'2%'}}>
+    <div >
     <p class="font-roboto font-bold text-lg leading-6 text-black">Restaurant Profile</p>
       <div className="bg-white shadow-md rounded-lg mb-4 p-4">
         <div className="flex justify-between items-center mb-4">
@@ -25,7 +25,7 @@ export default function Menu() {
         <div className="p-0 m-0">
           <ul className="flex flex-col m-0 p-0">
             <li className="my-2">
-              <Link to={`/food-seller-list`} className="flex items-center p-2 rounded hover:bg-blue-200">
+              <Link to={`personal`} className="flex items-center p-2 rounded hover:bg-blue-200">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
                   <path fillRule="evenodd" clipRule="evenodd" d="M7.00004 8.08333C5.74961 8.08333 4.59417 7.41623 3.96895 6.33333C3.34374 5.25042 3.34374 3.91623 3.96895 2.83333C4.59417 1.75042 5.74961 1.08333 7.00004 1.08333C8.93304 1.08333 10.5 2.65033 10.5 4.58333C10.5 6.51632 8.93304 8.08333 7.00004 8.08333ZM11.6667 13.3333H10.5V12.1667C10.5 11.2002 9.71654 10.4167 8.75004 10.4167H5.25004C4.28354 10.4167 3.50004 11.2002 3.50004 12.1667V13.3333H2.33337V12.1667C2.33337 10.5558 3.63921 9.25 5.25004 9.25H8.75004C10.3609 9.25 11.6667 10.5558 11.6667 12.1667V13.3333ZM9.33337 4.58333C9.33337 5.87199 8.2887 6.91666 7.00004 6.91666C5.71138 6.91666 4.66671 5.87199 4.66671 4.58333C4.66671 3.29466 5.71138 2.24999 7.00004 2.24999C8.2887 2.24999 9.33337 3.29466 9.33337 4.58333Z" fill="black" />
                 </svg>
@@ -33,7 +33,7 @@ export default function Menu() {
               </Link>
             </li>
             <li className="my-2">
-              <Link to="/food-seller-list/add-and-edit-food" className="flex items-center p-2 rounded hover:bg-blue-200">
+              <Link to="password" className="flex items-center p-2 rounded hover:bg-blue-200">
           <RiLockPasswordFill />
                 <span className="pl-2">Change Password</span>
               </Link>
@@ -55,15 +55,14 @@ export default function Menu() {
             </li>
             <li className="my-2">
               <Link to="/food-seller-list/coupons" className="flex items-center p-2 rounded hover:bg-blue-200">
-              <HiMenu />
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M1.33337 2.66667V6.33333C2.25385 6.33333 3.00004 7.07953 3.00004 8C3.00004 8.92048 2.25385 9.66667 1.33337 9.66667V13.3333H5.00004C5.00004 12.4129 5.74623 11.6667 6.66671 11.6667C7.58719 11.6667 8.33337 12.4129 8.33337 13.3333H12V9.66667C10.5526 9.66667 9.33337 8.44738 9.33337 7C9.33337 5.55262 10.5526 4.33333 12 4.33333V0.666668H8.33337C8.33337 1.58715 7.58719 2.33333 6.66671 2.33333C5.74623 2.33333 5.00004 1.58715 5.00004 0.666668H1.33337V2.66667ZM6.66671 9.00001C7.58719 9.00001 8.33337 7.92048 8.33337 7.00001C8.33337 6.07953 7.58719 5.00001 6.66671 5.00001C5.74623 5.00001 5.00004 6.07953 5.00004 7.00001C5.00004 7.92048 5.74623 9.00001 6.66671 9.00001Z" fill="black" />
+                </svg>
                 <span className="pl-2">Discount</span>
               </Link>
             </li>
             <li className="my-2">
               <Link to="/food-seller-list/coupons" className="flex items-center p-2 rounded hover:bg-blue-200">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M1.33337 2.66667V6.33333C2.25385 6.33333 3.00004 7.07953 3.00004 8C3.00004 8.92048 2.25385 9.66667 1.33337 9.66667V13.3333H5.00004C5.00004 12.4129 5.74623 11.6667 6.66671 11.6667C7.58719 11.6667 8.33337 12.4129 8.33337 13.3333H12V9.66667C10.5526 9.66667 9.33337 8.44738 9.33337 7C9.33337 5.55262 10.5526 4.33333 12 4.33333V0.666668H8.33337C8.33337 1.58715 7.58719 2.33333 6.66671 2.33333C5.74623 2.33333 5.00004 1.58715 5.00004 0.666668H1.33337V2.66667ZM6.66671 9.00001C7.58719 9.00001 8.33337 7.92048 8.33337 7.00001C8.33337 6.07953 7.58719 5.00001 6.66671 5.00001C5.74623 5.00001 5.00004 6.07953 5.00004 7.00001C5.00004 7.92048 5.74623 9.00001 6.66671 9.00001Z" fill="black" />
-                </svg>
                 <span className="pl-2">Side Items</span>
               </Link>
             </li>
@@ -106,11 +105,11 @@ export default function Menu() {
 <div className="flex justify-between pt-0 pb-4 space-x-8">
   <div className="flex flex-col items-center justify-center text-center">
     <span className="font-bold text-primary">25</span>
-    <span>Total Items</span>
+    <span>Items</span>
   </div>
   <div className="flex flex-col items-center justify-center text-center">
     <span className="font-bold text-primary">546</span>
-    <span>Total Orders</span>
+    <span>Orders</span>
   </div>
   <div className="flex flex-col items-center justify-center text-center">
     <span className="font-bold text-red-600">$3,450</span>
@@ -118,7 +117,7 @@ export default function Menu() {
   </div>
   <div className="flex flex-col items-center justify-center text-center">
     <span className="font-bold text-green-600">$9,250</span>
-    <span>Total Paid</span>
+    <span>Paid</span>
   </div>
 </div>
         </div>
