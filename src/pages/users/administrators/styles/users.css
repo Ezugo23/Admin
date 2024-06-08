@@ -1,0 +1,176 @@
+/* users.css */
+
+/* General Styles */
+.contain {
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.add-admin-btn {
+  background-color: #3B5998;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.main-container {
+  background-color: white !important;
+  padding: 12px;
+  margin-top: 20px;
+}
+
+.entries-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-container label {
+  margin-right: 10px;
+}
+
+.search-container input {
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  vertical-align: middle;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table tr:hover {
+  background-color: #ddd;
+}
+
+.table-header th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  color: #000000;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 18px;
+  color: white;
+}
+
+.status-active {
+  color: #4CAF50;
+  border: 1px solid #4CAF50;
+}
+
+.status-inactive {
+  color: #f44336;
+  border: 1px solid #f44336;
+}
+
+.name-phone-container {
+  display: flex;
+  align-items: center;
+}
+
+.name-phone-container img {
+  margin-right: 10px;
+}
+
+.name-phone-container .text {
+  display: flex;
+  flex-direction: column;
+}
+
+.image {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+}
+
+.pagination-con {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #4CAF50;
+  width: 24px;
+  padding: 2px;
+  margin: 2px;
+  color: white;
+  border-radius: 5px;
+}
+
+.pagination button.inactive {
+  border: 1px solid rgb(160, 159, 159);
+  width: 24px;
+  padding: 2px;
+  margin: 5px;
+  color: black;
+  border-radius: 5px;
+}
+
+.pagination button:hover {
+  background-color: #ddd;
+}
+
+.table-row {
+  font-size: 12px;
+}
+
+.action-cell {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
