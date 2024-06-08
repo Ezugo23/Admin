@@ -39,6 +39,19 @@ const data = [
   { id: 30007, sellerName: "Meteor", address: "No 11 Uba Asaba", swiftBalance: "$1145.45", totalOrders: 1056, withdraw: "$1045.55", rating: 8111 },
   { id: 30008, sellerName: "Black Hole", address: "No 12 Uba Asaba", swiftBalance: "$1245.45", totalOrders: 1156, withdraw: "$1145.55", rating: 9111 },
   { id: 30009, sellerName: "Nebula", address: "No 13 Uba Asaba", swiftBalance: "$1345.45", totalOrders: 1256, withdraw: "$1245.55", rating: 10111 },
+  { id: 30003, sellerName: "Planet", address: "No 7 Uba Asaba", swiftBalance: "$745.45", totalOrders: 656, withdraw: "$645.55", rating: 4111 },
+  { id: 30004, sellerName: "Galaxy", address: "No 8 Uba Asaba", swiftBalance: "$845.45", totalOrders: 756, withdraw: "$745.55", rating: 5111 },
+  { id: 30005, sellerName: "Comet", address: "No 9 Uba Asaba", swiftBalance: "$945.45", totalOrders: 856, withdraw: "$845.55", rating: 6111 },
+  { id: 30006, sellerName: "Asteroid", address: "No 10 Uba Asaba", swiftBalance: "$1045.45", totalOrders: 956, withdraw: "$945.55", rating: 7111 },
+  { id: 30007, sellerName: "Meteor", address: "No 11 Uba Asaba", swiftBalance: "$1145.45", totalOrders: 1056, withdraw: "$1045.55", rating: 8111 },
+  { id: 30008, sellerName: "Black Hole", address: "No 12 Uba Asaba", swiftBalance: "$1245.45", totalOrders: 1156, withdraw: "$1145.55", rating: 9111 },
+  { id: 30009, sellerName: "Nebula", address: "No 13 Uba Asaba", swiftBalance: "$1345.45", totalOrders: 1256, withdraw: "$1245.55", rating: 10111 },
+  { id: 30004, sellerName: "Galaxy", address: "No 8 Uba Asaba", swiftBalance: "$845.45", totalOrders: 756, withdraw: "$745.55", rating: 5111 },
+  { id: 30005, sellerName: "Comet", address: "No 9 Uba Asaba", swiftBalance: "$945.45", totalOrders: 856, withdraw: "$845.55", rating: 6111 },
+  { id: 30006, sellerName: "Asteroid", address: "No 10 Uba Asaba", swiftBalance: "$1045.45", totalOrders: 956, withdraw: "$945.55", rating: 7111 },
+  { id: 30007, sellerName: "Meteor", address: "No 11 Uba Asaba", swiftBalance: "$1145.45", totalOrders: 1056, withdraw: "$1045.55", rating: 8111 },
+  { id: 30008, sellerName: "Black Hole", address: "No 12 Uba Asaba", swiftBalance: "$1245.45", totalOrders: 1156, withdraw: "$1145.55", rating: 9111 },
+  { id: 30009, sellerName: "Nebula", address: "No 13 Uba Asaba", swiftBalance: "$1345.45", totalOrders: 1256, withdraw: "$1245.55", rating: 10111 },
 ];
 
 export default function TableMenu() {
