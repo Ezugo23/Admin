@@ -1,4 +1,3 @@
-// DriversList.js
 import React, { useState } from 'react';
 import {
   Box,
@@ -81,7 +80,10 @@ const DriversList = () => {
 
   return (
     <Box>
-      <Box display={'flex'} justifyContent={'flex-end'} mb={'5'}>
+      <HStack justify={'space-between'} mb={'5'}>
+        <Text fontSize={'1.125rem'} fontWeight={'400'}>
+          List of Drivers
+        </Text>
         <Button
           bg="#3B5998"
           color="white"
@@ -90,12 +92,11 @@ const DriversList = () => {
           h="44px"
           py="1.5rem"
           borderRadius={8}
-          // onClick={onDeleteOpen}
           leftIcon={<AddIcon />}
         >
           Add a New Driver
         </Button>
-      </Box>
+      </HStack>
 
       <Box bg={'white'} p={'5'}>
         <HStack justifyContent={'flex-end'} mb={'10px'}>
