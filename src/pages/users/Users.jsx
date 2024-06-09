@@ -36,6 +36,16 @@ const Users = () => {
       role: 'Support',
       status: 'Active',
     },
+    {
+      id: '4RT56FD',
+      image: 'https://via.placeholder.com/40',
+      name: 'Natalie Vachini',
+      phone: '+1 (366) 214-7890',
+      username: 'natashkela',
+      email: 'support@yourmail.com',
+      role: 'Support',
+      status: 'Active',
+    },
   ]);
 
   return (
