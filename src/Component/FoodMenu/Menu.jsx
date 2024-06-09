@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { RiLockPasswordFill } from "react-icons/ri";
 import { IoMdInformationCircle } from 'react-icons/io';
 import { HiMenu } from 'react-icons/hi';
+import {
+  Image
+} from '@chakra-ui/react';
 
 export default function Menu() {
   return (
@@ -39,7 +42,7 @@ export default function Menu() {
               </Link>
             </li>
             <li className="my-2">
-              <Link to="/food-seller-list/product" className="flex items-center p-2 rounded hover:bg-blue-200">
+              <Link to="resturant-information" className="flex items-center p-2 rounded hover:bg-blue-200">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <path fillRule="evenodd" clipRule="evenodd" d="M12.25 4.66667V12.2459C12.2511 12.4006 12.1907 12.5494 12.082 12.6596C11.9734 12.7698 11.8255 12.8323 11.6707 12.8333H2.32925C2.00957 12.8333 1.75032 12.5743 1.75 12.2547V1.74533C1.75 1.43208 2.01192 1.16667 2.3345 1.16667H8.74825L12.25 4.66667ZM11.0833 5.25H8.16667V2.33333H2.91667V11.6667H11.0833V5.25ZM6.41667 4.08333H4.66667V5.25H6.41667V4.08333ZM4.66667 6.41667H9.33333V7.58333H4.66667V6.41667ZM9.33333 8.75H4.66667V9.91667H9.33333V8.75Z" fill="black" />
                 </svg>
@@ -48,54 +51,66 @@ export default function Menu() {
             </li>
             <hr/>
             <li className="my-2">
-              <Link to="/food-seller-list/coupons" className="flex items-center p-2 rounded hover:bg-blue-200">
-              <HiMenu />
+              <Link to="add-menu" className="flex items-center p-2 rounded hover:bg-blue-200">
+              <Image
+                    src="/restaurant-line.png"
+                    alt="Edit"
+                  />
                 <span className="pl-2">Add Food Menu</span>
               </Link>
             </li>
             <li className="my-2">
-              <Link to="/food-seller-list/coupons" className="flex items-center p-2 rounded hover:bg-blue-200">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M1.33337 2.66667V6.33333C2.25385 6.33333 3.00004 7.07953 3.00004 8C3.00004 8.92048 2.25385 9.66667 1.33337 9.66667V13.3333H5.00004C5.00004 12.4129 5.74623 11.6667 6.66671 11.6667C7.58719 11.6667 8.33337 12.4129 8.33337 13.3333H12V9.66667C10.5526 9.66667 9.33337 8.44738 9.33337 7C9.33337 5.55262 10.5526 4.33333 12 4.33333V0.666668H8.33337C8.33337 1.58715 7.58719 2.33333 6.66671 2.33333C5.74623 2.33333 5.00004 1.58715 5.00004 0.666668H1.33337V2.66667ZM6.66671 9.00001C7.58719 9.00001 8.33337 7.92048 8.33337 7.00001C8.33337 6.07953 7.58719 5.00001 6.66671 5.00001C5.74623 5.00001 5.00004 6.07953 5.00004 7.00001C5.00004 7.92048 5.74623 9.00001 6.66671 9.00001Z" fill="black" />
-                </svg>
+              <Link to="discount" className="flex items-center p-2 rounded hover:bg-blue-200">
+              <Image
+                    src="/coupon-line.png"
+                    alt="Edit"
+                  />
                 <span className="pl-2">Discount</span>
               </Link>
             </li>
             <li className="my-2">
-              <Link to="/food-seller-list/coupons" className="flex items-center p-2 rounded hover:bg-blue-200">
+              <Link to="side-items" className="flex items-center p-2 rounded hover:bg-blue-200">
+                <Image
+                    src="/ep_dish.png"
+                    alt="Edit"
+                  />
                 <span className="pl-2">Side Items</span>
               </Link>
             </li>
             <hr/>
             <li className="my-2 mt-9">
-              <Link to="/food-seller-list/coupons" className="flex items-center p-2 rounded hover:bg-blue-200">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M1.33337 2.66667V6.33333C2.25385 6.33333 3.00004 7.07953 3.00004 8C3.00004 8.92048 2.25385 9.66667 1.33337 9.66667V13.3333H5.00004C5.00004 12.4129 5.74623 11.6667 6.66671 11.6667C7.58719 11.6667 8.33337 12.4129 8.33337 13.3333H12V9.66667C10.5526 9.66667 9.33337 8.44738 9.33337 7C9.33337 5.55262 10.5526 4.33333 12 4.33333V0.666668H8.33337C8.33337 1.58715 7.58719 2.33333 6.66671 2.33333C5.74623 2.33333 5.00004 1.58715 5.00004 0.666668H1.33337V2.66667ZM6.66671 9.00001C7.58719 9.00001 8.33337 7.92048 8.33337 7.00001C8.33337 6.07953 7.58719 5.00001 6.66671 5.00001C5.74623 5.00001 5.00004 6.07953 5.00004 7.00001C5.00004 7.92048 5.74623 9.00001 6.66671 9.00001Z" fill="black" />
-                </svg>
+              <Link to="order-history" className="flex items-center p-2 rounded hover:bg-blue-200">
+              <Image
+                    src="/currency-line.png"
+                    alt="Edit"
+                  />
                 <span className="pl-2">Order (sale) History</span>
               </Link>
             </li>
             <li className="my-2">
-              <Link to="/food-seller-list/coupons" className="flex items-center p-2 rounded hover:bg-blue-200">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M1.33337 2.66667V6.33333C2.25385 6.33333 3.00004 7.07953 3.00004 8C3.00004 8.92048 2.25385 9.66667 1.33337 9.66667V13.3333H5.00004C5.00004 12.4129 5.74623 11.6667 6.66671 11.6667C7.58719 11.6667 8.33337 12.4129 8.33337 13.3333H12V9.66667C10.5526 9.66667 9.33337 8.44738 9.33337 7C9.33337 5.55262 10.5526 4.33333 12 4.33333V0.666668H8.33337C8.33337 1.58715 7.58719 2.33333 6.66671 2.33333C5.74623 2.33333 5.00004 1.58715 5.00004 0.666668H1.33337V2.66667ZM6.66671 9.00001C7.58719 9.00001 8.33337 7.92048 8.33337 7.00001C8.33337 6.07953 7.58719 5.00001 6.66671 5.00001C5.74623 5.00001 5.00004 6.07953 5.00004 7.00001C5.00004 7.92048 5.74623 9.00001 6.66671 9.00001Z" fill="black" />
-                </svg>
+              <Link to="payout-method" className="flex items-center p-2 rounded hover:bg-blue-200">
+              <Image
+                    src="/credit-card.png"
+                    alt="Edit"
+                  />
                 <span className="pl-2">Payout Method</span>
               </Link>
             </li>
             <li className="my-2">
-              <Link to="/food-seller-list/coupons" className="flex items-center p-2 rounded hover:bg-blue-200">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M1.33337 2.66667V6.33333C2.25385 6.33333 3.00004 7.07953 3.00004 8C3.00004 8.92048 2.25385 9.66667 1.33337 9.66667V13.3333H5.00004C5.00004 12.4129 5.74623 11.6667 6.66671 11.6667C7.58719 11.6667 8.33337 12.4129 8.33337 13.3333H12V9.66667C10.5526 9.66667 9.33337 8.44738 9.33337 7C9.33337 5.55262 10.5526 4.33333 12 4.33333V0.666668H8.33337C8.33337 1.58715 7.58719 2.33333 6.66671 2.33333C5.74623 2.33333 5.00004 1.58715 5.00004 0.666668H1.33337V2.66667ZM6.66671 9.00001C7.58719 9.00001 8.33337 7.92048 8.33337 7.00001C8.33337 6.07953 7.58719 5.00001 6.66671 5.00001C5.74623 5.00001 5.00004 6.07953 5.00004 7.00001C5.00004 7.92048 5.74623 9.00001 6.66671 9.00001Z" fill="black" />
-                </svg>
+              <Link to="payout-management" className="flex items-center p-2 rounded hover:bg-blue-200">
+              <Image
+                    src="/wallet-2-line.png"
+                    alt="Edit"
+                  />
                 <span className="pl-2">Payout Management</span>
               </Link>
             </li>
             <li className="my-2">
-              <Link to="/food-seller-list/coupons" className="flex items-center p-2 rounded hover:bg-blue-200">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M1.33337 2.66667V6.33333C2.25385 6.33333 3.00004 7.07953 3.00004 8C3.00004 8.92048 2.25385 9.66667 1.33337 9.66667V13.3333H5.00004C5.00004 12.4129 5.74623 11.6667 6.66671 11.6667C7.58719 11.6667 8.33337 12.4129 8.33337 13.3333H12V9.66667C10.5526 9.66667 9.33337 8.44738 9.33337 7C9.33337 5.55262 10.5526 4.33333 12 4.33333V0.666668H8.33337C8.33337 1.58715 7.58719 2.33333 6.66671 2.33333C5.74623 2.33333 5.00004 1.58715 5.00004 0.666668H1.33337V2.66667ZM6.66671 9.00001C7.58719 9.00001 8.33337 7.92048 8.33337 7.00001C8.33337 6.07953 7.58719 5.00001 6.66671 5.00001C5.74623 5.00001 5.00004 6.07953 5.00004 7.00001C5.00004 7.92048 5.74623 9.00001 6.66671 9.00001Z" fill="black" />
-                </svg>
+              <Link to="dispute" className="flex items-center p-2 rounded hover:bg-blue-200">
+              <Image
+                    src="/foundation_x.png"
+                    alt="Edit"
+                  />
                 <span className="pl-2">Dispute</span>
               </Link>
             </li>

@@ -164,7 +164,7 @@ const Sidebar = () => {
               </AccordionButton>
             {/* </RouterLink> */}
             <AccordionPanel pb={4}>
-              <RouterLink to="/foodsellers/list" style={{ textDecoration: 'none' }}>
+              <RouterLink to="/foodsellers/" style={{ textDecoration: 'none' }}>
                 <Flex
                   alignItems="center"
                   mb={2}
