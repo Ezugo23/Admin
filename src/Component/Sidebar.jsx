@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Flex,
@@ -32,6 +32,18 @@ import { FaTwitter, FaGoogle } from 'react-icons/fa';
 const Sidebar = () => {
   const location = useLocation();
   const activeLink = location.pathname;
+
+  // State to manage the "USERS" dropdown
+  const [isUsersExpanded, setIsUsersExpanded] = useState(false);
+
+  const handleUsersToggle = () => {
+    setIsUsersExpanded(!isUsersExpanded);
+  };
+  const [isSelleresExpanded, setIsSelleresExpanded] = useState(false);
+
+  const handleSellersToggle = () => {
+    setIsSelleresExpanded(!isSelleresExpanded);
+  };
 
   return (
     <Box
@@ -81,25 +93,24 @@ const Sidebar = () => {
             PROFILE
           </Flex>
         </RouterLink>
-        <Accordion defaultIndex={[]} allowMultiple>
-          <AccordionItem>
-            <RouterLink to="/users" style={{ textDecoration: 'none' }}>
-              <AccordionButton
-                display="flex"
-                alignItems="center"
-                mb={2}
-                fontWeight={activeLink === '/users' ? 'bold' : 'normal'}
-                color={activeLink === '/users' ? 'white' : 'black'}
-                bg={activeLink === '/users' ? '#4caf50' : 'transparent'}
-                p={2}
-                borderRadius="md"
-                _hover={{ bg: '#4caf50', color: 'white' }}
-              >
-                <Icon as={FiUsers} mr={2} />
-                USERS
-                <AccordionIcon ml="auto" />
-              </AccordionButton>
-            </RouterLink>
+        <Accordion allowMultiple>
+          <AccordionItem isExpanded={isUsersExpanded}>
+            <AccordionButton
+              display="flex"
+              alignItems="center"
+              mb={2}
+              fontWeight={activeLink === '/users' ? 'bold' : 'normal'}
+              color={activeLink === '/users' ? 'white' : 'black'}
+              bg={activeLink === '/users' ? '#4caf50' : 'transparent'}
+              p={2}
+              borderRadius="md"
+              _hover={{ bg: '#4caf50', color: 'white' }}
+              onClick={handleUsersToggle}
+            >
+              <Icon as={FiUsers} mr={2} />
+              USERS
+              <AccordionIcon ml="auto" transform={isUsersExpanded ? 'rotate(180deg)' : 'rotate(0deg)'} />
+            </AccordionButton>
             <AccordionPanel pb={4}>
               <RouterLink to="/users/admin" style={{ textDecoration: 'none' }}>
                 <Flex
@@ -116,20 +127,13 @@ const Sidebar = () => {
                   - Administrators
                 </Flex>
               </RouterLink>
-              <RouterLink
-                to="/users/allusers"
-                style={{ textDecoration: 'none' }}
-              >
+              <RouterLink to="/users/allusers" style={{ textDecoration: 'none' }}>
                 <Flex
                   alignItems="center"
                   mb={2}
-                  fontWeight={
-                    activeLink === '/users/allusers' ? 'bold' : 'normal'
-                  }
+                  fontWeight={activeLink === '/users/allusers' ? 'bold' : 'normal'}
                   color={activeLink === '/users/allusers' ? 'white' : 'black'}
-                  bg={
-                    activeLink === '/users/allusers' ? '#4caf50' : 'transparent'
-                  }
+                  bg={activeLink === '/users/allusers' ? '#4caf50' : 'transparent'}
                   p={2}
                   pl={6}
                   borderRadius="md"
@@ -140,8 +144,8 @@ const Sidebar = () => {
               </RouterLink>
             </AccordionPanel>
           </AccordionItem>
-          <AccordionItem>
-            <RouterLink to="/foodsellers" style={{ textDecoration: 'none' }}>
+          <AccordionItem isExpanded={isSelleresExpanded}>
+            {/* <RouterLink to="/foodsellers" style={{ textDecoration: 'none' }}> */}
               <AccordionButton
                 display="flex"
                 alignItems="center"
@@ -152,29 +156,21 @@ const Sidebar = () => {
                 p={2}
                 borderRadius="md"
                 _hover={{ bg: '#4caf50', color: 'white' }}
+                onClick={handleSellersToggle}
               >
                 <Icon as={FiShoppingCart} mr={2} />
                 FOOD SELLERS
-                <AccordionIcon ml="auto" />
+                <AccordionIcon ml="auto" transform={isSelleresExpanded ? 'rotate(180deg)' : 'rotate(0deg)'} />
               </AccordionButton>
-            </RouterLink>
+            {/* </RouterLink> */}
             <AccordionPanel pb={4}>
-              <RouterLink
-                to="/foodsellers/list"
-                style={{ textDecoration: 'none' }}
-              >
+              <RouterLink to="/foodsellers/list" style={{ textDecoration: 'none' }}>
                 <Flex
                   alignItems="center"
                   mb={2}
-                  fontWeight={
-                    activeLink === '/foodsellers/list' ? 'bold' : 'normal'
-                  }
+                  fontWeight={activeLink === '/foodsellers/list' ? 'bold' : 'normal'}
                   color={activeLink === '/foodsellers/list' ? 'white' : 'black'}
-                  bg={
-                    activeLink === '/foodsellers/list'
-                      ? '#4caf50'
-                      : 'transparent'
-                  }
+                  bg={activeLink === '/foodsellers/list' ? '#4caf50' : 'transparent'}
                   p={2}
                   pl={6}
                   borderRadius="md"
@@ -204,22 +200,13 @@ const Sidebar = () => {
               </AccordionButton>
             </RouterLink>
             <AccordionPanel pb={4}>
-              <RouterLink
-                to="/drivers/settings"
-                style={{ textDecoration: 'none' }}
-              >
+              <RouterLink to="/drivers/settings" style={{ textDecoration: 'none' }}>
                 <Flex
                   alignItems="center"
                   mb={2}
-                  fontWeight={
-                    activeLink === '/drivers/settings' ? 'bold' : 'normal'
-                  }
+                  fontWeight={activeLink === '/drivers/settings' ? 'bold' : 'normal'}
                   color={activeLink === '/drivers/settings' ? 'white' : 'black'}
-                  bg={
-                    activeLink === '/drivers/settings'
-                      ? '#4caf50'
-                      : 'transparent'
-                  }
+                  bg={activeLink === '/drivers/settings' ? '#4caf50' : 'transparent'}
                   p={2}
                   pl={6}
                   borderRadius="md"
@@ -228,19 +215,13 @@ const Sidebar = () => {
                   - Settings
                 </Flex>
               </RouterLink>
-            </AccordionPanel>
-            <AccordionPanel pb={4}>
               <RouterLink to="/drivers/list" style={{ textDecoration: 'none' }}>
                 <Flex
                   alignItems="center"
                   mb={2}
-                  fontWeight={
-                    activeLink === '/drivers/list' ? 'bold' : 'normal'
-                  }
+                  fontWeight={activeLink === '/drivers/list' ? 'bold' : 'normal'}
                   color={activeLink === '/drivers/list' ? 'white' : 'black'}
-                  bg={
-                    activeLink === '/drivers/list' ? '#4caf50' : 'transparent'
-                  }
+                  bg={activeLink === '/drivers/list' ? '#4caf50' : 'transparent'}
                   p={2}
                   pl={6}
                   borderRadius="md"
@@ -249,26 +230,13 @@ const Sidebar = () => {
                   - List of Driver
                 </Flex>
               </RouterLink>
-            </AccordionPanel>
-            <AccordionPanel pb={4}>
-              <RouterLink
-                to="/drivers/oweamount"
-                style={{ textDecoration: 'none' }}
-              >
+              <RouterLink to="/drivers/oweamount" style={{ textDecoration: 'none' }}>
                 <Flex
                   alignItems="center"
                   mb={2}
-                  fontWeight={
-                    activeLink === '/drivers/oweamount' ? 'bold' : 'normal'
-                  }
-                  color={
-                    activeLink === '/drivers/oweamount' ? 'white' : 'black'
-                  }
-                  bg={
-                    activeLink === '/drivers/oweamount'
-                      ? '#4caf50'
-                      : 'transparent'
-                  }
+                  fontWeight={activeLink === '/drivers/oweamount' ? 'bold' : 'normal'}
+                  color={activeLink === '/drivers/oweamount' ? 'white' : 'black'}
+                  bg={activeLink === '/drivers/oweamount' ? '#4caf50' : 'transparent'}
                   p={2}
                   pl={6}
                   borderRadius="md"
