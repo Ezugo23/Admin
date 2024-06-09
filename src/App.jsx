@@ -78,11 +78,11 @@ function App() {
                 <Route path="/" element={<Home socket={socket} />} />
                 <Route path="/profile/*" element={<Profile socket={socket} />} />
                 <Route
-                  path="/foodsellers/list"
+                  path="/foodsellers/*"
                   element={<Sellers socket={socket} />}
                 />
                 <Route
-                  path="/foodsellers/list/menu/personal"
+                  path="/foodsellers/*"
                   element={<SellersList socket={socket} />}
                 />
                 <Route
