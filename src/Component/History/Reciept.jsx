@@ -14,7 +14,7 @@ export default function Reciept(){
         <p style={{boxSizing:'border-box', width:'2rem', height:'2rem', border:'solid #F9F9F9 0.5px', textAlign:'center', cursor:'pointer', backgroundColor:'white'}}>+</p>
       </div>
     </div>
-    <div style={{backgroundColor:'white', width:'81rem', height:'auto', marginTop:"70px"}}>
+    <div style={{backgroundColor:'white', height:'auto', marginTop:"70px"}} className='w-full'>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop:"40px" }}>
       <div style={{marginLeft:"40px"}}>
         <p style={{ fontFamily: 'Roboto', fontWeight: '400', fontSize: '40px', lineHeight: '48.88px', color: '#3B5998', marginBottom: '90px', marginTop:'30px' }}>INVOICE</p>
