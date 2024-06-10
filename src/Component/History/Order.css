@@ -1,0 +1,85 @@
+.custom-box {
+  height: 10.5rem; /* Reduced height */
+  width: 19rem; /* Reduced width */
+  margin-bottom: 1rem; /* Add margin at the bottom */
+  padding: 1rem; /* Add padding inside the box */
+  box-sizing: border-box; /* Ensure proper box sizing */
+  justify-content: space-between;
+  position: relative;
+  border: white;
+}
+.top {
+  box-sizing: border-box;
+  border: solid #3B5998;
+  background-color: #3B5998;
+  width: 2.5rem;
+  height: 1rem;
+  border-radius: 10px;
+  color: white; /* Added color for better visibility */
+  display: flex; /* Align text to center */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14.06px;
+}
+.top2 {
+  box-sizing: border-box;
+  border: solid #4DB6AC;
+  background-color: #4DB6AC;
+  width: 2.5rem;
+  height: 1rem;
+  border-radius: 10px;
+  color: white; /* Added color for better visibility */
+  display: flex; /* Align text to center */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14.06px;
+}
+.top3 {
+  box-sizing: border-box;
+  border: solid #40C4FF;
+  background-color:#40C4FF;
+  width: 2.5rem;
+  height: 1rem;
+  border-radius: 10px;
+  color: white; /* Added color for better visibility */
+  display: flex; /* Align text to center */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14.06px;
+}
+.top4 {
+  box-sizing: border-box;
+  border: solid #40C4FF;
+  background-color: #40C4FF;
+  width: 2.5rem;
+  height: 1rem;
+  border-radius: 10px;
+  color: white; /* Added color for better visibility */
+  display: flex; /* Align text to center */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  font-family: Roboto;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14.06px;
+}
+.link{
+  color: navy;
+  text-decoration: underline;
+}
+.below{
+  font-family: inter;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 21.78px;
+  color: black;
+}
