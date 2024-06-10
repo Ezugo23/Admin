@@ -92,7 +92,7 @@ export default function Table() {
                   <td>{item.client}</td>
                   <td>{item.seller}</td>
                   <td className='link'>
-                    <Link to={`/invoice/${item.invoice}`}>
+                    <Link to={'invoice'}>
                       {item.invoice}
                     </Link>
                   </td>

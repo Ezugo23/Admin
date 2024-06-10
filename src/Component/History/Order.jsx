@@ -158,7 +158,7 @@ const Order = () => {
             icon: <p className="top4">33%</p>,
           },
         ].map((data, index) => (
-          <Link to={index === 0 || index === 1 ? "/pending-order" : "/payment"} key={index}> {/* Use Link and set href accordingly */}
+          <Link to={index === 0 || index === 1 ? "/pending-order" : "invoice"} key={index}> {/* Use Link and set href accordingly */}
             <div
               className={`p-7 text-black flex flex-col justify-end items-start rounded-xl custom-box shadow-lg `}
               style={{ backgroundColor: 'white', borderColor: data.color, borderWidth: 1}}
