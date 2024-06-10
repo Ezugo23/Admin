@@ -1,7 +1,12 @@
-import React from 'react';
+import Order from '../../Component/History/Order';
+import { Routes, Route } from 'react-router-dom';
 
 const History = () => {
-  return <div>History</div>;
+  return(
+  <>
+<Order />
+</>
+)
 };
 
 export default History;
