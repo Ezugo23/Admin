@@ -76,3 +76,10 @@
   color: navy;
   text-decoration: underline;
 }
+.below{
+  font-family: inter;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 21.78px;
+  color: black;
+}

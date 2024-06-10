@@ -173,6 +173,13 @@ const Order = () => {
         ))}
       </div>
     </div>
+    <div style={{ backgroundColor: 'white', width: '80rem', height: '8.5rem', boxSizing: 'border-box', display: 'flex', alignItems: 'stretch', justifyContent: 'space-between' }} className='below'>
+        <p style={{ borderRight: '1px solid #D8D8D8', paddingRight: '10px', marginRight: '10px', flex: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Pending</p>
+        <p style={{ borderRight: '1px solid #D8D8D8', paddingRight: '10px', marginRight: '10px', flex: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Order Accepted By Resturant</p>
+        <p style={{ borderRight: '1px solid #D8D8D8', paddingRight: '10px', marginRight: '10px', flex: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Order Accepted By Driver</p>
+        <p style={{ borderRight: '1px solid #D8D8D8', paddingRight: '10px', marginRight: '10px', flex: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Picked Up</p>
+        <p style={{ paddingRight: '10px', flex: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Declined</p>
+      </div>
     <div>
     <Table/>
     </div>
