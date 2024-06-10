@@ -86,7 +86,7 @@ function App() {
                   element={<SellersList socket={socket} />}
                 />
                 <Route
-                  path="/ordersHistory"
+                  path="/ordersHistory/*"
                   element={<History socket={socket} />}
                 />
                 <Route path="/users/admin" element={<Users socket={socket} />} />
