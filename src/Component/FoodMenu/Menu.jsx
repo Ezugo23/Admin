@@ -87,7 +87,7 @@ export default function Menu() {
                 <span className="pl-2">Order (sale) History</span>
               </Link>
             </li>
-            <li className="my-2">
+            {/* <li className="my-2">
               <Link to="payout-method" className="flex items-center p-2 rounded hover:bg-blue-200">
               <Image
                     src="/credit-card.png"
@@ -95,7 +95,7 @@ export default function Menu() {
                   />
                 <span className="pl-2">Payout Method</span>
               </Link>
-            </li>
+            </li> */}
             <li className="my-2">
               <Link to="payout-management" className="flex items-center p-2 rounded hover:bg-blue-200">
               <Image

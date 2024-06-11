@@ -1,43 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaAngleLeft, FaAngleRight, FaEdit } from 'react-icons/fa';
-import './Order.css'
+import './Order.css';
 
-const data = [
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-  { id: 3000, Date: '2023-05-15', Time: '10:30 AM', client: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", seller: "$345.45", invoice: "W404DFG434", driver: { name: "John Doe", image: '/Bitmap (1).png' }, fee: 1111 },
-];
-
-export default function Table() {
+const Table = () => {
+  const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10); 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://swifdropp.onrender.com/api/v1/orders/');
+        const result = await response.json();
+        const formattedData = result.map(order => {
+          const date = new Date(order.orderDate);
+          return {
+            id: order._id,
+            Date: date.toLocaleDateString(),
+            Time: date.toLocaleTimeString(),
+            client: order.userId ? `${order.userId.username}\n${order.deliveryAddress.address}` : 'N/A',
+            seller: order.restaurantId ? `${order.restaurantId.restaurantName}\n${order.restaurantId.address}` : 'N/A',
+            invoice: `W${order.orderId}`,
+            driver: order.assignedDriver ? { 
+              name: order.assignedDriver.username, 
+              image: order.assignedDriver.image, 
+              phoneNumber: order.assignedDriver.phoneNumber 
+            } : { 
+              name: 'N/A', 
+              image: '', 
+              phoneNumber: 'N/A' 
+            },
+            
+            fee: order.grandTotal,
+            orderStatus: order.orderStatus
+          };
+        });
+        setData(formattedData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
   const handleClick = (newPage) => {
@@ -53,7 +59,7 @@ export default function Table() {
       <div className="main-container">
         <div className="entries-container mb-4">
           <label>Show 
-            <select className="ml-2">
+            <select className="ml-2" onChange={(e) => setItemsPerPage(Number(e.target.value))}>
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
@@ -70,46 +76,39 @@ export default function Table() {
           <table className="table min-w-full">
             <thead className="table-header">
               <tr>
-                <th>ID</th>
                 <th>Date, Time</th>
                 <th>Client</th>
                 <th>Seller</th>
                 <th>Invoice</th>
                 <th>Driver</th>
                 <th>Fee</th>
-                <th>Action</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {currentData.map((item) => (
                 <tr key={item.id} className="table-row">
-                  <td>{item.id}</td>
                   <td>
                     <strong>{item.Date}</strong>
                     <br />
                     {item.Time}
                   </td>
-                  <td>{item.client}</td>
-                  <td>{item.seller}</td>
+                  <td dangerouslySetInnerHTML={{ __html: item.client.replace(/\n/g, '<br />') }}></td>
+                  <td dangerouslySetInnerHTML={{ __html: item.seller.replace(/\n/g, '<br />') }}></td>
                   <td className='link'>
-                    <Link to={'invoice'}>
+                    <Link to={'/invoice'}>
                       {item.invoice}
                     </Link>
                   </td>
                   <td>
-                    <div className="flex items-center">
-                      <img src={item.driver.image} alt={item.driver.name} className="w-8 h-8 rounded-full mr-2" />
-                      {item.driver.name}
-                    </div>
+                  <div className="flex flex-col items-start">
+  {item.driver.image ? <img src={item.driver.image} alt={item.driver.name} className="w-8 h-8 rounded-full mr-2" /> : null}
+  <p>{item.driver.name}</p>
+  <p>{item.driver.phoneNumber}</p>
+</div>
                   </td>
-                  <td>{item.fee}</td>
-                  <td className="action-cell">
-                    <Link to={'menu/personal'}>
-                      <span className="action-item cursor-pointer flex items-center gap-3">
-                        <FaEdit />
-                      </span>
-                    </Link>
-                  </td>
+                  <td>₦{item.fee}</td>
+                  <td>{item.orderStatus}</td>
                 </tr>
               ))}
             </tbody>
@@ -146,4 +145,6 @@ export default function Table() {
       </div>
     </div>
   );
-}
+};
+
+export default Table;

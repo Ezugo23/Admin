@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate  } from 'react-router-dom';
 import Pro from './Pro'
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 //import { faStar } from '@fortawesome/free-solid-svg-icons';
@@ -37,16 +37,20 @@ const data = [
   { id: 30003, sellerName: "Planet", address: "No 7 Uba Asaba", swiftBalance: "$745.45", totalOrders: 656, withdraw: "$645.55", rating: 4111 },
 
 ];
-
 export default function TableMenu() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(data.length / itemsPerPage);
+  const navigate = useNavigate();
 
   const handleClick = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
+  };
+
+  const handleRowClick = () => {
+    navigate(`menu/personal`);
   };
 
   const currentData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -91,31 +95,30 @@ export default function TableMenu() {
             </thead>
             <tbody>
               {currentData.map((item) => (
-                <tr key={item.id} className="table-row">
+                <tr key={item.id} className="table-row cursor-pointer" onClick={() => handleRowClick(item.id)}>
                   <td>{item.id}</td>
-                  <td >
-                          <strong>{item.sellerName}</strong>
-                          <br />
-                          {item.address}
-                        </td>
+                  <td>
+                    <strong>{item.sellerName}</strong>
+                    <br />
+                    {item.address}
+                  </td>
                   <td>{item.swiftBalance}</td>
                   <td>{item.totalOrders}</td>
                   <td>{item.withdraw}</td>
                   <td>{item.rating}</td>
-                  <td >
-                          <button className="w-[80px] h-[25px] font-roboto font-normal text-[12px] leading-[14.06px] text-center text-[#4DB6AC] border border-[#4DB6AC] rounded-md active:bg-[#4DB6AC]">
-                            save
-                          </button>
-                        </td>
+                  <td>
+                    <button className="w-[80px] h-[25px] font-roboto font-normal text-[12px] leading-[14.06px] text-center text-[#4DB6AC] border border-[#4DB6AC] rounded-md active:bg-[#4DB6AC]">
+                      save
+                    </button>
+                  </td>
                   <td className="action-cell">
-                    <Link     to={'menu/personal'}>
                     <span className="action-item cursor-pointer flex items-center gap-3">
-                      <FaEdit /> 
+                      <FaEdit />
                     </span>
-                    </Link>
                     <span className="action-item cursor-pointer flex items-center gap-3">
-                      <FaTrash /> 
+                      <FaTrash />
                     </span>
+                    
                   </td>
                 </tr>
               ))}
