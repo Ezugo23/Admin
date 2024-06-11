@@ -16,7 +16,7 @@ export default function Sellers() {
         {/* Route for the Menu component */}
         <Route path="/" element={<Table />} />
         
-        <Route path="menu/*" element={<Test />} />
+        <Route path="menu/:id/*" element={<Test />} />
         {/* Route for the Personal component */}
       </Routes>
     </>
