@@ -6,10 +6,12 @@ import { useState } from 'react';
 
 const Order = () => {
   const [overview, setOverview] = useState({
-    pending: null,
-    confirm: null,
-    ontheway: null,
-    total: null,
+    pending: 1234,
+    confirmedByRestaurant: 1234,
+    acceptedByRider: 1234,
+    onTheWay: 1234,
+    delivered: 1234,
+    declined: 1234,
   });
 
   return (
