@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Table,
@@ -16,6 +17,8 @@ import {
   Text,
   Flex,
   Input,
+  Switch,
+  useToast,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 
@@ -31,6 +34,7 @@ const DriversList = () => {
   const { drivers, totalItems, pageSize } = useDrivers();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const toast = useToast();
 
   const filteredDrivers = drivers.filter((driver) =>
     `${driver.name} ${driver.lastname}`
@@ -77,6 +81,62 @@ const DriversList = () => {
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = Math.min(startIndex + pageSize, drivers.length);
   const currentDrivers = filteredDrivers.slice(startIndex, endIndex);
+  const navigate = useNavigate();
+
+  const toggleAvailability = async (driverId, currentStatus) => {
+    try {
+      console.log(
+        `Toggling availability for driver ID: ${driverId}, current status: ${currentStatus}`
+      );
+
+      const response = await fetch(
+        `https://swifdropp.onrender.com/api/v1/driver/availability-driver/${driverId}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ available: !currentStatus }),
+        }
+      );
+
+      console.log('Response status:', response.status);
+
+      if (response.ok) {
+        toast({
+          title: 'Success',
+          description: 'Driver availability has been updated.',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+        });
+      } else {
+        const errorData = await response.json();
+        console.error('Error response data:', errorData);
+        toast({
+          title: 'Error',
+          description: `Failed to update driver availability: ${
+            errorData.message || 'Unknown error'
+          }`,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          position: 'top',
+        });
+      }
+    } catch (error) {
+      console.error('Error during fetch:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update driver availability.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
 
   return (
     <Box>
@@ -218,6 +278,7 @@ const DriversList = () => {
                   key={index}
                   textAlign="center"
                   bg={index % 2 === 0 ? '#f9fafc' : 'white'}
+                  onClick={() => navigate('/driversprofile')}
                 >
                   <Td
                     fontSize="0.675rem"
@@ -308,7 +369,7 @@ const DriversList = () => {
                           aria-label=""
                           w="1.5rem"
                           h="2.0rem"
-                          // onClick={onViewOpen}
+                          onClick={() => navigate(`/request/${driver._id}`)}
                         />
                       </Tooltip>
                       <Tooltip label="Edit" aria-label="Edit Tooltip">
@@ -317,7 +378,6 @@ const DriversList = () => {
                           color="black"
                           cursor="pointer"
                           bg="#EFEFEF"
-                          // onClick={onEditOpen}
                           aria-label=""
                           w="1.5rem"
                           h="2.0rem"
@@ -332,7 +392,6 @@ const DriversList = () => {
                           aria-label=""
                           w="1.5rem"
                           h="2.0rem"
-                          // onClick={onViewOpen}
                         />
                       </Tooltip>
                       <Tooltip label="Delete" aria-label="Delete Tooltip">
@@ -341,10 +400,21 @@ const DriversList = () => {
                           color="black"
                           cursor="pointer"
                           bg="#EFEFEF"
-                          // onClick={onDeleteOpen}
                           aria-label=""
                           w="1.5rem"
                           h="2.0rem"
+                        />
+                      </Tooltip>
+                      <Tooltip
+                        label="Toggle Availability"
+                        aria-label="Toggle Availability Tooltip"
+                      >
+                        <Switch
+                          isChecked={driver.available}
+                          onChange={() =>
+                            toggleAvailability(driver._id, driver.available)
+                          }
+                          colorScheme="teal"
                         />
                       </Tooltip>
                     </HStack>

@@ -14,10 +14,12 @@ import AllUsers from './pages/users/allUsers/AllUsers';
 import Drivers from './pages/drivers/Drivers';
 import DriverSettings from './pages/drivers/DriverSettings';
 import DriversList from './pages/drivers/DriversList';
+import DriversProfile from './pages/drivers/component/DriversProfile';
 import OweAmount from './pages/drivers/OweAmount';
 import Sellers from './pages/FoodSellers/Sellers';
 import SellersList from './pages/FoodSellers/SellersList';
 import SideMenu from './Component/Profile/sideMenu';
+import Request from './pages/drivers/component/Request';
 import { io } from 'socket.io-client';
 import { DriversProvider } from './contexts/DriversContext';
 
@@ -108,6 +110,10 @@ function App() {
                     element={<Drivers socket={socket} />}
                   />
                   <Route
+                    path="/driversprofile/*"
+                    element={<DriversProfile socket={socket} />}
+                  />
+                  <Route
                     path="/drivers/settings"
                     element={<DriverSettings socket={socket} />}
                   />
@@ -115,6 +121,11 @@ function App() {
                     path="/drivers/list"
                     element={<DriversList socket={socket} />}
                   />
+                  <Route
+                    path="/request/:id"
+                    element={<Request socket={socket} />}
+                  />
+
                   <Route
                     path="/drivers/oweamount"
                     element={<OweAmount socket={socket} />}
