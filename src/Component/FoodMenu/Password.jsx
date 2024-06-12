@@ -20,9 +20,9 @@ export default function Password() {
               className="w-[70%] h-12 border-gray-100 rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm mr-4"
               placeholder="Enter your new password"
             />
-            <button className="w-[219px] h-[45px] bg-blue-900 text-white font-roboto font-normal text-base leading-[17.58px] rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+            {/* <button className="w-[219px] h-[45px] bg-blue-900 text-white font-roboto font-normal text-base leading-[17.58px] rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
               Strong Password Generation
-            </button>
+            </button> */}
           </div>
           <button className="w-[219px] h-[45px] bg-[#4DB6AC] text-white font-roboto font-normal text-base leading-[17.58px] rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
             SAVE PASSWORD
