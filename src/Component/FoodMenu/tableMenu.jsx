@@ -93,9 +93,9 @@ export default function TableMenu() {
                     <br />
                     {item.address}
                   </td>
-                  <td>${item.wallet.availableBalance}</td>
-                  <td>{item.totalOrders}</td>
                   <td>${item.wallet.swiftWallet}</td>
+                  <td>{item.totalOrders}</td>
+                  <td>${item.totalPaid}</td>
                   <td>{item.averageRating}</td>
                   <td>
                     <button className="w-[80px] h-[25px] font-roboto font-normal text-[12px] leading-[14.06px] text-center text-[#4DB6AC] border border-[#4DB6AC] rounded-md active:bg-[#4DB6AC]">

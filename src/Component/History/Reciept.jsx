@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import axios from 'axios';
+import Spinner from 'react-bootstrap/Spinner';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Order.css';
 
 const Reciept = () => {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
+  const [acceptingOrder, setAcceptingOrder] = useState(false);
+  const [cancelingOrder, setCancelingOrder] = useState(false);
+  const [reassigningRider, setReassigningRider] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -22,6 +30,72 @@ const Reciept = () => {
 
     fetchOrder();
   }, [orderId]);
+
+  const handleAcceptOrder = async () => {
+    try {
+      setAcceptingOrder(true);
+      const response = await axios.post(`https://swifdropp.onrender.com/api/v1/restaurant/confirmorder/${orderId}`);
+      
+      if (response.status === 200) {
+        toast.success("Order accepted successfully");
+        setOrder(prevOrder => ({
+          ...prevOrder,
+          orderStatus: 'CONFIRMED'
+        }));
+      } else {
+        throw new Error('Failed to confirm order');
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setAcceptingOrder(false);
+    }
+  };
+
+  const handleCancelOrder = async () => {
+    try {
+      setCancelingOrder(true);
+      const response = await axios.post(`https://swifdropp.onrender.com/api/v1/restaurant/declineorder/${orderId}`);
+      
+      if (response.status === 200) {
+        toast.error("Order declined ❌");
+        setOrder(prevOrder => ({
+          ...prevOrder,
+          orderStatus: 'DECLINED'
+        }));
+      } else {
+        throw new Error('Failed to cancel order');
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setCancelingOrder(false);
+    }
+  };
+
+  const handleReassignRider = async () => {
+    try {
+      setReassigningRider(true);
+      const response = await axios.put(`http://localhost:8080/api/v1/driver/cancel/${orderId}`);
+      
+      if (response.status === 200) {
+        toast.success("Rider reassigned successfully");
+        setOrder(prevOrder => ({
+          ...prevOrder,
+          orderStatus: 'CONFIRMED'
+        }));
+      } else if (response.status === 400 && response.data.error === 	'Driver cannot cancel order, it is already on the way') {
+        toast.error("Order can't be reassigned, it's already on the way");
+      } else {
+        throw new Error('Failed to reassign rider');
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setReassigningRider(false);
+    }
+  };
+
 
   if (!order) {
     return <div>Loading...</div>;
@@ -52,25 +126,6 @@ const Reciept = () => {
               Back
             </p>
           </Link>
-          <button style={{
-            boxSizing: 'border-box',
-            width: '4rem',
-            height: '2rem',
-            border: 'solid #F9F9F9 0.5px',
-            textAlign: 'center',
-            cursor: 'pointer',
-            backgroundColor: '#3B5998',
-            color: 'white'
-          }}>Print</button>
-          <p style={{
-            boxSizing: 'border-box',
-            width: '2rem',
-            height: '2rem',
-            border: 'solid #F9F9F9 0.5px',
-            textAlign: 'center',
-            cursor: 'pointer',
-            backgroundColor: 'white'
-          }}>+</p>
         </div>
       </div>
       <div style={{ backgroundColor: 'white', height: 'auto', marginTop: "70px" }} className='w-full'>
@@ -106,7 +161,7 @@ const Reciept = () => {
               fontSize: '15px',
               lineHeight: '17.58px',
               color: 'black'
-            }}>{order.userId?.email || 'N/A'} {order.userId?.phoneNumber|| 'N/A'}</p>
+            }}>{order.userId?.email || 'N/A'} {order.userId?.phoneNumber || 'N/A'}</p>
             <p style={{
               fontFamily: 'Roboto',
               fontWeight: '300',
@@ -130,7 +185,7 @@ const Reciept = () => {
               fontSize: '15px',
               lineHeight: '17.58px',
               color: '#3B5998'
-            }}>{order.restaurantId?.email || 'N/A'}</p>
+            }}>{order.restaurantId?.email || 'N/A'} {order.restaurantId?.phoneNumber || 'N/A'}</p>
             <p style={{
               fontFamily: 'Roboto',
               fontWeight: '300',
@@ -221,7 +276,7 @@ const Reciept = () => {
                 marginLeft: '20px'
               }}>Side Items: <span>{item.additives.map(additive => additive.name).join(', ')}</span></p>
             </div>
-            <div style={{ display: 'flex', gap: '85px' }}>
+            <div style={{ display: 'flex', gap: '85px', marginLeft:'10px' }}>
               <p style={{ textAlign: 'center' }}>{item.quantity}</p>
               <p style={{ textAlign: 'center' }}>{item.price}</p>
               <p style={{ marginRight: '40px' }}>{item.quantity * item.price}</p>
@@ -230,14 +285,6 @@ const Reciept = () => {
         ))}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: "50px" }}>
           <div>
-            <p style={{
-              fontFamily: 'Roboto',
-              fontWeight: '400',
-              fontSize: '20px',
-              lineHeight: '23.44px',
-              color: '#3B5998',
-              marginLeft: "20px"
-            }}>Food city</p>
             <div style={{
               display: 'flex',
               gap: '20px',
@@ -245,26 +292,77 @@ const Reciept = () => {
               marginLeft: '20px',
               marginBottom: '20px'
             }}>
-              <p style={{
+              <button
+                className="btn btn-primary"
+                onClick={handleAcceptOrder}
+                disabled={order.orderStatus === 'CONFIRMED' || acceptingOrder}
+                style={{
+                  boxSizing: 'border-box',
+                  width: '6rem',
+                  height: '2rem',
+                  border: 'solid #3B5998 0.5px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  backgroundColor: 'white'
+                }}
+              >
+                {acceptingOrder ? (
+                  <Spinner animation="border" size="sm" />
+                ) : (
+                  "Accept"
+                )}
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={handleCancelOrder}
+                disabled={order.orderStatus === 'CANCELLED' || cancelingOrder}
+                style={{
+                  boxSizing: 'border-box',
+                  width: '6rem',
+                  height: '2rem',
+                  border: 'solid #FF5252 0.5px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  backgroundColor: '#FF5252',
+                  color: 'white'
+                }}
+              >
+                {cancelingOrder ? (
+                  <Spinner animation="border" size="sm" />
+                ) : (
+                  "Refund"
+                )}
+              </button>
+              <button
+              className="btn btn-warning"
+              onClick={handleReassignRider}
+              disabled={reassigningRider}
+              style={{
                 boxSizing: 'border-box',
                 width: '6rem',
                 height: '2rem',
-                border: 'solid #FF5252 0.5px',
+                border: 'solid #FFC107 0.5px',
                 textAlign: 'center',
                 cursor: 'pointer',
-                backgroundColor: 'white'
-              }}>Decline</p>
-              <p style={{
-                boxSizing: 'border-box',
-                width: '6rem',
-                height: '2rem',
-                border: 'solid #FF5252 0.5px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                backgroundColor: '#FF5252',
+                backgroundColor: '#FFC107',
                 color: 'white'
-              }}>Refund</p>
+              }}
+            >
+              {reassigningRider ? (
+                <Spinner animation="border" size="sm" />
+              ) : (
+                "Reassign Rider"
+              )}
+            </button>
             </div>
+            <p style={{
+              fontFamily: 'Roboto',
+              fontWeight: '400',
+              fontSize: '15px',
+              lineHeight: '17.58px',
+              color: 'black',
+              marginLeft: "20px"
+            }}>Rider: {order.assignedDriver?.username  || 'N/A'} ({order.driverFee  || 'N/A'} NGN)</p>              
           </div>
           <div>
             <p style={{
@@ -272,8 +370,24 @@ const Reciept = () => {
               fontWeight: '300',
               fontSize: '15px',
               lineHeight: '17.58px',
+              color: 'black',
+              marginBottom: '20px'
+            }}>Delivery Fee: NGN {order.deliveryFee}</p>
+            <p style={{
+              fontFamily: 'Roboto',
+              fontWeight: '300',
+              fontSize: '15px',
+              lineHeight: '17.58px',
+              color: 'black',
+              marginBottom: '20px'
+            }}>Service Fee: NGN {order.serviceFee}</p>
+            <p style={{
+              fontFamily: 'Roboto',
+              fontWeight: '300',
+              fontSize: '15px',
+              lineHeight: '17.58px',
               color: '#3B5998',
-              marginTop: '30px'
+              marginTop: '20px'
             }}>Total Amount</p>
             <p style={{
               fontFamily: 'Roboto',
@@ -282,17 +396,11 @@ const Reciept = () => {
               lineHeight: '23.44px',
               color: '#3B5998'
             }}>NGN {order.grandTotal}</p>
-            <p style={{
-              fontFamily: 'Roboto',
-              fontWeight: '300',
-              fontSize: '15px',
-              lineHeight: '17.58px',
-              color: 'black',
-              marginBottom: '20px'
-            }}>VAT included</p>
+            
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 };
