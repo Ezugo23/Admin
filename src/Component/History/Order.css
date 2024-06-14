@@ -78,8 +78,16 @@
 }
 .below{
   font-family: inter;
-  font-weight: 400;
-  font-size: 18px;
+  font-weight: 500;
+  font-size: 20px;
   line-height: 21.78px;
   color: black;
+  text-align: center;
+}
+.below.active {
+  color: green;
+}
+.dem{
+  display: flex;
+   cursor: pointer;
 }

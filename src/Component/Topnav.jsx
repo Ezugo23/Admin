@@ -23,25 +23,7 @@ const TopNav = () => {
 
   return (
     <Box bg={'#f9f9f9'} p={4}>
-      <Flex justify="space-between" align="center">
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <BreadcrumbLink as={RouterLink} to="/">
-              Home
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          {pathnames.map((value, index) => {
-            const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-
-            return (
-              <BreadcrumbItem key={to}>
-                <BreadcrumbLink as={RouterLink} to={to}>
-                  {value.charAt(0).toUpperCase() + value.slice(1)}
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            );
-          })}
-        </Breadcrumb>
+      <Flex justify="space-between" align="center" justifyContent="flex-end">
 
         <Flex align="center">
           <InputGroup width="200px" borderRadius={15} mr={4}>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 
-export default function TableMenu() {
+export default function Comapany() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -44,14 +44,9 @@ export default function TableMenu() {
 
   return (
     <div className="contain">
-      <div className="header">
-        <h2 className="header-title">Food Sellers List</h2>
-        <span className="add-admin-btn">
-          + Add New Restaurant
-        </span>
-      </div>
       <div className="main-container">
         <div className="entries-container mb-4">
+          <div>
           <label>
             Show
             <select className="ml-2" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
@@ -62,14 +57,9 @@ export default function TableMenu() {
             </select>
             entries
           </label>
+          </div>
           <div className="search-container ml-auto">
-            <label htmlFor="search">Search:</label>
-            <input
-              id="search"
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+           <button style={{width:"145px", height:'30px', borderRadius:'10px', backgroundColor:'#4CAF50', color:"white", fontFamily:'Open Sans', fontSize:'16px', fontWeight:'600', lineHeight:'21.79px'}}>Pay</button>
           </div>
         </div>
         <div className="table-container">
@@ -79,7 +69,7 @@ export default function TableMenu() {
                 <th>ID</th>
                 <th>SELLER NAME</th>
                 <th>SWIFTBALANCE</th>
-                <th>TOTAL ORDERS</th>
+                <th>TOTAL ORDER</th>
                 <th>WITHDRAW</th>
                 <th>RATING</th>
                 <th>STATUS</th>

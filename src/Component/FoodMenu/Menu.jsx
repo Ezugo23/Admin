@@ -2,9 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { RiLockPasswordFill } from "react-icons/ri";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {
-  Image
-} from '@chakra-ui/react';
+import { Image } from '@chakra-ui/react';
 
 export default function Menu() {
   const { id } = useParams();
@@ -14,6 +12,7 @@ export default function Menu() {
     const fetchRestaurant = async () => {
       try {
         const response = await axios.get(`https://swifdropp.onrender.com/api/v1/restaurant/byId/${id}`);
+        console.log('Restaurant data:', response.data);  // Logging data to debug
         setRestaurant(response.data.restaurant);
       } catch (error) {
         console.error('Error fetching restaurant data:', error);
@@ -26,6 +25,7 @@ export default function Menu() {
   if (!restaurant) {
     return <div>Loading...</div>;
   }
+
   return (
     <div>
       <p className="font-roboto font-bold text-lg leading-6 text-black">Restaurant Profile</p>
@@ -55,7 +55,7 @@ export default function Menu() {
             </li>
             <li className="my-2">
               <Link to={`password/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
-          <RiLockPasswordFill />
+                <RiLockPasswordFill />
                 <span className="pl-2">Change Password</span>
               </Link>
             </li>
@@ -70,89 +70,64 @@ export default function Menu() {
             <hr/>
             <li className="my-2">
               <Link to={`add-menu/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
-              <Image
-                    src="/restaurant-line.png"
-                    alt="Edit"
-                  />
+                <Image src="/restaurant-line.png" alt="Edit" />
                 <span className="pl-2">Add Food Menu</span>
               </Link>
             </li>
             <li className="my-2">
               <Link to={`discount/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
-              <Image
-                    src="/coupon-line.png"
-                    alt="Edit"
-                  />
+                <Image src="/coupon-line.png" alt="Edit" />
                 <span className="pl-2">Discount</span>
               </Link>
             </li>
             <li className="my-2">
               <Link to={`side-items/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
-                <Image
-                    src="/ep_dish.png"
-                    alt="Edit"
-                  />
+                <Image src="/ep_dish.png" alt="Edit" />
                 <span className="pl-2">Side Items</span>
               </Link>
             </li>
             <hr/>
             <li className="my-2 mt-9">
               <Link to={`order-history/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
-              <Image
-                    src="/currency-line.png"
-                    alt="Edit"
-                  />
+                <Image src="/currency-line.png" alt="Edit" />
                 <span className="pl-2">Order (sale) History</span>
               </Link>
             </li>
-            {/* <li className="my-2">
-              <Link to="payout-method" className="flex items-center p-2 rounded hover:bg-blue-200">
-              <Image
-                    src="/credit-card.png"
-                    alt="Edit"
-                  />
-                <span className="pl-2">Payout Method</span>
-              </Link>
-            </li> */}
             <li className="my-2">
               <Link to={`payout-management/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
-              <Image
-                    src="/wallet-2-line.png"
-                    alt="Edit"
-                  />
+                <Image src="/wallet-2-line.png" alt="Edit" />
                 <span className="pl-2">Payout Management</span>
               </Link>
             </li>
             <li className="my-2">
               <Link to={`dispute/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
-              <Image
-                    src="/foundation_x.png"
-                    alt="Edit"
-                  />
+                <Image src="/foundation_x.png" alt="Edit" />
                 <span className="pl-2">Dispute</span>
               </Link>
             </li>
           </ul>
          
           <hr className="mt-10" />
-<div className="flex justify-between pt-0 pb-4 space-x-8">
-  <div className="flex flex-col items-center justify-center text-center">
-    <span className="font-bold text-primary">25</span>
-    <span>Items</span>
-  </div>
-  <div className="flex flex-col items-center justify-center text-center">
-    <span className="font-bold text-primary">546</span>
-    <span>Orders</span>
-  </div>
-  <div className="flex flex-col items-center justify-center text-center">
-    <span className="font-bold text-red-600">$3,450</span>
-    <span>Balance</span>
-  </div>
-  <div className="flex flex-col items-center justify-center text-center">
-    <span className="font-bold text-green-600">$9,250</span>
-    <span>Paid</span>
-  </div>
-</div>
+          <div className="flex justify-between pt-0 pb-4 space-x-8">
+            <div className="flex flex-col items-center justify-center text-center">
+              <span className="font-bold text-primary">{restaurant.totalItems}</span>
+              <span>Items</span>
+            </div>
+            <div className="flex flex-col items-center justify-center text-center">
+              <span className="font-bold text-primary">{restaurant.totalOrders}</span>
+              <span>Orders</span>
+            </div>
+            <div className="flex flex-col items-center justify-center text-center">
+              <span className="font-bold text-red-600">
+                {restaurant.wallet && restaurant.wallet.availableBalance ? restaurant.wallet.availableBalance : 'N/A'}
+              </span>
+              <span>Balance</span>
+            </div>
+            <div className="flex flex-col items-center justify-center text-center">
+              <span className="font-bold text-green-600">{restaurant.totalPaid}</span>
+              <span>Paid</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
