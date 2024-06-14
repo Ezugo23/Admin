@@ -182,14 +182,14 @@ const Sidebar = () => {
             </AccordionPanel>
           </AccordionItem>
           <AccordionItem>
-            <RouterLink to="/drivers" style={{ textDecoration: 'none' }}>
+            <RouterLink to="/drivers/list" style={{ textDecoration: 'none' }}>
               <AccordionButton
                 display="flex"
                 alignItems="center"
                 mb={2}
-                fontWeight={activeLink === '/drivers' ? 'bold' : 'normal'}
-                color={activeLink === '/drivers' ? 'white' : 'black'}
-                bg={activeLink === '/drivers' ? '#4caf50' : 'transparent'}
+                fontWeight={activeLink === '/drivers/list' ? 'bold' : 'normal'}
+                color={activeLink === '/drivers/list' ? 'white' : 'black'}
+                bg={activeLink === '/drivers/list' ? '#4caf50' : 'transparent'}
                 p={2}
                 borderRadius="md"
                 _hover={{ bg: '#4caf50', color: 'white' }}
