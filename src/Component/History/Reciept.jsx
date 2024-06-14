@@ -76,7 +76,7 @@ const Reciept = () => {
   const handleReassignRider = async () => {
     try {
       setReassigningRider(true);
-      const response = await axios.put(`http://localhost:8080/api/v1/driver/cancel/${orderId}`);
+      const response = await axios.put(`https://swifdropp.onrender.com/api/v1/driver/cancel/${orderId}`);
       
       if (response.status === 200) {
         toast.success("Rider reassigned successfully");
