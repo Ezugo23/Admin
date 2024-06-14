@@ -14,11 +14,14 @@ import AllUsers from './pages/users/allUsers/AllUsers';
 import Drivers from './pages/drivers/Drivers';
 import DriverSettings from './pages/drivers/DriverSettings';
 import DriversList from './pages/drivers/DriversList';
+import DriversProfile from './pages/drivers/component/DriversProfile';
 import OweAmount from './pages/drivers/OweAmount';
 import Sellers from './pages/FoodSellers/Sellers';
 import SellersList from './pages/FoodSellers/SellersList';
 import SideMenu from './Component/Profile/sideMenu';
+import Request from './pages/drivers/component/Request';
 import { io } from 'socket.io-client';
+import { DriversProvider } from './contexts/DriversContext';
 
 function App() {
   const [socket, setSocket] = useState(null);
@@ -51,81 +54,98 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Flex
-        h="100vh"
-        direction="row"
-        backgroundColor="#f9f9f9"
-        overflow="hidden"
-      >
-        <Box as="nav" flex="0 0 auto">
-          <Sidebar />
-        </Box>
-        <Flex direction="column" flex="1" overflow="hidden">
-          <Box as="header" flex="0 0 auto">
-            <TopNav />
+    <DriversProvider>
+      <Router>
+        <Flex
+          h="100vh"
+          direction="row"
+          backgroundColor="#f9f9f9"
+          overflow="hidden"
+        >
+          <Box as="nav" flex="0 0 auto">
+            <Sidebar />
           </Box>
-          <Box
-            as="main"
-            flex="1"
-            overflowY="auto"
-            overflowX="hidden"
-            p={4}
-            maxW="100%"
-          >
-            <Box maxW="100%">
-              <Routes>
-                <Route path="/" element={<Home socket={socket} />} />
-                <Route path="/profile/*" element={<Profile socket={socket} />} />
-                <Route
-                  path="/foodsellers/*"
-                  element={<Sellers socket={socket} />}
-                />
-                <Route
-                  path="/foodsellers/*"
-                  element={<SellersList socket={socket} />}
-                />
-                <Route
-                  path="/ordersHistory/*"
-                  element={<History socket={socket} />}
-                />
-                <Route path="/users/admin" element={<Users socket={socket} />} />
-                <Route
-                  path="/users/admin"
-                  element={<Admin socket={socket} />}
-                />
-                <Route
-                  path="/users/allusers"
-                  element={<AllUsers socket={socket} />}
-                />
-                <Route path="/drivers" element={<Drivers socket={socket} />} />
-                <Route
-                  path="/drivers/settings"
-                  element={<DriverSettings socket={socket} />}
-                />
-                <Route
-                  path="/drivers/list"
-                  element={<DriversList socket={socket} />}
-                />
-                <Route
-                  path="/drivers/oweamount"
-                  element={<OweAmount socket={socket} />}
-                />
-                <Route path="/daily-transaction/*" element={<Daily socket={socket} />} />
-                <Route
-                  path="/settings"
-                  element={<Settings socket={socket} />}
-                />
-                 <Route
-                  path="/sidemenu"
-                  element={<SideMenu socket={socket} />}
-                />
-              </Routes>
+          <Flex direction="column" flex="1" overflow="hidden">
+            <Box as="header" flex="0 0 auto">
+              <TopNav />
             </Box>
-          </Box>
+            <Box
+              as="main"
+              flex="1"
+              overflowY="auto"
+              overflowX="hidden"
+              p={4}
+              maxW="100%"
+            >
+              <Box maxW="100%">
+                <Routes>
+                  <Route path="/" element={<Home socket={socket} />} />
+                  <Route
+                    path="/profile/*"
+                    element={<Profile socket={socket} />}
+                  />
+                  <Route
+                    path="/foodsellers/*"
+                    element={<Sellers socket={socket} />}
+                  />
+                  <Route
+                    path="/foodsellers/list"
+                    element={<SellersList socket={socket} />}
+                  />
+                  <Route
+                    path="/ordersHistory/*"
+                    element={<History socket={socket} />}
+                  />
+                  <Route path="/users/admin" element={<Users socket={socket} />} />
+                  <Route
+                    path="/users/admin"
+                    element={<Admin socket={socket} />}
+                  />
+                  <Route
+                    path="/users/allusers"
+                    element={<AllUsers socket={socket} />}
+                  />
+                  <Route
+                    path="/drivers"
+                    element={<Drivers socket={socket} />}
+                  />
+                  <Route
+                    path="/driversprofile/*"
+                    element={<DriversProfile socket={socket} />}
+                  />
+                  <Route
+                    path="/drivers/settings"
+                    element={<DriverSettings socket={socket} />}
+                  />
+                  <Route
+                    path="/drivers/list"
+                    element={<DriversList socket={socket} />}
+                  />
+                  <Route
+                    path="/request/:id"
+                    element={<Request socket={socket} />}
+                  />
+
+                  <Route
+                    path="/drivers/oweamount"
+                    element={<OweAmount socket={socket} />}
+                  />
+                   <Route path="/daily-transaction/*" element={<Daily socket={socket} />} />
+                  <Route
+                    path="/settings"
+                    element={<Settings socket={socket} />}
+                  />
+                  <Route
+                    path="/sidemenu"
+                    element={<SideMenu socket={socket} />}
+                  />
+                </Routes>
+              </Box>
+            </Box>
+          </Flex>
         </Flex>
-      </Flex>
-    </Router>
+      </Router>
+    </DriversProvider>
   );
 }
 

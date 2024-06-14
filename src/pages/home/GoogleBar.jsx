@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  HStack,
-  Image,
-  VStack,
-  Text,
-} from '@chakra-ui/react';
+import { Box, HStack, Image, VStack, Text } from '@chakra-ui/react';
 // import { AiOutlineUp, AiOutlineDown } from 'react-icons/ai';
 
 const GoogleBar = () => {
@@ -63,7 +57,7 @@ const GoogleBar = () => {
       // vectorUrl: '/ordersvector.png',
       total: totalOrders,
       label: 'Total Orders',
-   
+
       // icon: AiOutlineDown,
       bgColor: '#FF5252',
     },
@@ -100,7 +94,7 @@ const GoogleBar = () => {
   ];
 
   return (
-    <VStack spacing={12} mx={2} >
+    <VStack spacing={12} mx={2}>
       {barData.map((bar) => (
         <HStack
           key={bar.id}
@@ -135,12 +129,14 @@ const GoogleBar = () => {
               borderRadius="full"
               boxShadow="md"
               minW="20px"
-              transition="all 0.3s"
+              transition="all 0.7s"
             >
               {/* <Text fontWeight="bold" fontSize="md">
                 {bar.percentage}%
               </Text> */}
-              {bar.icon && <bar.icon size={24} style={{ marginRight: '8px' }} />}
+              {bar.icon && (
+                <bar.icon size={24} style={{ marginRight: '8px' }} />
+              )}
             </HStack>
             {/* <Image
               src={bar.vectorUrl}
@@ -151,7 +147,6 @@ const GoogleBar = () => {
           </Box>
         </HStack>
       ))}
-     
     </VStack>
   );
 };

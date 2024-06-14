@@ -1,74 +1,79 @@
-
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Order.css';
 import Table from './Table';
-import { useState } from 'react';
 
 const Order = () => {
   const [overview, setOverview] = useState({
-    pending: 1234,
-    confirmedByRestaurant: 1234,
-    acceptedByRider: 1234,
-    onTheWay: 1234,
-    delivered: 1234,
-    declined: 1234,
+    pending: 0,
+    confirmedByRestaurant: 0,
+    acceptedByRider: 0,
+    onTheWay: 0,
+    delivered: 0,
+    declined: 0,
   });
+
+  const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    const fetchOrderOverview = async () => {
+      try {
+        const response = await fetch('https://swifdropp.onrender.com/api/v1/orders/count-orders/status');
+        if (!response.ok) {
+          throw new Error('Failed to fetch order overview');
+        }
+        const data = await response.json();
+        const { PENDING, CONFIRMED, 'PICK UP SOON': acceptedByRider, 'ON THE WAY': onTheWay } = data.data;
+        setOverview({
+          pending: PENDING || 0,
+          confirmedByRestaurant: CONFIRMED || 0,
+          acceptedByRider: acceptedByRider || 0,
+          onTheWay: onTheWay || 0,
+          delivered: 0,
+          declined: 0,
+        });
+      } catch (error) {
+        console.error('Error fetching order overview:', error);
+      }
+    };
+
+    fetchOrderOverview();
+  }, []);
+
+  const handleBoxClick = (status) => {
+    setFilter(status);
+  };
 
   return (
     <>
-      <div className="p-6 pb-0" style={{ marginTop: "-30px" }}>
+      <div className="p-4 pb-0" style={{ marginTop: '-30px' }}>
         <p className="text-2xl font-bold" style={{ color: 'black' }}>All Orders</p>
-        <div className="grid mt-3 grid-cols-4 gap-3">
+        <div className="grid mt-3 grid-cols-6 gap-4">
           {[
-            {
-              key: 'pending',
-              text: 'Total Pending',
-              color: '#4CAF50',
-              icon: <p className="top">33%</p>,
-            },
-            {
-              key: 'confirm',
-              text: 'Total Confirmed',
-              color: '#348238',
-              icon: <p className="top2">33%</p>,
-            },
-            {
-              key: 'ontheway',
-              text: 'Total On The Way',
-              color: '#246226',
-              icon: <p className="top3">33%</p>,
-            },
-            {
-              key: 'total',
-              text: "Total Deliveries",
-              color: '#507A52',
-              icon: <p className="top4">33%</p>,
-            },
+            { key: 'pending', text: 'Pending orders', color: '#4CAF50', status: 'PENDING' },
+            { key: 'confirmedByRestaurant', text: 'Confirmed by Restaurant', color: '#348238', status: 'CONFIRMED' },
+            { key: 'acceptedByRider', text: 'Accepted by Rider', color: '#246226', status: 'PICK UP SOON' },
+            { key: 'onTheWay', text: 'On the Way', color: '#507A52', status: 'ON THE WAY' },
+            { key: 'delivered', text: 'Delivered', color: '#4CAF50', status: 'DELIVERED' },
+            { key: 'declined', text: 'Declined', color: '#FF6347', status: 'DECLINED' },
           ].map((data, index) => (
-            <Link to={index === 0 || index === 1 ? "/pending-order" : "invoice"} key={index}> {/* Use Link and set href accordingly */}
-              <div
-                className={`p-7 text-black flex flex-col justify-end items-start rounded-xl custom-box shadow-lg `}
-                style={{ backgroundColor: 'white', borderColor: data.color, borderWidth: 1}}
-              >
-                <div className="flex flex-col items-start">
-                  <p className="text-xl font-bold">3</p>
-                  <p className="text-13 font-bold">{data.text}</p>
-                </div>
-                {data.icon && <div className="absolute top-4 right-4">{data.icon}</div>}
+            <div
+              key={index}
+              className="p-6 h-38 w-25 text-black flex flex-col justify-between items-start rounded-xl shadow-lg cursor-pointer"
+              style={{ backgroundColor: 'white', borderColor: data.color, borderWidth: 1, marginBottom: '10px' }}
+              onClick={() => handleBoxClick(data.status)}
+            >
+              <div className="flex flex-col items-start">
+                <p className="text-xl font-bold" style={{ color: 'black' }}>{overview[data.key]}</p>
+                <p className="mt-4 text-xs font-bold" style={{ color: 'green' }}>{data.text}</p>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </div>
-      <div style={{ backgroundColor: 'white', width: '70rem', height: '8.5rem', boxSizing: 'border-box', display: 'flex', alignItems: 'stretch', justifyContent: 'space-between', marginLeft:'60px'}} className='below'>
-        <p style={{ borderRight: '1px solid #D8D8D8', paddingRight: '10px', marginRight: '10px', flex: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Pending</p>
-        <p style={{ borderRight: '1px solid #D8D8D8', paddingRight: '10px', marginRight: '10px', flex: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Order Accepted By Restaurant</p>
-        <p style={{ borderRight: '1px solid #D8D8D8', paddingRight: '10px', marginRight: '10px', flex: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Order Accepted By Driver</p>
-        <p style={{ borderRight: '1px solid #D8D8D8', paddingRight: '10px', marginRight: '10px', flex: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Picked Up</p>
-        <p style={{ paddingRight: '10px', flex: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Declined</p>
-      </div>
+
       <div>
-        <Table />
+        <Table filter={filter} />
       </div>
     </>
   );

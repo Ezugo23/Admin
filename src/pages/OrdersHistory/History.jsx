@@ -1,16 +1,16 @@
-import Order from '../../Component/History/Order';
+// History.js
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Reciept from '../../Component/History/Reciept'
+import Order from '../../Component/History/Order';
+import Reciept from '../../Component/History/Reciept';
 
-const History = () => {
-  return(
-  <>
-<Routes>
-<Route path='/' element={<Order/>}/>
-  <Route path='invoice' element={<Reciept/>}/>
-</Routes>
-</>
-)
+const History = ({ socket }) => {
+  return (
+    <Routes>
+      <Route path="/" element={<Order socket={socket} />} />
+      <Route path="receipt/:orderId" element={<Reciept socket={socket} />} />
+    </Routes>
+  );
 };
 
 export default History;

@@ -27,7 +27,7 @@ export default function Menu() {
   }
 
   return (
-    <div>
+    <div className="w-64"> {/* Adjust the width here */}
       <p className="font-roboto font-bold text-lg leading-6 text-black">Restaurant Profile</p>
       <div className="bg-white shadow-md rounded-lg mb-4 p-4">
         <div className="flex justify-between items-center mb-4">
@@ -67,7 +67,7 @@ export default function Menu() {
                 <span className="pl-2">Resturants Information</span>
               </Link>
             </li>
-            <hr/>
+            <hr />
             <li className="my-2">
               <Link to={`add-menu/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
                 <Image src="/restaurant-line.png" alt="Edit" />
@@ -86,13 +86,22 @@ export default function Menu() {
                 <span className="pl-2">Side Items</span>
               </Link>
             </li>
-            <hr/>
+            <hr />
             <li className="my-2 mt-9">
               <Link to={`order-history/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
                 <Image src="/currency-line.png" alt="Edit" />
                 <span className="pl-2">Order (sale) History</span>
               </Link>
             </li>
+<<<<<<< HEAD
+=======
+            {/* <li className="my-2">
+              <Link to="payout-method" className="flex items-center p-2 rounded hover:bg-blue-200">
+                <Image src="/credit-card.png" alt="Edit" />
+                <span className="pl-2">Payout Method</span>
+              </Link>
+            </li> */}
+>>>>>>> 7c88514c957e97d61d2271b9599f7c434bad4aa5
             <li className="my-2">
               <Link to={`payout-management/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
                 <Image src="/wallet-2-line.png" alt="Edit" />
@@ -106,8 +115,8 @@ export default function Menu() {
               </Link>
             </li>
           </ul>
-         
           <hr className="mt-10" />
+<<<<<<< HEAD
           <div className="flex justify-between pt-0 pb-4 space-x-8">
             <div className="flex flex-col items-center justify-center text-center">
               <span className="font-bold text-primary">{restaurant.totalItems}</span>
@@ -125,6 +134,23 @@ export default function Menu() {
             </div>
             <div className="flex flex-col items-center justify-center text-center">
               <span className="font-bold text-green-600">{restaurant.totalPaid}</span>
+=======
+          <div className="flex justify-between pt-0 pb-4 space-x-3">
+            <div className="flex flex-col items-center justify-center text-center">
+              <span className="font-bold text-primary">25</span>
+              <span>Items</span>
+            </div>
+            <div className="flex flex-col items-center justify-center text-center">
+              <span className="font-bold text-primary">546</span>
+              <span>Orders</span>
+            </div>
+            <div className="flex flex-col items-center justify-center text-center">
+              <span className="font-bold text-red-600">$3,450</span>
+              <span>Balance</span>
+            </div>
+            <div className="flex flex-col items-center justify-center text-center">
+              <span className="font-bold text-green-600">$9,250</span>
+>>>>>>> 7c88514c957e97d61d2271b9599f7c434bad4aa5
               <span>Paid</span>
             </div>
           </div>

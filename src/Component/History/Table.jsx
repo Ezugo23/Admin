@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaAngleLeft, FaAngleRight, FaEdit } from 'react-icons/fa';
 import './Order.css';
 
-const Table = () => {
+const Table = ({ filter }) => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10); 
@@ -31,7 +31,6 @@ const Table = () => {
               image: '', 
               phoneNumber: 'N/A' 
             },
-            
             fee: order.grandTotal,
             orderStatus: order.orderStatus
           };
@@ -44,7 +43,9 @@ const Table = () => {
     fetchData();
   }, []);
 
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const filteredData = filter ? data.filter(item => item.orderStatus === filter) : data;
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const handleClick = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -52,7 +53,7 @@ const Table = () => {
     }
   };
 
-  const currentData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div className="contain">
@@ -95,17 +96,15 @@ const Table = () => {
                   </td>
                   <td dangerouslySetInnerHTML={{ __html: item.client.replace(/\n/g, '<br />') }}></td>
                   <td dangerouslySetInnerHTML={{ __html: item.seller.replace(/\n/g, '<br />') }}></td>
-                  <td className='link'>
-                    <Link to={'invoice'}>
-                      {item.invoice}
-                    </Link>
+                  <td className="invoice-column">
+                    <Link to={`receipt/${item.id}`} className="invoice-link">{item.invoice}</Link>
                   </td>
                   <td>
-                  <div className="flex flex-col items-start">
-  {item.driver.image ? <img src={item.driver.image} alt={item.driver.name} className="w-8 h-8 rounded-full mr-2" /> : null}
-  <p>{item.driver.name}</p>
-  <p>{item.driver.phoneNumber}</p>
-</div>
+                    <div className="flex flex-col items-start">
+                      {item.driver.image ? <img src={item.driver.image} alt={item.driver.name} className="w-8 h-8 rounded-full mr-2" /> : null}
+                      <p>{item.driver.name}</p>
+                      <p>{item.driver.phoneNumber}</p>
+                    </div>
                   </td>
                   <td>₦{item.fee}</td>
                   <td>{item.orderStatus}</td>
@@ -115,7 +114,7 @@ const Table = () => {
           </table>
         </div>
         <div className="pagination-con">
-          <span className="text-gray-600">Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, data.length)}-{Math.min(currentPage * itemsPerPage, data.length)} of {data.length} data</span>
+          <span className="text-gray-600">Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, filteredData.length)}-{Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} data</span>
           <div className="pagination flex items-center">
             <button 
               className="px-3 py-1 mx-1 rounded hover:bg-gray-300" 
