@@ -44,14 +44,9 @@ export default function TableMenu() {
 
   return (
     <div className="contain">
-      <div className="header">
-        <h2 className="header-title">Food Sellers List</h2>
-        <span className="add-admin-btn">
-          + Add New Restaurant
-        </span>
-      </div>
       <div className="main-container">
         <div className="entries-container mb-4">
+          <div>
           <label>
             Show
             <select className="ml-2" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
@@ -62,6 +57,20 @@ export default function TableMenu() {
             </select>
             entries
           </label>
+          <p
+      style={{
+        fontFamily: 'Open Sans, sans-serif',
+        fontWeight: 600,
+        fontSize: '16px',
+        lineHeight: '21.79px',
+        textAlign: 'right',
+        color: '#000000',
+        marginTop:"30px"
+      }}
+    >
+      Daily Total Moved Swift Amount
+    </p>
+          </div>
           <div className="search-container ml-auto">
             <label htmlFor="search">Search:</label>
             <input

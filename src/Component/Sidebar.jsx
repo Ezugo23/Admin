@@ -246,6 +246,72 @@ const Sidebar = () => {
                 </Flex>
               </RouterLink>
             </AccordionPanel>
+            
+          </AccordionItem>
+          <AccordionItem isExpanded={isSelleresExpanded}>
+              <AccordionButton
+                display="flex"
+                alignItems="center"
+                mb={2}
+                fontWeight={activeLink === '' ? 'bold' : 'normal'}
+                color={activeLink === '' ? 'white' : 'black'}
+                bg={activeLink === '' ? '#4caf50' : 'transparent'}
+                p={2}
+                borderRadius="md"
+                _hover={{ bg: '#4caf50', color: 'white' }}
+              >
+                <Icon as={FiTruck} mr={2} />
+                Daily Transaction
+                <AccordionIcon ml="auto" />
+              </AccordionButton>
+            <AccordionPanel pb={4}>
+              <RouterLink to="/daily-transaction" style={{ textDecoration: 'none' }}>
+                <Flex
+                  alignItems="center"
+                  mb={2}
+                  fontWeight={activeLink === '/daily-transaction' ? 'bold' : 'normal'}
+                  color={activeLink === '/daily-transaction' ? 'white' : 'black'}
+                  bg={activeLink === '/daily-transaction' ? '#4caf50' : 'transparent'}
+                  p={2}
+                  pl={6}
+                  borderRadius="md"
+                  _hover={{ bg: '#4caf50', color: 'white' }}
+                >
+                  - Resturant Transaction
+                </Flex>
+              </RouterLink>
+              <RouterLink to="/daily-transaction" style={{ textDecoration: 'none' }}>
+                <Flex
+                  alignItems="center"
+                  mb={2}
+                  fontWeight={activeLink === '/daily-transaction' ? 'bold' : 'normal'}
+                  color={activeLink === '/daily-transaction' ? 'white' : 'black'}
+                  bg={activeLink === '/daily-transaction' ? '#4caf50' : 'transparent'}
+                  p={2}
+                  pl={6}
+                  borderRadius="md"
+                  _hover={{ bg: '#4caf50', color: 'white' }}
+                >
+                  - Drivers Transaction
+                </Flex>
+              </RouterLink>
+              <RouterLink to='/daily-transaction'style={{ textDecoration: 'none' }}>
+                <Flex
+                  alignItems="center"
+                  mb={2}
+                  fontWeight={activeLink === '/daily-transaction' ? 'bold' : 'normal'}
+                  color={activeLink ==='/daily-transaction' ? 'white' : 'black'}
+                  bg={activeLink === '/daily-transaction' ? '#4caf50' : 'transparent'}
+                  p={2}
+                  pl={6}
+                  borderRadius="md"
+                  _hover={{ bg: '#4caf50', color: 'white' }}
+                >
+                  - Total Daily Transaction
+                </Flex>
+              </RouterLink>
+            </AccordionPanel>
+            
           </AccordionItem>
         </Accordion>
         <RouterLink to="/ordersHistory" style={{ textDecoration: 'none' }}>
@@ -261,21 +327,6 @@ const Sidebar = () => {
           >
             <Icon as={FiClipboard} mr={2} />
             ORDER HISTORY
-          </Flex>
-        </RouterLink>
-        <RouterLink to="/faq" style={{ textDecoration: 'none' }}>
-          <Flex
-            alignItems="center"
-            mb={4}
-            fontWeight={activeLink === '/faq' ? 'bold' : 'normal'}
-            color={activeLink === '/faq' ? 'white' : 'black'}
-            bg={activeLink === '/faq' ? '#4caf50' : 'transparent'}
-            p={2}
-            borderRadius="md"
-            _hover={{ bg: '#4caf50', color: 'white' }}
-          >
-            <Icon as={FiHelpCircle} mr={2} />
-            FAQ
           </Flex>
         </RouterLink>
         <RouterLink to="/settings" style={{ textDecoration: 'none' }}>
