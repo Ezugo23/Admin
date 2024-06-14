@@ -280,13 +280,13 @@ const Sidebar = () => {
                   - Resturant Transaction
                 </Flex>
               </RouterLink>
-              <RouterLink to="/drivers/list" style={{ textDecoration: 'none' }}>
+              <RouterLink to="/daily-transaction" style={{ textDecoration: 'none' }}>
                 <Flex
                   alignItems="center"
                   mb={2}
-                  fontWeight={activeLink === '/drivers/list' ? 'bold' : 'normal'}
-                  color={activeLink === '/drivers/list' ? 'white' : 'black'}
-                  bg={activeLink === '/drivers/list' ? '#4caf50' : 'transparent'}
+                  fontWeight={activeLink === '/daily-transaction' ? 'bold' : 'normal'}
+                  color={activeLink === '/daily-transaction' ? 'white' : 'black'}
+                  bg={activeLink === '/daily-transaction' ? '#4caf50' : 'transparent'}
                   p={2}
                   pl={6}
                   borderRadius="md"
@@ -295,13 +295,13 @@ const Sidebar = () => {
                   - Drivers Transaction
                 </Flex>
               </RouterLink>
-              <RouterLink to="/drivers/oweamount" style={{ textDecoration: 'none' }}>
+              <RouterLink to='/daily-transaction'style={{ textDecoration: 'none' }}>
                 <Flex
                   alignItems="center"
                   mb={2}
-                  fontWeight={activeLink === '/drivers/oweamount' ? 'bold' : 'normal'}
-                  color={activeLink === '/drivers/oweamount' ? 'white' : 'black'}
-                  bg={activeLink === '/drivers/oweamount' ? '#4caf50' : 'transparent'}
+                  fontWeight={activeLink === '/daily-transaction' ? 'bold' : 'normal'}
+                  color={activeLink ==='/daily-transaction' ? 'white' : 'black'}
+                  bg={activeLink === '/daily-transaction' ? '#4caf50' : 'transparent'}
                   p={2}
                   pl={6}
                   borderRadius="md"
