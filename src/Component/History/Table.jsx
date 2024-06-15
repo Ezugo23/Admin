@@ -97,7 +97,7 @@ const Table = ({ filter }) => {
                   <td dangerouslySetInnerHTML={{ __html: item.client.replace(/\n/g, '<br />') }}></td>
                   <td dangerouslySetInnerHTML={{ __html: item.seller.replace(/\n/g, '<br />') }}></td>
                   <td className="invoice-column">
-                    <Link to={`receipt/${item.id}`} className="invoice-link">{item.invoice}</Link>
+                    <Link to={`receipt/${item.id}`} className="link">{item.invoice}</Link>
                   </td>
                   <td>
                     <div className="flex flex-col items-start">
