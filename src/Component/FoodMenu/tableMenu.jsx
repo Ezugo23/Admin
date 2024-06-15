@@ -76,7 +76,7 @@ export default function TableMenu() {
           <table className="table min-w-full">
             <thead className="table-header">
               <tr>
-                <th>ID</th>
+                <th>S/N</th>
                 <th>SELLER NAME</th>
                 <th>SWIFTBALANCE</th>
                 <th>TOTAL ORDERS</th>
@@ -87,11 +87,12 @@ export default function TableMenu() {
               </tr>
             </thead>
             <tbody>
-              {currentData.map((item) => {
+              {currentData.map((item, index) => {
                 const hasData = item.totalOrders > 0 || item.totalItems > 0; // Check if the restaurant has orders or items
+                const serialNumber = (currentPage - 1) * itemsPerPage + index + 1; // Calculate the serial number
                 return (
                   <tr key={item._id} className="table-row cursor-pointer" onClick={() => handleRowClick(item._id, hasData)}>
-                    <td>{item._id}</td>
+                    <td>{serialNumber}</td>
                     <td>
                       <strong>{item.restaurantName}</strong>
                       <br />
