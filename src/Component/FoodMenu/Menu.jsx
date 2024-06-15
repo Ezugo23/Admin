@@ -7,6 +7,7 @@ import { Image } from '@chakra-ui/react';
 export default function Menu() {
   const { id } = useParams();
   const [restaurant, setRestaurant] = useState(null);
+  const [wallet, setWallet] = useState(null);
 
   useEffect(() => {
     const fetchRestaurant = async () => {
@@ -14,6 +15,7 @@ export default function Menu() {
         const response = await axios.get(`https://swifdropp.onrender.com/api/v1/restaurant/byId/${id}`);
         console.log('Restaurant data:', response.data);  // Logging data to debug
         setRestaurant(response.data.restaurant);
+        setWallet(response.data.wallet);
       } catch (error) {
         console.error('Error fetching restaurant data:', error);
       }
@@ -22,7 +24,7 @@ export default function Menu() {
     fetchRestaurant();
   }, [id]);
 
-  if (!restaurant) {
+  if (!restaurant || !wallet) {
     return <div>Loading...</div>;
   }
 
@@ -107,7 +109,7 @@ export default function Menu() {
             </li>
           </ul>
           <hr className="mt-10" />
-          <div className="flex justify-between pt-0 pb-4 space-x-8">
+          <div className="flex justify-between pt-0 pb-4 space-x-5">
             <div className="flex flex-col items-center justify-center text-center">
               <span className="font-bold text-primary">{restaurant.totalItems}</span>
               <span>Items</span>
@@ -118,12 +120,12 @@ export default function Menu() {
             </div>
             <div className="flex flex-col items-center justify-center text-center">
               <span className="font-bold text-red-600">
-                {restaurant.wallet && restaurant.wallet.availableBalance ? restaurant.wallet.availableBalance : 'N/A'}
+              ₦{wallet.availableBalance ? wallet.availableBalance : 'N/A'}
               </span>
               <span>Balance</span>
             </div>
             <div className="flex flex-col items-center justify-center text-center">
-              <span className="font-bold text-green-600">{restaurant.totalPaid}</span>
+              <span className="font-bold text-green-600"> ₦{restaurant.totalPaid}</span>
               <span>Paid</span>
             </div>
           </div>

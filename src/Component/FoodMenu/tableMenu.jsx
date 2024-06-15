@@ -76,11 +76,11 @@ export default function TableMenu() {
           <table className="table min-w-full">
             <thead className="table-header">
               <tr>
-                <th>ID</th>
+               
                 <th>SELLER NAME</th>
                 <th>SWIFTBALANCE</th>
                 <th>TOTAL ORDERS</th>
-                <th>WITHDRAW</th>
+                <th>AVAILABLE BALANCE</th>
                 <th>RATING</th>
                 <th>STATUS</th>
                 <th>ACTION</th>
@@ -91,15 +91,15 @@ export default function TableMenu() {
                 const hasData = item.totalOrders > 0 || item.totalItems > 0; // Check if the restaurant has orders or items
                 return (
                   <tr key={item._id} className="table-row cursor-pointer" onClick={() => handleRowClick(item._id, hasData)}>
-                    <td>{item._id}</td>
+                    {/* <td>{item._id}</td> */}
                     <td>
                       <strong>{item.restaurantName}</strong>
                       <br />
                       {item.address}
                     </td>
-                    <td>${item.wallet.availableBalance}</td>
+                    <td>₦{item.wallet.swiftWallet}</td>
                     <td>{item.totalOrders}</td>
-                    <td>${item.wallet.swiftWallet}</td>
+                    <td>₦{item.wallet.availableBalance}</td>
                     <td>{item.averageRating}</td>
                     <td>
                       <button className="w-[80px] h-[25px] font-roboto font-normal text-[12px] leading-[14.06px] text-center text-[#4DB6AC] border border-[#4DB6AC] rounded-md active:bg-[#4DB6AC]">

@@ -48,24 +48,25 @@ const Order = () => {
     <>
       <div className="p-4 pb-0" style={{ marginTop: '-30px' }}>
         <p className="text-2xl font-bold" style={{ color: 'black' }}>All Orders</p>
-        <div className="grid mt-3 grid-cols-6 gap-4">
+        <div className="grid mt-3 grid-cols-7 gap-4">
           {[
+            { key: 'all', text: 'All Orders', color: '#000000', status: '' },
             { key: 'pending', text: 'Pending orders', color: '#4CAF50', status: 'PENDING' },
             { key: 'confirmedByRestaurant', text: 'Confirmed by Restaurant', color: '#348238', status: 'CONFIRMED' },
             { key: 'acceptedByRider', text: 'Accepted by Rider', color: '#246226', status: 'PICK UP SOON' },
-            { key: 'onTheWay', text: 'On the Way', color: '#507A52', status: 'ON THE WAY' },
+            { key: 'onTheWay', text: 'Orders on transit', color: '#507A52', status: 'ON THE WAY' },
             { key: 'delivered', text: 'Delivered', color: '#4CAF50', status: 'DELIVERED' },
             { key: 'declined', text: 'Declined', color: '#FF6347', status: 'DECLINED' },
           ].map((data, index) => (
             <div
               key={index}
-              className="p-6 h-38 w-25 text-black flex flex-col justify-between items-start rounded-xl shadow-lg cursor-pointer"
+              className="p-4 h-35 w-25 text-black flex flex-col justify-between items-start rounded-xl shadow-lg cursor-pointer"
               style={{ backgroundColor: 'white', borderColor: data.color, borderWidth: 1, marginBottom: '10px' }}
               onClick={() => handleBoxClick(data.status)}
             >
               <div className="flex flex-col items-start">
-                <p className="text-xl font-bold" style={{ color: 'black' }}>{overview[data.key]}</p>
-                <p className="mt-4 text-xs font-bold" style={{ color: 'green' }}>{data.text}</p>
+                <p className="text-xl font-bold" style={{ color: 'black' }}>{data.key !== 'all' ? overview[data.key] : ' '}</p>
+                <p className="mt-4 text-xs font-bold" style={{ color: data.color }}>{data.text}</p>
               </div>
             </div>
           ))}
