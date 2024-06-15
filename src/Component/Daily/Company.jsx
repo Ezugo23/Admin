@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import Modal from './modal'; // Import the Modal component
 
-export default function Comapany() {
+export default function Company() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +37,14 @@ export default function Comapany() {
     }
   };
 
+  const handleApproveClick = () => {
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
   const filteredData = data.filter((item) =>
     item.restaurantName.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -47,19 +57,34 @@ export default function Comapany() {
       <div className="main-container">
         <div className="entries-container mb-4">
           <div>
-          <label>
-            Show
-            <select className="ml-2" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-            entries
-          </label>
+            <label>
+              Show
+              <select className="ml-2" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+              entries
+            </label>
           </div>
           <div className="search-container ml-auto">
-           <button style={{width:"145px", height:'30px', borderRadius:'10px', backgroundColor:'#4CAF50', color:"white", fontFamily:'Open Sans', fontSize:'16px', fontWeight:'600', lineHeight:'21.79px'}}>Pay</button>
+            <button
+              onClick={handleApproveClick}
+              style={{
+                width: "145px",
+                height: '30px',
+                borderRadius: '10px',
+                backgroundColor: '#4CAF50',
+                color: "white",
+                fontFamily: 'Open Sans',
+                fontSize: '16px',
+                fontWeight: '600',
+                lineHeight: '21.79px',
+              }}
+            >
+              Approve
+            </button>
           </div>
         </div>
         <div className="table-container">
@@ -139,6 +164,7 @@ export default function Comapany() {
           </div>
         </div>
       </div>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 }
