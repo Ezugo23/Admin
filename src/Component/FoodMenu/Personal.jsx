@@ -121,7 +121,7 @@ export default function Personal() {
                     <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" id="uploadLogoInput" />
                     <button
                       type="button"
-                      className="bg-red-500 text-white font-bold py-2 px-4 rounded"
+                      className="bg-green-700 text-white font-bold py-2 px-4 rounded"
                       onClick={() => document.getElementById('uploadLogoInput').click()}
                     >
                       Change Logo
