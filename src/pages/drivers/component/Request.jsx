@@ -45,7 +45,7 @@ const Request = () => {
 
     const timeoutId = setTimeout(() => {
       setLoading(false);
-    }, 60000);
+    }, 70000);
 
     return () => clearTimeout(timeoutId);
   }, []);
