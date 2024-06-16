@@ -42,6 +42,12 @@ const Request = () => {
 
   useEffect(() => {
     fetchOrders();
+
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 60000);
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
   const fetchOrders = async () => {
