@@ -26,7 +26,7 @@ import {
 
 const SidebarLink = ({ to, icon, children }) => {
   const { pathname } = useLocation();
-  const isActive = pathname === to;
+  const isActive = pathname === `/driversprofile/${to}`;
   const activeLinkStyles = {
     bg: '#40C4FF',
     color: 'white',
@@ -36,30 +36,28 @@ const SidebarLink = ({ to, icon, children }) => {
   return (
     <Link
       as={RouterLink}
-      to={to}
+      to={`/driversprofile/${to}`}
       display="flex"
       alignItems="center"
-      px="4"
-      py="2"
+      p="2"
       borderRadius="md"
       _hover={{
         textDecoration: 'none',
         ...activeLinkStyles,
       }}
-      {...(isActive ? activeLinkStyles : {})}
+      sx={isActive ? activeLinkStyles : {}}
     >
       {icon}
       <Box ml="3">{children}</Box>
     </Link>
   );
 };
-
 const DriverProfileSidebar = () => {
   return (
     <Box
       as="nav"
       pos="relative"
-      w="60"
+      minW={'100'}
       h="full"
       bg={useColorModeValue('white', 'gray.900')}
       boxShadow="md"
@@ -82,7 +80,7 @@ const DriverProfileSidebar = () => {
         />
       </Flex>
       <Divider mb="6" />
-      <VStack spacing="3" align="stretch">
+      <VStack spacing="1" align="stretch">
         <SidebarLink to="personal" icon={<FaUser />}>
           Personal Information
         </SidebarLink>
