@@ -6,12 +6,29 @@ import '../../style/user.css';
 export default function Personal() {
   const { id } = useParams();
   const [restaurant, setRestaurant] = useState(null);
+  const [formData, setFormData] = useState({
+    firstname: '',
+    lastname: '',
+    phoneNumber: '',
+    email: '',
+    image: '',
+    logo: ''
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`https://swifdropp.onrender.com/api/v1/restaurant/byId/${id}`);
-        setRestaurant(response.data.restaurant);  // Adjust the response structure if necessary
+        const fetchedRestaurant = response.data.restaurant;
+        setRestaurant(fetchedRestaurant);
+        setFormData({
+          firstname: fetchedRestaurant.firstname,
+          lastname: fetchedRestaurant.lastname,
+          phoneNumber: fetchedRestaurant.phoneNumber,
+          email: fetchedRestaurant.email,
+          image: fetchedRestaurant.image,
+          logo: fetchedRestaurant.logo
+        });
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -20,6 +37,58 @@ export default function Personal() {
     fetchData();
   }, [id]);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.patch(`https://swifdropp.onrender.com/api/v1/restaurant/${id}`, formData);
+      setRestaurant(response.data.restaurant);
+    } catch (error) {
+      console.error('Error updating data:', error);
+    }
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+      const response = await axios.patch(`https://swifdropp.onrender.com/api/v1/restaurant/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      setRestaurant(response.data.restaurant);
+      setFormData((prevData) => ({ ...prevData, image: response.data.restaurant.image }));
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
+
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('logo', file);
+    try {
+      const response = await axios.patch(`https://swifdropp.onrender.com/api/v1/restaurant/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      setRestaurant(response.data.restaurant);
+      setFormData((prevData) => ({ ...prevData, logo: response.data.restaurant.logo }));
+    } catch (error) {
+      console.error('Error uploading logo:', error);
+    }
+  };
+
   if (!restaurant) {
     return <div>Loading...</div>;
   }
@@ -27,7 +96,7 @@ export default function Personal() {
   return (
     <div className="flex justify-center" style={{ marginTop: '2%', marginLeft: '20px' }}>
       <div className="w-[100%] max-w-4xl">
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="border-none bg-white shadow-md">
             <div className="bg-white p-4 border-b border-gray-200">Restaurant Information</div>
             <div className="p-4">
@@ -38,24 +107,39 @@ export default function Personal() {
                   </label>
                   <div className="my-10 p-10 flex flex-col items-center" style={{ marginTop: '-30px' }}>
                     <img src={restaurant.image} className="w-50 h-40 mb-4" alt="Upload" />
-                    <button className="bg-blue-500 text-white font-bold py-2 px-4 rounded">Change Photo</button>
+                    <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" id="uploadImageInput" />
+                    <button
+                      type="button"
+                      className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => document.getElementById('uploadImageInput').click()}
+                    >
+                      Change Photo
+                    </button>
                   </div>
                   <div className="flex flex-col items-center" style={{ marginTop: '-40px' }}>
                     <img src={restaurant.logo} className="w-[272px] h-[114px] mb-4" alt="Upload" />
-                    <button className="bg-blue-500 text-white font-bold py-2 px-4 rounded">Change Photo</button>
+                    <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" id="uploadLogoInput" />
+                    <button
+                      type="button"
+                      className="bg-green-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => document.getElementById('uploadLogoInput').click()}
+                    >
+                      Change Logo
+                    </button>
                   </div>
                 </div>
                 <div className="col-span-1 md:col-span-1" style={{ marginTop: '-2px' }}>
                   <div className="grid grid-cols-1">
                     <div className="col-span-1">
-                      <label htmlFor="firstName" className="block mb-2">First Name</label>
+                      <label htmlFor="firstname" className="block mb-2">First Name</label>
                       <input
-                        id="firstName"
+                        id="firstname"
                         type="text"
                         className="input border border-gray-300 p-2 rounded"
-                        name="firstName"
+                        name="firstname"
                         placeholder="Enter First Name"
-                        value={restaurant.firstname}
+                        value={formData.firstname}
+                        onChange={handleChange}
                         style={{ width: '80%' }}
                       />
                     </div>
@@ -67,7 +151,8 @@ export default function Personal() {
                         className="input border border-gray-300 p-2 rounded w-full"
                         name="lastname"
                         placeholder="Enter Last Name"
-                        value={restaurant.lastname}
+                        value={formData.lastname}
+                        onChange={handleChange}
                         style={{ width: '80%' }}
                       />
                     </div>
@@ -77,9 +162,10 @@ export default function Personal() {
                         id="phonenumber"
                         type="number"
                         className="input border border-gray-300 p-2 rounded w-full"
-                        name="phonenumber"
+                        name="phoneNumber"
                         placeholder="Enter Phone Number"
-                        value={restaurant.phoneNumber}
+                        value={formData.phoneNumber}
+                        onChange={handleChange}
                         style={{ width: '80%' }}
                       />
                     </div>
@@ -91,7 +177,8 @@ export default function Personal() {
                         className="input border border-gray-300 p-2 rounded w-full"
                         name="email"
                         placeholder="Enter Email Address"
-                        value={restaurant.email}
+                        value={formData.email}
+                        onChange={handleChange}
                         style={{ width: '80%' }}
                       />
                     </div>
