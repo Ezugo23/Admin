@@ -278,7 +278,7 @@ const DriversList = () => {
                   key={index}
                   textAlign="center"
                   bg={index % 2 === 0 ? '#f9fafc' : 'white'}
-                  onClick={() => navigate('/driversprofile')}
+                  // onClick={() => navigate('/driversprofile')}
                 >
                   <Td
                     fontSize="0.675rem"
@@ -294,6 +294,7 @@ const DriversList = () => {
                       alt="avatar"
                       fill
                       borderRadius={'full'}
+                      onClick={() => navigate('/driversprofile')}
                       boxSize="40px"
                     />
                   </Td>
