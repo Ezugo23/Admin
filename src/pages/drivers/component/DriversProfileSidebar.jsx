@@ -8,6 +8,7 @@ import {
   Link,
   VStack,
   useColorModeValue,
+  Image,
 } from '@chakra-ui/react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import {
@@ -24,9 +25,9 @@ import {
   FaTruck,
 } from 'react-icons/fa';
 
-const SidebarLink = ({ to, icon, children }) => {
+const SidebarLink = ({ to, icon, driverId, children }) => {
   const { pathname } = useLocation();
-  const isActive = pathname === `/driversprofile/${to}`;
+  const isActive = pathname === `/driversprofile/${driverId}/${to}`;
   const activeLinkStyles = {
     bg: '#40C4FF',
     color: 'white',
@@ -36,7 +37,7 @@ const SidebarLink = ({ to, icon, children }) => {
   return (
     <Link
       as={RouterLink}
-      to={`/driversprofile/${to}`}
+      to={`/driversprofile/${driverId}/${to}`}
       display="flex"
       alignItems="center"
       p="2"
@@ -52,25 +53,25 @@ const SidebarLink = ({ to, icon, children }) => {
     </Link>
   );
 };
-const DriverProfileSidebar = () => {
+
+const DriverProfileSidebar = ({ driverId, driverData }) => {
   return (
     <Box
       as="nav"
       pos="relative"
-      minW={'100'}
+      minW="100"
       h="full"
       bg={useColorModeValue('white', 'gray.900')}
       boxShadow="md"
+      borderRadius="lg"
       p="5"
     >
       <Flex alignItems="center" justifyContent="space-between" mb="6">
         <Flex alignItems="center">
-          <Avatar name="Driver Name" src="/path/to/avatar.jpg" />
+          <Avatar src={driverData.image} size="md" />
           <Box ml="3">
-            <Box fontWeight="bold">Driver Name</Box>
-            <Box fontSize="sm" color="gray.500">
-              Driver Role
-            </Box>
+            <Box fontWeight="bold">{driverData.firstname} </Box>
+            <Box fontSize="bold">{driverData.lastname}</Box>
           </Box>
         </Flex>
         <IconButton
@@ -81,35 +82,51 @@ const DriverProfileSidebar = () => {
       </Flex>
       <Divider mb="6" />
       <VStack spacing="1" align="stretch">
-        <SidebarLink to="personal" icon={<FaUser />}>
+        <SidebarLink to="personal" icon={<FaUser />} driverId={driverId}>
           Personal Information
         </SidebarLink>
-        <SidebarLink to="change-password" icon={<FaLock />}>
+        <SidebarLink to="change-password" icon={<FaLock />} driverId={driverId}>
           Change Password
         </SidebarLink>
-        <SidebarLink to="company-info" icon={<FaBuilding />}>
+        <SidebarLink
+          to="company-info"
+          icon={<FaBuilding />}
+          driverId={driverId}
+        >
           Company Information
         </SidebarLink>
-        <SidebarLink to="license" icon={<FaIdCard />}>
+        {/* <SidebarLink to="license" icon={<FaIdCard />} driverId={driverId}>
           Driver License
         </SidebarLink>
-        <SidebarLink to="vehicle" icon={<FaCar />}>
+        <SidebarLink to="vehicle" icon={<FaCar />} driverId={driverId}>
           Registered Vehicle
         </SidebarLink>
-        <SidebarLink to="schedule" icon={<FaCalendar />}>
+        <SidebarLink to="schedule" icon={<FaCalendar />} driverId={driverId}>
           Schedule
-        </SidebarLink>
-        <SidebarLink to="payment-method" icon={<FaMoneyCheckAlt />}>
+        </SidebarLink> */}
+        <SidebarLink
+          to="payment-method"
+          icon={<FaMoneyCheckAlt />}
+          driverId={driverId}
+        >
           Payment Method
         </SidebarLink>
-        <SidebarLink to="payout-management" icon={<FaCreditCard />}>
+        <SidebarLink
+          to="payout-management"
+          icon={<FaCreditCard />}
+          driverId={driverId}
+        >
           Payout Management
         </SidebarLink>
-        <SidebarLink to="delivery" icon={<FaTruck />}>
-          Delivery
+        <SidebarLink to="delivery" icon={<FaTruck />} driverId={driverId}>
+          Delivery Request History
         </SidebarLink>
-        <SidebarLink to="request-history" icon={<FaHistory />}>
-          Request History
+        <SidebarLink
+          to="request-history"
+          icon={<FaHistory />}
+          driverId={driverId}
+        >
+          Dispute
         </SidebarLink>
       </VStack>
     </Box>

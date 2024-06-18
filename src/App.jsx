@@ -96,7 +96,10 @@ function App() {
                     path="/ordersHistory"
                     element={<History socket={socket} />}
                   />
-                  <Route path="/users/admin" element={<Users socket={socket} />} />
+                  <Route
+                    path="/users/admin"
+                    element={<Users socket={socket} />}
+                  />
                   <Route
                     path="/users/admin"
                     element={<Admin socket={socket} />}
@@ -110,7 +113,7 @@ function App() {
                     element={<Drivers socket={socket} />}
                   />
                   <Route
-                    path="/driversprofile/*"
+                    path="/driversprofile/:driverId/*"
                     element={<DriversProfile socket={socket} />}
                   />
                   <Route
