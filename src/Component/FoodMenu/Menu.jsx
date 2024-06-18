@@ -7,12 +7,15 @@ import { Image } from '@chakra-ui/react';
 export default function Menu() {
   const { id } = useParams();
   const [restaurant, setRestaurant] = useState(null);
+  const [wallet, setWallet] = useState(null);
 
   useEffect(() => {
     const fetchRestaurant = async () => {
       try {
         const response = await axios.get(`https://swifdropp.onrender.com/api/v1/restaurant/byId/${id}`);
+        console.log('Restaurant data:', response.data);  // Logging data to debug
         setRestaurant(response.data.restaurant);
+        setWallet(response.data.wallet);
       } catch (error) {
         console.error('Error fetching restaurant data:', error);
       }
@@ -21,7 +24,7 @@ export default function Menu() {
     fetchRestaurant();
   }, [id]);
 
-  if (!restaurant) {
+  if (!restaurant || !wallet) {
     return <div>Loading...</div>;
   }
 
@@ -92,12 +95,6 @@ export default function Menu() {
                 <span className="pl-2">Order (sale) History</span>
               </Link>
             </li>
-            {/* <li className="my-2">
-              <Link to="payout-method" className="flex items-center p-2 rounded hover:bg-blue-200">
-                <Image src="/credit-card.png" alt="Edit" />
-                <span className="pl-2">Payout Method</span>
-              </Link>
-            </li> */}
             <li className="my-2">
               <Link to={`payout-management/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
                 <Image src="/wallet-2-line.png" alt="Edit" />
@@ -112,21 +109,23 @@ export default function Menu() {
             </li>
           </ul>
           <hr className="mt-10" />
-          <div className="flex justify-between pt-0 pb-4 space-x-3">
+          <div className="flex justify-between pt-0 pb-4 space-x-5">
             <div className="flex flex-col items-center justify-center text-center">
-              <span className="font-bold text-primary">25</span>
+              <span className="font-bold text-primary">{restaurant.totalItems}</span>
               <span>Items</span>
             </div>
             <div className="flex flex-col items-center justify-center text-center">
-              <span className="font-bold text-primary">546</span>
+              <span className="font-bold text-primary">{restaurant.totalOrders}</span>
               <span>Orders</span>
             </div>
             <div className="flex flex-col items-center justify-center text-center">
-              <span className="font-bold text-red-600">$3,450</span>
+              <span className="font-bold text-red-600">
+              ₦{wallet.availableBalance ? wallet.availableBalance : 'N/A'}
+              </span>
               <span>Balance</span>
             </div>
             <div className="flex flex-col items-center justify-center text-center">
-              <span className="font-bold text-green-600">$9,250</span>
+              <span className="font-bold text-green-600"> ₦{restaurant.totalPaid}</span>
               <span>Paid</span>
             </div>
           </div>

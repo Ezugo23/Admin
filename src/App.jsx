@@ -7,7 +7,7 @@ import TopNav from './Component/Topnav';
 import Settings from './pages/settings/Settings';
 import Home from './pages/home/Home';
 import History from './pages/OrdersHistory/History';
-import Faq from './pages/faq/Faq';
+import Daily from './pages/faq/Daily';
 import Users from './pages/users/Users';
 import Admin from './pages/users/administrators/Admin';
 import AllUsers from './pages/users/allUsers/AllUsers';
@@ -93,7 +93,7 @@ function App() {
                     element={<SellersList socket={socket} />}
                   />
                   <Route
-                    path="/ordersHistory"
+                    path="/ordersHistory/*"
                     element={<History socket={socket} />}
                   />
                   <Route
@@ -133,7 +133,7 @@ function App() {
                     path="/drivers/oweamount"
                     element={<OweAmount socket={socket} />}
                   />
-                  <Route path="/faq" element={<Faq socket={socket} />} />
+                   <Route path="/daily-transaction/*" element={<Daily socket={socket} />} />
                   <Route
                     path="/settings"
                     element={<Settings socket={socket} />}

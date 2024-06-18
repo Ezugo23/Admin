@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import Modal from './modal'; // Import the Modal component
 
-export default function TableMenu() {
+export default function Company() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +37,14 @@ export default function TableMenu() {
     }
   };
 
+  const handleApproveClick = () => {
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
   const filteredData = data.filter((item) =>
     item.restaurantName.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -44,63 +54,67 @@ export default function TableMenu() {
 
   return (
     <div className="contain">
-      <div className="header">
-        <h2 className="header-title">Food Sellers List</h2>
-        <span className="add-admin-btn">
-          + Add New Restaurant
-        </span>
-      </div>
       <div className="main-container">
         <div className="entries-container mb-4">
-          <label>
-            Show
-            <select className="ml-2" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-            entries
-          </label>
+          <div>
+            <label>
+              Show
+              <select className="ml-2" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+              entries
+            </label>
+          </div>
           <div className="search-container ml-auto">
-            <label htmlFor="search">Search:</label>
-            <input
-              id="search"
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <button
+              onClick={handleApproveClick}
+              style={{
+                width: "145px",
+                height: '30px',
+                borderRadius: '10px',
+                backgroundColor: '#4CAF50',
+                color: "white",
+                fontFamily: 'Open Sans',
+                fontSize: '16px',
+                fontWeight: '600',
+                lineHeight: '21.79px',
+              }}
+            >
+              Approve
+            </button>
           </div>
         </div>
         <div className="table-container">
           <table className="table min-w-full">
             <thead className="table-header">
               <tr>
-                <th>S/N</th>
+                <th>ID</th>
                 <th>SELLER NAME</th>
                 <th>SWIFTBALANCE</th>
-                <th>TOTAL ORDERS</th>
-                <th>AVAILABLE BALANCE</th>
+                <th>TOTAL ORDER</th>
+                <th>WITHDRAW</th>
                 <th>RATING</th>
                 <th>STATUS</th>
                 <th>ACTION</th>
               </tr>
             </thead>
             <tbody>
-              {currentData.map((item, index) => {
+              {currentData.map((item) => {
                 const hasData = item.totalOrders > 0 || item.totalItems > 0; // Check if the restaurant has orders or items
-                const serialNumber = (currentPage - 1) * itemsPerPage + index + 1; // Calculate the serial number
                 return (
                   <tr key={item._id} className="table-row cursor-pointer" onClick={() => handleRowClick(item._id, hasData)}>
-                    <td>{serialNumber}</td>
+                    <td>{item._id}</td>
                     <td>
                       <strong>{item.restaurantName}</strong>
                       <br />
                       {item.address}
                     </td>
-                    <td>₦{item.wallet.swiftWallet}</td>
+                    <td>${item.wallet.availableBalance}</td>
                     <td>{item.totalOrders}</td>
-                    <td>₦{item.wallet.availableBalance}</td>
+                    <td>${item.wallet.swiftWallet}</td>
                     <td>{item.averageRating}</td>
                     <td>
                       <button className="w-[80px] h-[25px] font-roboto font-normal text-[12px] leading-[14.06px] text-center text-[#4DB6AC] border border-[#4DB6AC] rounded-md active:bg-[#4DB6AC]">
@@ -150,6 +164,7 @@ export default function TableMenu() {
           </div>
         </div>
       </div>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   );
 }
