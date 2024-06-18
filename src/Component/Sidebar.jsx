@@ -63,7 +63,7 @@ const Sidebar = () => {
       </HStack>
       <Divider mt={'4'} />
       <Flex direction="column" align="start" mt={'30px'} pl={'10px'}>
-        <RouterLink to="/" style={{ textDecoration: 'none' }}>
+        <RouterLink to="/Dashboard" style={{ textDecoration: 'none' }}>
           <Flex
             alignItems="center"
             mb={4}

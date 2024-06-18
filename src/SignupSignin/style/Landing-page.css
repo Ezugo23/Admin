@@ -1,0 +1,21 @@
+.landing-page{
+    height: 90vh;
+}
+
+.landing-page-text{
+    width: 45rem;
+   
+}
+
+.landing-page img{
+    width: 30rem;
+}
+
+.landing-page-text h1{
+    font-family: 'Pacifico', cursive;
+    font-size: 3rem;
+}
+
+.landing-page-text p{
+    font-size: 24px;
+}
