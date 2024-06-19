@@ -23,14 +23,14 @@ const Order = () => {
           throw new Error('Failed to fetch order overview');
         }
         const data = await response.json();
-        const { PENDING, CONFIRMED, 'PICK UP SOON': acceptedByRider, 'ON THE WAY': onTheWay } = data.data;
+        const { PENDING, CONFIRMED, 'PICK UP SOON': acceptedByRider, 'ON THE WAY': onTheWay ,DELIVERED,DECLINED } = data.data;
         setOverview({
           pending: PENDING || 0,
           confirmedByRestaurant: CONFIRMED || 0,
           acceptedByRider: acceptedByRider || 0,
           onTheWay: onTheWay || 0,
-          delivered: 0,
-          declined: 0,
+          delivered: DELIVERED ,
+          declined: DECLINED || 0,
         });
       } catch (error) {
         console.error('Error fetching order overview:', error);

@@ -256,31 +256,45 @@ const Reciept = () => {
         <hr className="border-#979797" style={{ border: 'solid #979797 0.2px' }} />
         {order.orderItems.map((item, index) => (
           <div key={index} style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <p style={{
-                textAlign: 'center',
-                fontFamily: 'Roboto',
-                fontWeight: '400',
-                fontSize: '17px',
-                lineHeight: '16.58px',
-                color: 'black',
-                marginRight: '115px'
-              }}>{item.foodId.title}</p>
-              <p style={{
-                textAlign: 'center',
-                fontFamily: 'Roboto',
-                fontWeight: '700',
-                fontSize: '14px',
-                lineHeight: '16.58px',
-                color: 'black',
-                marginLeft: '20px'
-              }}>Side Items: <span>{item.additives.map(additive => additive.name).join(', ')}</span></p>
-            </div>
-            <div style={{ display: 'flex', gap: '85px', marginLeft:'10px' }}>
-              <p style={{ textAlign: 'center' }}>{item.quantity}</p>
-              <p style={{ textAlign: 'center' }}>{item.price}</p>
-              <p style={{ marginRight: '40px' }}>{item.quantity * item.price}</p>
-            </div>
+   <div>
+  <p style={{
+    textAlign: 'center',
+    fontFamily: 'Roboto',
+    fontWeight: '400',
+    fontSize: '17px',
+    lineHeight: '16.58px',
+    color: 'black',
+    marginRight: '115px'
+  }}>
+    {item.foodId.title} (₦{item.foodId.price}) 
+    {item.foodId.discount ? ` - Discounted Price: ₦${item.foodId.price * (1 - item.foodId.discount)}` : ''}
+  </p>
+  
+  <p style={{
+    textAlign: 'center',
+    fontFamily: 'Roboto',
+    fontWeight: '700',
+    fontSize: '14px',
+    lineHeight: '16.58px',
+    color: 'black',
+    marginLeft: '20px'
+  }}>Side Items: <span>{item.additives.map(additive => `${additive.name} (₦${additive.price})`).join(', ')}</span></p>
+
+</div>
+
+
+<div style={{ display: 'flex', gap: '85px', marginLeft: '10px' }}>
+  <p style={{ textAlign: 'center' }}>{item.quantity}</p>
+  <p style={{ textAlign: 'center' }}>
+      {item.foodId.price * (1 - item.foodId.discount || 0) + item.additives.reduce((total, additive) => total + additive.price, 0)}
+    </p>
+    <p style={{ marginRight: '40px' }}>
+      {item.quantity * (item.foodId.price * (1 - item.foodId.discount || 0) + item.additives.reduce((total, additive) => total + additive.price, 0))}
+    </p>
+</div>
+
+
+
           </div>
         ))}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: "50px" }}>
@@ -315,7 +329,7 @@ const Reciept = () => {
               <button
                 className="btn btn-danger"
                 onClick={handleCancelOrder}
-                disabled={order.orderStatus === 'CANCELLED' || cancelingOrder}
+                disabled={order.orderStatus === 'DECLINED' || cancelingOrder}
                 style={{
                   boxSizing: 'border-box',
                   width: '6rem',
@@ -339,7 +353,7 @@ const Reciept = () => {
               disabled={reassigningRider}
               style={{
                 boxSizing: 'border-box',
-                width: '6rem',
+                width: '8rem',
                 height: '2rem',
                 border: 'solid #FFC107 0.5px',
                 textAlign: 'center',
