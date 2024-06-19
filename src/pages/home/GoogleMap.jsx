@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { GoogleMap, LoadScript, Marker, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  DirectionsService,
+  DirectionsRenderer,
+} from '@react-google-maps/api';
 import { io } from 'socket.io-client';
 
 const states = {
-  "Abia": { lat: 5.532003, lng: 7.486002 },
-  "Delta": { lat: 5.7048, lng: 6.1361 },
-  "Kaduna": { lat: 10.5105, lng: 7.4165 },
-  "Kano": { lat: 12.0022, lng: 8.5919 },
-  "Katsina": { lat: 12.9843, lng: 7.6174 },
-  "Kwara": { lat: 8.9669, lng: 4.4248 },
-  "Lagos": { lat: 6.5244, lng: 3.3792 },
-  "Rivers": { lat: 4.8156, lng: 7.0498 },
+  Abia: { lat: 5.532003, lng: 7.486002 },
+  Delta: { lat: 5.7048, lng: 6.1361 },
+  Kaduna: { lat: 10.5105, lng: 7.4165 },
+  Kano: { lat: 12.0022, lng: 8.5919 },
+  Katsina: { lat: 12.9843, lng: 7.6174 },
+  Kwara: { lat: 8.9669, lng: 4.4248 },
+  Lagos: { lat: 6.5244, lng: 3.3792 },
+  Rivers: { lat: 4.8156, lng: 7.0498 },
 };
 
 const GoogleMapComponent = () => {
@@ -18,7 +24,7 @@ const GoogleMapComponent = () => {
   const [drivers, setDrivers] = useState([]);
   const [orders, setOrders] = useState([]);
   const [directions, setDirections] = useState([]);
-  const [center, setCenter] = useState({ lat: 9.0820, lng: 8.6753 });
+  const [center, setCenter] = useState({ lat: 9.082, lng: 8.6753 });
   const [selectedState, setSelectedState] = useState('');
 
   const mapStyles = {
@@ -35,7 +41,7 @@ const GoogleMapComponent = () => {
     url: 'https://maps.google.com/mapfiles/kml/shapes/cabs.png',
     scaledSize: window.google ? new window.google.maps.Size(20, 20) : undefined,
   };
-  
+
   const humanIcon = {
     url: 'https://maps.google.com/mapfiles/kml/shapes/man.png',
     scaledSize: window.google ? new window.google.maps.Size(20, 20) : undefined,
@@ -56,7 +62,9 @@ const GoogleMapComponent = () => {
       console.log('Driver location update received:', data);
 
       setDrivers((prevDrivers) => {
-        const updatedDrivers = prevDrivers.filter(driver => driver.driverId !== data.driverId);
+        const updatedDrivers = prevDrivers.filter(
+          (driver) => driver.driverId !== data.driverId
+        );
         updatedDrivers.push(data);
         console.log('Updated drivers:', updatedDrivers);
         return updatedDrivers;
@@ -72,7 +80,9 @@ const GoogleMapComponent = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('https://swifdropp.onrender.com/api/v1/orders/');
+        const response = await fetch(
+          'https://swifdropp.onrender.com/api/v1/orders/'
+        );
         const data = await response.json();
         setOrders(data);
       } catch (error) {
@@ -107,8 +117,12 @@ const GoogleMapComponent = () => {
       const DirectionsService = new window.google.maps.DirectionsService();
 
       orders.forEach((order) => {
-        if ((order.orderStatus === 'PENDING' || order.orderStatus === 'CONFIRMED') &&
-          order.deliveryAddress && order.restaurantId) {
+        if (
+          (order.orderStatus === 'PENDING' ||
+            order.orderStatus === 'CONFIRMED') &&
+          order.deliveryAddress &&
+          order.restaurantId
+        ) {
           const origin = {
             lat: order.restaurantId.latitude,
             lng: order.restaurantId.longitude,
@@ -144,28 +158,42 @@ const GoogleMapComponent = () => {
 
   const renderOrderMarkers = () => {
     return orders
-      .filter(order => order.orderStatus !== 'DELIVERED')
-      .map(order => {
+      .filter((order) => order.orderStatus !== 'DELIVERED')
+      .map((order) => {
         const { deliveryAddress, restaurantId, _id } = order;
 
         const markers = [];
 
-        if (deliveryAddress && typeof deliveryAddress.latitude === 'number' && typeof deliveryAddress.longitude === 'number') {
+        if (
+          deliveryAddress &&
+          typeof deliveryAddress.latitude === 'number' &&
+          typeof deliveryAddress.longitude === 'number'
+        ) {
           markers.push(
             <Marker
               key={`delivery-${_id}`}
-              position={{ lat: deliveryAddress.latitude, lng: deliveryAddress.longitude }}
+              position={{
+                lat: deliveryAddress.latitude,
+                lng: deliveryAddress.longitude,
+              }}
               title={`Order ID: ${order.orderId}`}
               icon={humanIcon}
             />
           );
         }
 
-        if (restaurantId && typeof restaurantId.latitude === 'number' && typeof restaurantId.longitude === 'number') {
+        if (
+          restaurantId &&
+          typeof restaurantId.latitude === 'number' &&
+          typeof restaurantId.longitude === 'number'
+        ) {
           markers.push(
             <Marker
               key={`restaurant-${_id}`}
-              position={{ lat: restaurantId.latitude, lng: restaurantId.longitude }}
+              position={{
+                lat: restaurantId.latitude,
+                lng: restaurantId.longitude,
+              }}
               title={`Restaurant: ${restaurantId.restaurantName}`}
               icon={shopIcon}
               onClick={() =>
@@ -205,7 +233,7 @@ const GoogleMapComponent = () => {
           options={{
             restriction: {
               latLngBounds: {
-                north: 13.8920,
+                north: 13.892,
                 south: 4.2722,
                 east: 14.6779,
                 west: 2.6769,
@@ -213,7 +241,7 @@ const GoogleMapComponent = () => {
               strictBounds: true,
             },
             minZoom: 6,
-            maxZoom: 15, 
+            maxZoom: 15,
           }}
         >
           {drivers.map((driver) => (
@@ -231,7 +259,7 @@ const GoogleMapComponent = () => {
               options={{
                 suppressMarkers: true,
                 polylineOptions: {
-                  strokeColor: "#FF0000",
+                  strokeColor: '#FF0000',
                   strokeOpacity: 0.7,
                   strokeWeight: 5,
                 },
@@ -245,4 +273,3 @@ const GoogleMapComponent = () => {
 };
 
 export default GoogleMapComponent;
-
