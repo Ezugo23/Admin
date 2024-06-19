@@ -87,7 +87,7 @@ export default function Login() {
                     <input type="checkbox" id="remember" className="mr-2" />
                     <label htmlFor="remember">Remember me</label>
                   </div>
-                  <Link to='/forgotpassword'>Forgot Password?</Link>
+                  <Link to=''>Forgot Password?</Link>
                 </div>
                 {error && <div className="text-red-500 mb-4">{error}</div>}
                 <div className="text-center">
