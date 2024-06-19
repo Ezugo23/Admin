@@ -33,7 +33,7 @@ const DriversList = () => {
   const { drivers, totalItems, pageSize, toggleAvailability } = useDrivers();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
-  const toast = useToast(); // Initialize useToast
+  const toast = useToast();
 
   const filteredDrivers = drivers.filter((driver) =>
     `${driver.firstname} ${driver.lastname}`
