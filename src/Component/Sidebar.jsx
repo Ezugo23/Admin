@@ -24,6 +24,8 @@ import {
   FiClipboard,
   FiHelpCircle,
   FiSettings,
+  FiDollarSign,
+  FiTrendingUp,
 } from 'react-icons/fi';
 import { RxDashboard } from 'react-icons/rx';
 import { FaFacebookF } from 'react-icons/fa6';
@@ -33,17 +35,16 @@ const Sidebar = () => {
   const location = useLocation();
   const activeLink = location.pathname;
 
-  // State to manage the "USERS" dropdown
+  // State to manage the dropdowns
   const [isUsersExpanded, setIsUsersExpanded] = useState(false);
+  const [isSellersExpanded, setIsSellersExpanded] = useState(false);
+  const [isDriversExpanded, setIsDriversExpanded] = useState(false);
+  const [isTransactionsExpanded, setIsTransactionsExpanded] = useState(false);
 
-  const handleUsersToggle = () => {
-    setIsUsersExpanded(!isUsersExpanded);
-  };
-  const [isSelleresExpanded, setIsSelleresExpanded] = useState(false);
-
-  const handleSellersToggle = () => {
-    setIsSelleresExpanded(!isSelleresExpanded);
-  };
+  const handleUsersToggle = () => setIsUsersExpanded(!isUsersExpanded);
+  const handleSellersToggle = () => setIsSellersExpanded(!isSellersExpanded);
+  const handleDriversToggle = () => setIsDriversExpanded(!isDriversExpanded);
+  const handleTransactionsToggle = () => setIsTransactionsExpanded(!isTransactionsExpanded);
 
   return (
     <Box
@@ -63,7 +64,7 @@ const Sidebar = () => {
       </HStack>
       <Divider mt={'4'} />
       <Flex direction="column" align="start" mt={'30px'} pl={'10px'}>
-        <RouterLink to="/" style={{ textDecoration: 'none' }}>
+        <RouterLink to="/Dashboard" style={{ textDecoration: 'none' }}>
           <Flex
             alignItems="center"
             mb={4}
@@ -144,33 +145,31 @@ const Sidebar = () => {
               </RouterLink>
             </AccordionPanel>
           </AccordionItem>
-          <AccordionItem isExpanded={isSelleresExpanded}>
-            {/* <RouterLink to="/foodsellers" style={{ textDecoration: 'none' }}> */}
-              <AccordionButton
-                display="flex"
-                alignItems="center"
-                mb={2}
-                fontWeight={activeLink === '/foodsellers' ? 'bold' : 'normal'}
-                color={activeLink === '/foodsellers' ? 'white' : 'black'}
-                bg={activeLink === '/foodsellers' ? '#4caf50' : 'transparent'}
-                p={2}
-                borderRadius="md"
-                _hover={{ bg: '#4caf50', color: 'white' }}
-                onClick={handleSellersToggle}
-              >
-                <Icon as={FiShoppingCart} mr={2} />
-                FOOD SELLERS
-                <AccordionIcon ml="auto" transform={isSelleresExpanded ? 'rotate(180deg)' : 'rotate(0deg)'} />
-              </AccordionButton>
-            {/* </RouterLink> */}
+          <AccordionItem isExpanded={isSellersExpanded}>
+            <AccordionButton
+              display="flex"
+              alignItems="center"
+              mb={2}
+              fontWeight={activeLink === '/foodsellers' ? 'bold' : 'normal'}
+              color={activeLink === '/foodsellers' ? 'white' : 'black'}
+              bg={activeLink === '/foodsellers' ? '#4caf50' : 'transparent'}
+              p={2}
+              borderRadius="md"
+              _hover={{ bg: '#4caf50', color: 'white' }}
+              onClick={handleSellersToggle}
+            >
+              <Icon as={FiShoppingCart} mr={2} />
+              FOOD SELLERS
+              <AccordionIcon ml="auto" transform={isSellersExpanded ? 'rotate(180deg)' : 'rotate(0deg)'} />
+            </AccordionButton>
             <AccordionPanel pb={4}>
               <RouterLink to="/foodsellers/" style={{ textDecoration: 'none' }}>
                 <Flex
                   alignItems="center"
                   mb={2}
-                  fontWeight={activeLink === '/foodsellers/list' ? 'bold' : 'normal'}
-                  color={activeLink === '/foodsellers/list' ? 'white' : 'black'}
-                  bg={activeLink === '/foodsellers/list' ? '#4caf50' : 'transparent'}
+                  fontWeight={activeLink === '/foodsellers/' ? 'bold' : 'normal'}
+                  color={activeLink === '/foodsellers/' ? 'white' : 'black'}
+                  bg={activeLink === '/foodsellers/' ? '#4caf50' : 'transparent'}
                   p={2}
                   pl={6}
                   borderRadius="md"
@@ -179,26 +178,55 @@ const Sidebar = () => {
                   - List
                 </Flex>
               </RouterLink>
+              <RouterLink to="/foodsellers/oweamount" style={{ textDecoration: 'none' }}>
+                <Flex
+                  alignItems="center"
+                  mb={2}
+                  fontWeight={activeLink === '/foodsellers/oweamount' ? 'bold' : 'normal'}
+                  color={activeLink === '/foodsellers/oweamount' ? 'white' : 'black'}
+                  bg={activeLink === '/foodsellers/oweamount' ? '#4caf50' : 'transparent'}
+                  p={2}
+                  pl={6}
+                  borderRadius="md"
+                  _hover={{ bg: '#4caf50', color: 'white' }}
+                >
+                  - Owe Amount
+                </Flex>
+              </RouterLink>
+              <RouterLink to="/foodsellers/swiftamount" style={{ textDecoration: 'none' }}>
+                <Flex
+                  alignItems="center"
+                  mb={2}
+                  fontWeight={activeLink === '/foodsellers/swiftamount' ? 'bold' : 'normal'}
+                  color={activeLink === '/foodsellers/swiftamount' ? 'white' : 'black'}
+                  bg={activeLink === '/foodsellers/swiftamount' ? '#4caf50' : 'transparent'}
+                  p={2}
+                  pl={6}
+                  borderRadius="md"
+                  _hover={{ bg: '#4caf50', color: 'white' }}
+                >
+                  - Swift Amount
+                </Flex>
+              </RouterLink>
             </AccordionPanel>
           </AccordionItem>
-          <AccordionItem>
-            <RouterLink to="/drivers/list" style={{ textDecoration: 'none' }}>
-              <AccordionButton
-                display="flex"
-                alignItems="center"
-                mb={2}
-                fontWeight={activeLink === '/drivers/list' ? 'bold' : 'normal'}
-                color={activeLink === '/drivers/list' ? 'white' : 'black'}
-                bg={activeLink === '/drivers/list' ? '#4caf50' : 'transparent'}
-                p={2}
-                borderRadius="md"
-                _hover={{ bg: '#4caf50', color: 'white' }}
-              >
-                <Icon as={FiTruck} mr={2} />
-                DRIVERS
-                <AccordionIcon ml="auto" />
-              </AccordionButton>
-            </RouterLink>
+          <AccordionItem isExpanded={isDriversExpanded}>
+            <AccordionButton
+              display="flex"
+              alignItems="center"
+              mb={2}
+              fontWeight={activeLink === '/drivers' ? 'bold' : 'normal'}
+              color={activeLink === '/drivers' ? 'white' : 'black'}
+              bg={activeLink === '/drivers' ? '#4caf50' : 'transparent'}
+              p={2}
+              borderRadius="md"
+              _hover={{ bg: '#4caf50', color: 'white' }}
+              onClick={handleDriversToggle}
+            >
+              <Icon as={FiTruck} mr={2} />
+              DRIVERS
+              <AccordionIcon ml="auto" transform={isDriversExpanded ? 'rotate(180deg)' : 'rotate(0deg)'} />
+            </AccordionButton>
             <AccordionPanel pb={4}>
               <RouterLink to="/drivers/settings" style={{ textDecoration: 'none' }}>
                 <Flex
@@ -246,47 +274,47 @@ const Sidebar = () => {
                 </Flex>
               </RouterLink>
             </AccordionPanel>
-            
           </AccordionItem>
-          <AccordionItem isExpanded={isSelleresExpanded}>
-              <AccordionButton
-                display="flex"
-                alignItems="center"
-                mb={2}
-                fontWeight={activeLink === '' ? 'bold' : 'normal'}
-                color={activeLink === '' ? 'white' : 'black'}
-                bg={activeLink === '' ? '#4caf50' : 'transparent'}
-                p={2}
-                borderRadius="md"
-                _hover={{ bg: '#4caf50', color: 'white' }}
-              >
-                <Icon as={FiTruck} mr={2} />
-                Daily Transaction
-                <AccordionIcon ml="auto" />
-              </AccordionButton>
+          <AccordionItem isExpanded={isTransactionsExpanded}>
+            <AccordionButton
+              display="flex"
+              alignItems="center"
+              mb={2}
+              fontWeight={activeLink === '/daily-transaction' ? 'bold' : 'normal'}
+              color={activeLink === '/daily-transaction' ? 'white' : 'black'}
+              bg={activeLink === '/daily-transaction' ? '#4caf50' : 'transparent'}
+              p={2}
+              borderRadius="md"
+              _hover={{ bg: '#4caf50', color: 'white' }}
+              onClick={handleTransactionsToggle}
+            >
+              <Icon as={FiDollarSign} mr={2} />
+              DAILY TRANSACTION
+              <AccordionIcon ml="auto" transform={isTransactionsExpanded ? 'rotate(180deg)' : 'rotate(0deg)'} />
+            </AccordionButton>
             <AccordionPanel pb={4}>
-              <RouterLink to="/daily-transaction" style={{ textDecoration: 'none' }}>
+              <RouterLink to="/daily-transaction/restaurant" style={{ textDecoration: 'none' }}>
                 <Flex
                   alignItems="center"
                   mb={2}
-                  fontWeight={activeLink === '/daily-transaction' ? 'bold' : 'normal'}
-                  color={activeLink === '/daily-transaction' ? 'white' : 'black'}
-                  bg={activeLink === '/daily-transaction' ? '#4caf50' : 'transparent'}
+                  fontWeight={activeLink === '/daily-transaction/restaurant' ? 'bold' : 'normal'}
+                  color={activeLink === '/daily-transaction/restaurant' ? 'white' : 'black'}
+                  bg={activeLink === '/daily-transaction/restaurant' ? '#4caf50' : 'transparent'}
                   p={2}
                   pl={6}
                   borderRadius="md"
                   _hover={{ bg: '#4caf50', color: 'white' }}
                 >
-                  - Resturant Transaction
+                  - Restaurant Transaction
                 </Flex>
               </RouterLink>
-              <RouterLink to="/daily-transaction" style={{ textDecoration: 'none' }}>
+              <RouterLink to="/daily-transaction/driver" style={{ textDecoration: 'none' }}>
                 <Flex
                   alignItems="center"
                   mb={2}
-                  fontWeight={activeLink === '/daily-transaction' ? 'bold' : 'normal'}
-                  color={activeLink === '/daily-transaction' ? 'white' : 'black'}
-                  bg={activeLink === '/daily-transaction' ? '#4caf50' : 'transparent'}
+                  fontWeight={activeLink === '/daily-transaction/driver' ? 'bold' : 'normal'}
+                  color={activeLink === '/daily-transaction/driver' ? 'white' : 'black'}
+                  bg={activeLink === '/daily-transaction/driver' ? '#4caf50' : 'transparent'}
                   p={2}
                   pl={6}
                   borderRadius="md"
@@ -295,13 +323,13 @@ const Sidebar = () => {
                   - Drivers Transaction
                 </Flex>
               </RouterLink>
-              <RouterLink to='/daily-transaction'style={{ textDecoration: 'none' }}>
+              <RouterLink to="/daily-transaction/total" style={{ textDecoration: 'none' }}>
                 <Flex
                   alignItems="center"
                   mb={2}
-                  fontWeight={activeLink === '/daily-transaction' ? 'bold' : 'normal'}
-                  color={activeLink ==='/daily-transaction' ? 'white' : 'black'}
-                  bg={activeLink === '/daily-transaction' ? '#4caf50' : 'transparent'}
+                  fontWeight={activeLink === '/daily-transaction/total' ? 'bold' : 'normal'}
+                  color={activeLink === '/daily-transaction/total' ? 'white' : 'black'}
+                  bg={activeLink === '/daily-transaction/total' ? '#4caf50' : 'transparent'}
                   p={2}
                   pl={6}
                   borderRadius="md"
@@ -311,7 +339,6 @@ const Sidebar = () => {
                 </Flex>
               </RouterLink>
             </AccordionPanel>
-            
           </AccordionItem>
         </Accordion>
         <RouterLink to="/ordersHistory" style={{ textDecoration: 'none' }}>

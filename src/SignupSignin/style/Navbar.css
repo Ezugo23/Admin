@@ -1,0 +1,26 @@
+.search-icon{
+    position: absolute;
+    right: 4rem;
+    /* width: 20px; */
+}
+
+
+ ul li{
+    
+    margin-top: 14px;
+}
+
+ul li:hover{
+    background-color: green;
+    color: white;
+}
+
+
+.input{
+    width: 5rem;
+    padding: 0 2rem;
+}
+
+.input:focus-visible{
+    width: 100%;
+}

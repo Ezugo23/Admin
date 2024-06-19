@@ -14,7 +14,7 @@ export default function Modal({ isOpen, onClose }) {
           <label style={type2}>Amount</label>
           <div style={amountBoxStyles}>amount</div>
         </div>
-        <p onClick={onClose} style={closeButton}>Close</p>
+        <button onClick={onClose} style={closeButton}>Close</button>
       </div>
     </div>
   );
@@ -38,8 +38,8 @@ const modalContentStyles = {
   padding: '20px',
   borderRadius: '5px',
   textAlign: 'center',
-  width: '25rem',
-  height: '20rem',
+  width: '30rem',
+  height: '25rem',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
@@ -63,13 +63,14 @@ const closeButton = {
   borderStyle:'border-box',
   marginTop: '25px',
   width: '10rem',
-  height: '10rem',
+  height: '4rem',
   backgroundColor: '#4CAF50',
   color: "white",
   fontFamily: 'Open Sans',
   fontSize: '16px',
   fontWeight: '600',
   lineHeight: '21.79px',
+  cursor: 'pointer'
 };
 
 const text = {
