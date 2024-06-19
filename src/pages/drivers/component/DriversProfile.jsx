@@ -1,21 +1,58 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Flex } from '@chakra-ui/react';
-import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 import DriverProfileSidebar from './DriversProfileSidebar';
 import PersonalInformation from './PersonalInformation';
-// import other components
 
 const DriversProfile = () => {
+  const { driverId } = useParams();
+  const [driverData, setDriverData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchDriverData = async () => {
+      try {
+        const response = await axios.get(
+          `https://swifdropp.onrender.com/api/v1/driver/${driverId}`
+        );
+        setDriverData(response.data.driver);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDriverData();
+  }, [driverId]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
   return (
     <Flex>
       <Box flex="0 0 auto">
-        <DriverProfileSidebar />
+        <DriverProfileSidebar driverId={driverId} driverData={driverData} />
       </Box>
       <Box flex="1" p={4}>
         <Routes>
           <Route path="/" element={<Navigate to="personal" />} />
-
-          <Route path="personal" element={<PersonalInformation />} />
+          <Route
+            path="personal"
+            element={
+              <PersonalInformation
+                driverId={driverId}
+                driverData={driverData}
+              />
+            }
+          />
           {/* Uncomment and add other routes */}
           {/* <Route path="change-password" element={<ChangePassword />} />
           <Route path="company-info" element={<CompanyInformation />} />
