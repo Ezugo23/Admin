@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../../style/user.css';
 
 export default function Personal() {
@@ -50,42 +52,48 @@ export default function Personal() {
     try {
       const response = await axios.patch(`https://swifdropp.onrender.com/api/v1/restaurant/${id}`, formData);
       setRestaurant(response.data.restaurant);
+      toast.success('Edited successfully');
     } catch (error) {
       console.error('Error updating data:', error);
+      toast.error('Failed to edit');
     }
   };
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append('image', file);
+    const uploadFormData = new FormData();
+    uploadFormData.append('image', file);
     try {
-      const response = await axios.patch(`https://swifdropp.onrender.com/api/v1/restaurant/${id}`, formData, {
+      const response = await axios.patch(`https://swifdropp.onrender.com/api/v1/restaurant/${id}`, uploadFormData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
       setRestaurant(response.data.restaurant);
       setFormData((prevData) => ({ ...prevData, image: response.data.restaurant.image }));
+      toast.success('Photo edited successfully');
     } catch (error) {
       console.error('Error uploading image:', error);
+      toast.error('Failed to edit photo');
     }
   };
 
   const handleLogoUpload = async (e) => {
     const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append('logo', file);
+    const uploadFormData = new FormData();
+    uploadFormData.append('logo', file);
     try {
-      const response = await axios.patch(`https://swifdropp.onrender.com/api/v1/restaurant/${id}`, formData, {
+      const response = await axios.patch(`https://swifdropp.onrender.com/api/v1/restaurant/${id}`, uploadFormData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
       setRestaurant(response.data.restaurant);
       setFormData((prevData) => ({ ...prevData, logo: response.data.restaurant.logo }));
+      toast.success('Logo edited successfully');
     } catch (error) {
       console.error('Error uploading logo:', error);
+      toast.error('Failed to edit logo');
     }
   };
 
@@ -95,6 +103,7 @@ export default function Personal() {
 
   return (
     <div className="flex justify-center" style={{ marginTop: '2%', marginLeft: '20px' }}>
+      <ToastContainer position="top-center" />
       <div className="w-[100%] max-w-4xl">
         <form onSubmit={handleSubmit}>
           <div className="border-none bg-white shadow-md">

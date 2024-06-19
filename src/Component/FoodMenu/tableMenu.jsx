@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import { RiErrorWarningLine } from 'react-icons/ri';
+import { Switch } from '@chakra-ui/react';
+import { SpinnerRoundOutlined } from 'spinners-react';
 
 export default function TableMenu() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,10 +21,18 @@ export default function TableMenu() {
         setData(response.data.restaurants);
       } catch (error) {
         console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
+
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000); // Set the timer to 3 seconds (3000 milliseconds)
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleClick = (newPage) => {
@@ -32,6 +44,41 @@ export default function TableMenu() {
   const handleRowClick = (id, hasData) => {
     if (hasData) {
       navigate(`menu/${id}/personal/${id}`);
+    }
+  };
+
+  const handleApprove = async (id) => {
+    try {
+      await axios.patch(`https://swifdropp.onrender.com/api/v1/approve-restaurant/${id}`);
+      // Fetch updated data
+      const response = await axios.get('https://swifdropp.onrender.com/api/v1/restaurant/');
+      setData(response.data.restaurants);
+    } catch (error) {
+      console.error('Error approving restaurant:', error);
+    }
+  };
+
+  const handleToggleStatus = async (id) => {
+    try {
+      await axios.patch(`https://swifdropp.onrender.com/api/v1/${id}/toggle-restaurant-status`);
+      // Fetch updated data
+      const response = await axios.get('https://swifdropp.onrender.com/api/v1/restaurant/');
+      setData(response.data.restaurants);
+    } catch (error) {
+      console.error('Error toggling restaurant status:', error);
+    }
+  };
+
+  const handleToggleAvailability = async (id, isAvailable) => {
+    try {
+      await axios.patch(`https://swifdropp.onrender.com/api/v1/restaurant/available/${id}`, {
+        isAvailable: !isAvailable
+      });
+      // Fetch updated data
+      const response = await axios.get('https://swifdropp.onrender.com/api/v1/restaurant/');
+      setData(response.data.restaurants);
+    } catch (error) {
+      console.error('Error toggling availability:', error);
     }
   };
 
@@ -72,57 +119,97 @@ export default function TableMenu() {
             />
           </div>
         </div>
-        <div className="table-container">
-          <table className="table min-w-full">
-            <thead className="table-header">
-              <tr>
-                <th>S/N</th>
-                <th>SELLER NAME</th>
-                <th>SWIFTBALANCE</th>
-                <th>TOTAL ORDERS</th>
-                <th>AVAILABLE BALANCE</th>
-                <th>RATING</th>
-                <th>STATUS</th>
-                <th>ACTION</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentData.map((item, index) => {
-                const hasData = item.totalOrders > 0 || item.totalItems > 0; // Check if the restaurant has orders or items
-                const serialNumber = (currentPage - 1) * itemsPerPage + index + 1; // Calculate the serial number
-                return (
-                  <tr key={item._id} className="table-row cursor-pointer" onClick={() => handleRowClick(item._id, hasData)}>
-                    <td>{serialNumber}</td>
-                    <td>
-                      <strong>{item.restaurantName}</strong>
-                      <br />
-                      {item.address}
-                    </td>
-                    <td>₦{item.wallet.swiftWallet}</td>
-                    <td>{item.totalOrders}</td>
-                    <td>₦{item.wallet.availableBalance}</td>
-                    <td>{item.averageRating}</td>
-                    <td>
-                      <button className="w-[80px] h-[25px] font-roboto font-normal text-[12px] leading-[14.06px] text-center text-[#4DB6AC] border border-[#4DB6AC] rounded-md active:bg-[#4DB6AC]">
-                        {item.isActive ? 'Active' : 'Inactive'}
-                      </button>
-                    </td>
-                    <td className="action-cell">
-                      <span className={`action-item cursor-pointer flex items-center gap-3 ${!hasData ? 'opacity-50 cursor-not-allowed' : ''}`} onClick={() => handleRowClick(item._id, hasData)}>
-                        <FaEdit />
-                      </span>
-                      <span className="action-item cursor-pointer flex items-center gap-3">
-                        <FaTrash />
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <div className="table-container" style={{ position: 'relative', minHeight: '300px' }}>
+          {loading ? (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+              <SpinnerRoundOutlined size={50} color="green" />
+            </div>
+          ) : (
+            <table className="table min-w-full" style={{ borderCollapse: 'collapse' }}>
+              <thead className="table-header" style={{ backgroundColor: 'green', color: 'white' }}>
+                <tr>
+                  <th style={{ color: 'white', border: 'none' }}>S/N</th>
+                  <th style={{ color: 'white', border: 'none' }}>SELLER NAME</th>
+                  <th style={{ color: 'white', border: 'none' }}>SWIFTBALANCE</th>
+                  <th style={{ color: 'white', border: 'none' }}>TOTAL ORDERS</th>
+                  <th style={{ color: 'white', border: 'none' }}>AVAILABLE BALANCE</th>
+                  <th style={{ color: 'white', border: 'none' }}>RATING</th>
+                  <th style={{ color: 'white', border: 'none' }}>STATUS</th>
+                  <th style={{ color: 'white', border: 'none' }}>ACTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentData.map((item, index) => {
+                  const hasData = item.totalOrders > 0 || item.totalItems > 0; // Check if the restaurant has orders or items
+                  const serialNumber = (currentPage - 1) * itemsPerPage + index + 1; // Calculate the serial number
+
+                  let statusText = 'Pending';
+                  let statusColorClass = 'bg-orange-500 text-white';
+
+                  if (item.approved) {
+                    if (item.isActive) {
+                      statusText = 'Active';
+                      statusColorClass = 'bg-green-500 text-white';
+                    } else {
+                      statusText = 'Suspended';
+                      statusColorClass = 'bg-red-500 text-white';
+                    }
+                  }
+
+                  return (
+                    <tr key={item._id} className="table-row cursor-pointer" onClick={() => handleRowClick(item._id, hasData)} style={{ borderBottom: 'none' }}>
+                      <td style={{ border: 'none' }}>{serialNumber}</td>
+                      <td style={{ border: 'none' }}>
+                        <strong>{item.restaurantName}</strong>
+                        <br />
+                        {item.address}
+                      </td>
+                      <td style={{ border: 'none' }}>₦{item.wallet.swiftWallet}</td>
+                      <td style={{ border: 'none' }}>{item.totalOrders}</td>
+                      <td style={{ border: 'none' }}>₦{item.wallet.availableBalance}</td>
+                      <td style={{ border: 'none' }}>{item.averageRating}</td>
+                      <td style={{ border: 'none' }}>
+                        <button className={`w-[80px] h-[25px] font-roboto font-normal text-[12px] leading-[14.06px] text-center border rounded-md ${statusColorClass}`}>
+                          {statusText}
+                        </button>
+                      </td>
+                      <td className="action-cell" style={{ border: 'none' }}>
+                        <span
+                          className="action-item cursor-pointer flex items-center gap-3"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Switch
+                            isChecked={item.isAvailable}
+                            onChange={() => handleToggleAvailability(item._id, item.isAvailable)}
+                          />
+                        </span>
+                        <span
+                          className={`action-item cursor-pointer flex items-center gap-3 ${!hasData ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            item.approved ? handleToggleStatus(item._id) : handleApprove(item._id);
+                          }}
+                        >
+                          <RiErrorWarningLine size={20} />
+                        </span>
+                        <span
+                          className="action-item cursor-pointer flex items-center gap-3"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <FaTrash size={15} />
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
         <div className="pagination-con">
-          <span className="text-gray-600">Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, data.length)}-{Math.min(currentPage * itemsPerPage, data.length)} of {data.length} data</span>
+          <span className="text-gray-600">Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, filteredData.length)}-{Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} data</span>
+
+          {/* <span className="text-gray-600">Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, filteredData.length)}-{Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} data</span> */}
           <div className="pagination flex items-center">
             <button 
               className="px-3 py-1 mx-1 rounded hover:bg-gray-300" 
