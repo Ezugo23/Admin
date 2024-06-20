@@ -188,7 +188,7 @@ const DriversList = () => {
           >
             <Thead bg="white">
               <Tr>
-                <Th
+                {/* <Th
                   fontSize="0.738rem"
                   textAlign="center"
                   color={'#181616'}
@@ -196,7 +196,7 @@ const DriversList = () => {
                   fontWeight={400}
                 >
                   ID
-                </Th>
+                </Th> */}
                 <Th
                   fontSize="0.738rem"
                   textAlign="center"
@@ -204,7 +204,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  AVATAR
+                  IMAGE
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -280,14 +280,14 @@ const DriversList = () => {
                   bg={index % 2 === 0 ? '#f9fafc' : 'white'}
                   // onClick={() => navigate('/driversprofile')}
                 >
-                  <Td
+                  {/* <Td
                     fontSize="0.675rem"
                     color="#121111"
                     textAlign="center"
                     whiteSpace={'nowrap'}
                   >
                     {driver._id}
-                  </Td>
+                  </Td> */}
                   <Td>
                     <Image
                       src={driver.image}
@@ -308,12 +308,13 @@ const DriversList = () => {
                     <Box noOfLines={2} maxWidth="10rem">
                       <Text
                         isTruncated={true}
-                        fontSize={'0.675rem'}
+                        fontSize={'0.775rem'}
+                        fontWeight={'bold'}
                         color={'#000000'}
                       >
-                        {driver.name} {driver.lastname}
+                        {driver.firstname} {driver.lastname}
                       </Text>
-                      <Text fontSize={'0.575rem'}>{driver.vehicleType}</Text>
+                      <Text fontSize={'0.675rem'}>{driver.vehicleType}</Text>
                     </Box>
                   </Td>
 
@@ -339,7 +340,7 @@ const DriversList = () => {
                     textAlign="center"
                     whiteSpace={'nowrap'}
                   >
-                    {driver.balance}
+                    ₦{driver.balance}
                   </Td>
                   <Td
                     fontSize="0.675rem"
@@ -352,12 +353,12 @@ const DriversList = () => {
 
                   <Td>
                     <Badge
-                      colorScheme={driver.status === 'Active' ? 'green' : 'red'}
+                      colorScheme={driver.isActive === 'true' ? 'green' : 'red'}
                       borderRadius={'7rem'}
                       textTransform={'capitalize'}
                       px={2}
                     >
-                      {driver.status}
+                      {driver.isActive}
                     </Badge>
                   </Td>
                   <Td textAlign="center" whiteSpace={'nowrap'}>
