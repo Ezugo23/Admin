@@ -329,6 +329,19 @@ const DriversList = () => {
                   </Td>
                   <Td>
                     <HStack justify={'center'}>
+                      <Tooltip label="Request" aria-label="Request Tooltip">
+                        <IconButton
+                          icon={<RiErrorWarningLine />}
+                          color="black"
+                          cursor="pointer"
+                          bg="#EFEFEF"
+                          aria-label=""
+                          w="1.5rem"
+                          h="2.0rem"
+                          onClick={() => navigate(`/request/${driver._id}`)}
+                        />
+                      </Tooltip>
+
                       <Tooltip label="Edit" aria-label="Edit Tooltip">
                         <IconButton
                           icon={<RiEditLine />}
