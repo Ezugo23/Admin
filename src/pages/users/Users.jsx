@@ -1,10 +1,21 @@
-// src/components/AdminTable.js
 import React, { useState } from 'react';
-import './administrators/styles/users.css';  // Import the custom styles
-import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa';  // Import icons from react-icons
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import './administrators/styles/users.css'; 
+import { FaEdit, FaPlus, FaTrash } from 'react-icons/fa'; 
 
 const Users = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  const handleClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   const [admins] = useState([
     {
       id: '03DR456',
@@ -38,6 +49,27 @@ const Users = () => {
     },
   ]);
 
+  const filteredAdmins = admins.filter(admin =>
+    admin.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const currentAdmins = filteredAdmins.slice(indexOfFirstItem, indexOfLastItem);
+  const totalItems = filteredAdmins.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const showingFrom = totalItems === 0 ? 0 : indexOfFirstItem + 1;
+  const showingTo = Math.min(indexOfLastItem, totalItems);
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
   return (
     <div className="contain">
       <div className="header">
@@ -60,7 +92,7 @@ const Users = () => {
           </label>
           <div className="search-container ml-auto">
             <label htmlFor="search">Search:</label>
-            <input id="search" type="text" />
+            <input id="search" type="text"  value={searchTerm} onChange={handleSearchChange}/>
           </div>
         </div>
         <div className="table-container">
@@ -78,7 +110,7 @@ const Users = () => {
               </tr>
             </thead>
             <tbody>
-              {admins.map((admin) => (
+              {currentAdmins.map((admin) => (
                 <tr key={admin.id} className="table-row">
                   <td>{admin.id}</td>
                   <td>
@@ -117,7 +149,37 @@ const Users = () => {
             </tbody>
           </table>
         </div>
-        <div className="pagination-con">
+
+        <div className='flex items-center justify-between p-3'>
+        <p className='text-sm'>Showing <span className="font-semibold">{showingFrom}-{showingTo} </span> from <span className="font-semibold">{totalItems}</span> data </p>
+        {totalPages > 1 && <div>
+        <button
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+          className={`px-3 py-1 mx-1 rounded hover:bg-gray-300 ${currentPage === 1 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}`}
+        >
+          &lt; 
+        </button>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => handleClick(index + 1)}
+              className={`text-sm px-3 py-1 mx-1 rounded border border-gray-200 hover:bg-gray-300 ${index + 1 === currentPage ? 'bg-green text-white' : ''}`}
+              disabled={index + 1 === currentPage}
+            >
+              {index + 1}
+            </button>
+          ))}
+          <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={`px-2 py-1 mx-1 rounded hover:bg-gray-300 ${currentPage === totalPages ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-200'}`}
+        >
+          &gt;
+        </button>
+        </div>}
+      </div>
+        {/* <div className="pagination-con">
           <span className="text-gray-600">Showing 1-10 from 100 data</span>
           <div className="pagination flex items-center">
             <button className="px-3 py-1 mx-1  rounded hover:bg-gray-300">
@@ -136,7 +198,7 @@ const Users = () => {
               <FaAngleRight />
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
