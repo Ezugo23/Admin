@@ -294,7 +294,8 @@ const DriversList = () => {
                       alt="avatar"
                       fill
                       borderRadius={'full'}
-                      onClick={() => navigate('/driversprofile')}
+                      onClick={() => navigate(`/driversprofile/${driver._id}`)}
+                      cursor={'pointer'}
                       boxSize="40px"
                     />
                   </Td>

@@ -96,7 +96,7 @@ function App() {
           <Route path="/users/admin" element={<MainLayout><Users socket={socket} /></MainLayout>} />
           <Route path="/users/allusers" element={<MainLayout><AllUsers socket={socket} /></MainLayout>} />
           <Route path="/drivers" element={<MainLayout><Drivers socket={socket} /></MainLayout>} />
-          <Route path="/driversprofile/*" element={<MainLayout><DriversProfile socket={socket} /></MainLayout>} />
+          <Route path="/driversprofile/:driverId/*" element={<MainLayout><DriversProfile socket={socket} /></MainLayout>} />
           <Route path="/drivers/settings" element={<MainLayout><DriverSettings socket={socket} /></MainLayout>} />
           <Route path="/drivers/list" element={<MainLayout><DriversList socket={socket} /></MainLayout>} />
           <Route path="/request/:id" element={<MainLayout><Request socket={socket} /></MainLayout>} />
