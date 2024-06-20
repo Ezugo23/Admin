@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   HStack,
   VStack,
@@ -19,18 +19,60 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { ChevronDownIcon, CloseIcon } from '@chakra-ui/icons';
+import { FaUser } from 'react-icons/fa';
 import axios from 'axios';
 
 const PersonalInformation = ({ driverId, driverData }) => {
   const [formData, setFormData] = useState(driverData);
+  const [file, setFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+  const fileInputRef = React.useRef(null);
+
+  useEffect(() => {
+    // Convert feePercentage from decimal to percentage when setting the initial form data
+    if (driverData && driverData.feePercentage) {
+      setFormData((prevData) => ({
+        ...prevData,
+        feePercentage: (driverData.feePercentage * 100).toFixed(0),
+      }));
+    }
+  }, [driverData]);
 
   const handleUpdateDriverData = async () => {
+    setIsLoading(true);
     try {
+      const formDataToSend = new FormData();
+
+      // Only append the file if it exists, otherwise append the image URL
+      if (file) {
+        formDataToSend.append('image', file);
+      } else if (formData.image) {
+        formDataToSend.append('image', formData.image);
+      }
+
+      // Convert feePercentage back to decimal before sending the data
+      const updatedFormData = {
+        ...formData,
+        feePercentage: formData.feePercentage / 100,
+      };
+
+      Object.entries(updatedFormData).forEach(([key, value]) => {
+        if (key !== 'image') {
+          formDataToSend.append(key, value);
+        }
+      });
+
       const response = await axios.patch(
         `https://swifdropp.onrender.com/api/v1/driver/${driverId}`,
-        formData
+        formDataToSend,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
       );
       setFormData(response.data.driver);
       toast({
@@ -51,6 +93,8 @@ const PersonalInformation = ({ driverId, driverData }) => {
         isClosable: true,
         position: 'top',
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -60,6 +104,16 @@ const PersonalInformation = ({ driverId, driverData }) => {
       ...formData,
       [name]: name === 'NIN' ? value.toUpperCase() : value,
     });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFile(file);
+    setPreviewImage(URL.createObjectURL(file));
+  };
+
+  const handleChangePhoto = () => {
+    fileInputRef.current.click();
   };
 
   if (!driverData) {
@@ -93,7 +147,11 @@ const PersonalInformation = ({ driverId, driverData }) => {
             position="relative"
           >
             <Box position="relative">
-              <Image src={driverData.image} w={'100%'} />
+              {driverData.image || previewImage ? (
+                <Image src={previewImage || driverData.image} w={'100%'} />
+              ) : (
+                <Icon as={FaUser} boxSize="100px" color="gray.400" />
+              )}
               <IconButton
                 icon={<CloseIcon />}
                 size="sm"
@@ -106,15 +164,23 @@ const PersonalInformation = ({ driverId, driverData }) => {
                 _hover={{
                   bg: 'red',
                 }}
-                onClick={() => console.log('Remove image')}
+                onClick={() => setPreviewImage(null)}
               />
             </Box>
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+            />
             <Button
               bg={'#3B5998'}
               _hover={{
                 bg: '#3b5998',
               }}
               color={'white'}
+              onClick={handleChangePhoto}
             >
               Change Photo
             </Button>
@@ -203,13 +269,19 @@ const PersonalInformation = ({ driverId, driverData }) => {
           </FormControl>
           <FormControl>
             <FormLabel>Percentage</FormLabel>
-            <Input
+            <Select
               border="2px solid #e8e8ff"
               py="15px"
               value={formData.feePercentage}
               name="feePercentage"
               onChange={handleFormChange}
-            />
+            >
+              {[...Array(61)].map((_, i) => (
+                <option key={i + 40} value={i + 40}>
+                  {i + 40}%
+                </option>
+              ))}
+            </Select>
           </FormControl>
           <Button
             mt={'7'}
@@ -220,6 +292,8 @@ const PersonalInformation = ({ driverId, driverData }) => {
             _hover={{
               bg: '#4db6ac',
             }}
+            isLoading={isLoading}
+            loadingText="Saving..."
           >
             Save
           </Button>
