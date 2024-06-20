@@ -301,6 +301,6 @@ const PersonalInformation = ({ driverId, driverData }) => {
       </Flex>
     </Stack>
   );
-};
+} 
 
 export default PersonalInformation;
