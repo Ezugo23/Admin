@@ -23,7 +23,6 @@ const LandingPage = () => {
               <div className="hidden group-hover:block origin-top-right absolute left-1/2 transform -translate-x-1/2 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                   <Link to="Register" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Admin</Link>
-                  <Link to="SuperRegister" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">SuperAdmin</Link>
                 </div>
               </div>
             </div>
