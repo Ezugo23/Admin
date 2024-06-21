@@ -56,6 +56,28 @@ export const DriversProvider = ({ children }) => {
     }
   };
 
+  const deleteDriver = async (driverId) => {
+    try {
+      const response = await axios.delete(
+        `https://swifdropp.onrender.com/api/v1/driver/${driverId}`
+      );
+
+      if (response.status === 200) {
+        const updatedDrivers = drivers.filter(
+          (driver) => driver._id !== driverId
+        );
+        setDrivers((prevDrivers) =>
+          prevDrivers.filter((driver) => driver._id !== driverId)
+        );
+        setTotalItems((prevTotalItems) => prevTotalItems - 1); // Update the totalItems count
+      } else {
+        console.error('Failed to delete driver:', response.data);
+      }
+    } catch (error) {
+      console.error('Error deleting driver:', error);
+    }
+  };
+
   const fetchUpdatedDrivers = async () => {
     try {
       const response = await axios.get(
@@ -75,6 +97,7 @@ export const DriversProvider = ({ children }) => {
         totalItems,
         pageSize,
         toggleAvailability,
+        deleteDriver,
         fetchUpdatedDrivers,
       }}
     >

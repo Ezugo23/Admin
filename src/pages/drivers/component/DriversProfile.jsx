@@ -4,6 +4,7 @@ import { Routes, Route, Navigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import DriverProfileSidebar from './DriversProfileSidebar';
 import PersonalInformation from './PersonalInformation';
+import DeliveryHistory from './DeliveryHistory';
 
 const DriversProfile = () => {
   const { driverId } = useParams();
@@ -41,7 +42,7 @@ const DriversProfile = () => {
       <Box flex="0 0 auto">
         <DriverProfileSidebar driverId={driverId} driverData={driverData} />
       </Box>
-      <Box flex="1" p={4}>
+      <Box flex="1" p={4} overflowX={'auto'}>
         <Routes>
           <Route path="/" element={<Navigate to="personal" />} />
           <Route
@@ -50,6 +51,15 @@ const DriversProfile = () => {
               <PersonalInformation
                 driverId={driverId}
                 driverData={driverData}
+              />
+            }
+          />
+          <Route
+            path="delivery"
+            element={
+              <DeliveryHistory
+                driverId={driverId}
+                // driverData={driverData}
               />
             }
           />

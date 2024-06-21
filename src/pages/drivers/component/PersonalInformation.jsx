@@ -24,36 +24,67 @@ import axios from 'axios';
 
 const PersonalInformation = ({ driverId, driverData }) => {
   const [formData, setFormData] = useState(driverData);
+  const [initialFormData, setInitialFormData] = useState(null);
   const [file, setFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFormChanged, setIsFormChanged] = useState(false);
   const toast = useToast();
   const fileInputRef = React.useRef(null);
 
   useEffect(() => {
-    // Convert feePercentage from decimal to percentage when setting the initial form data
-    if (driverData && driverData.feePercentage) {
-      setFormData((prevData) => ({
-        ...prevData,
+    if (driverData) {
+      const initialData = {
+        ...driverData,
         feePercentage: (driverData.feePercentage * 100).toFixed(0),
-      }));
+      };
+      setInitialFormData(initialData);
+      setFormData(initialData);
     }
   }, [driverData]);
+
+  const hasFormChanged = (currentData, initialData) => {
+    const normalizedCurrentData = {
+      ...currentData,
+      feePercentage: parseFloat(currentData.feePercentage),
+    };
+
+    const normalizedInitialData = {
+      ...initialData,
+      feePercentage: parseFloat(initialData.feePercentage),
+    };
+
+    for (const key in normalizedCurrentData) {
+      if (normalizedCurrentData[key] !== normalizedInitialData[key]) {
+        if (key === 'feePercentage') {
+          // Handle the case where the user deleted the input for feePercentage
+          if (
+            isNaN(normalizedCurrentData[key]) &&
+            !isNaN(normalizedInitialData[key])
+          ) {
+            return true;
+          }
+        } else {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
 
   const handleUpdateDriverData = async () => {
     setIsLoading(true);
     try {
       const formDataToSend = new FormData();
 
-      // Only append the file if it exists, otherwise append the image URL
       if (file) {
         formDataToSend.append('image', file);
       } else if (formData.image) {
         formDataToSend.append('image', formData.image);
       }
 
-      // Convert feePercentage back to decimal before sending the data
       const updatedFormData = {
         ...formData,
         feePercentage: formData.feePercentage / 100,
@@ -74,7 +105,12 @@ const PersonalInformation = ({ driverId, driverData }) => {
           },
         }
       );
-      setFormData(response.data.driver);
+      const responseData = {
+        ...response.data.driver,
+        feePercentage: (response.data.driver.feePercentage * 100).toFixed(0),
+      };
+      setFormData(responseData);
+      setInitialFormData(responseData);
       toast({
         title: 'Success',
         description: 'Driver data updated successfully',
@@ -83,6 +119,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
         isClosable: true,
         position: 'top',
       });
+      setIsFormChanged(false);
     } catch (err) {
       setError(err);
       toast({
@@ -100,20 +137,26 @@ const PersonalInformation = ({ driverId, driverData }) => {
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
+    const updatedFormData = {
       ...formData,
       [name]: name === 'NIN' ? value.toUpperCase() : value,
-    });
+    };
+    setFormData(updatedFormData);
+    setIsFormChanged(hasFormChanged(updatedFormData, initialFormData));
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    const updatedFormData = { ...formData, image: URL.createObjectURL(file) };
     setFile(file);
-    setPreviewImage(URL.createObjectURL(file));
+    setPreviewImage(updatedFormData.image);
+    setFormData(updatedFormData);
+    setIsFormChanged(true);
   };
 
   const handleChangePhoto = () => {
     fileInputRef.current.click();
+    setIsFormChanged(true);
   };
 
   if (!driverData) {
@@ -294,6 +337,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
             }}
             isLoading={isLoading}
             loadingText="Saving..."
+            isDisabled={!isFormChanged}
           >
             Save
           </Button>
@@ -301,6 +345,6 @@ const PersonalInformation = ({ driverId, driverData }) => {
       </Flex>
     </Stack>
   );
-} 
+};
 
 export default PersonalInformation;
