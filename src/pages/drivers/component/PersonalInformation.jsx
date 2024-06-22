@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   HStack,
   VStack,
@@ -31,11 +31,38 @@ const PersonalInformation = ({ driverId, driverData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const fileInputRef = React.useRef(null);
+  useEffect(() => {
+    // Convert feePercentage from decimal to percentage when setting the initial form data
+    if (driverData && driverData.feePercentage) {
+      setFormData((prevData) => ({
+        ...prevData,
+        feePercentage: (driverData.feePercentage * 100).toFixed(0),
+      }));
+    }
+  }, [driverData]);
 
   const handleUpdateDriverData = async () => {
     setIsLoading(true);
     try {
       const formDataToSend = new FormData();
+
+      // Only append the file if it exists, otherwise append the image URL
+      if (file) {
+        formDataToSend.append('image', file);
+      } else if (formData.image) {
+        formDataToSend.append('image', formData.image);
+      }
+
+      // Convert feePercentage back to decimal before sending the data
+      const updatedFormData = {
+        ...formData,
+        feePercentage: formData.feePercentage / 100,
+      };
+
+      Object.entries(updatedFormData).forEach(([key, value]) => {
+        if (key !== 'image') {
+          formDataToSend.append(key, value);
+        }
       formDataToSend.append('image', file);
 
       Object.entries(formData).forEach(([key, value]) => {
@@ -246,13 +273,19 @@ const PersonalInformation = ({ driverId, driverData }) => {
           </FormControl>
           <FormControl>
             <FormLabel>Percentage</FormLabel>
-            <Input
+            <Select
               border="2px solid #e8e8ff"
               py="15px"
               value={formData.feePercentage}
               name="feePercentage"
               onChange={handleFormChange}
-            />
+            >
+              {[...Array(61)].map((_, i) => (
+                <option key={i + 40} value={i + 40}>
+                  {i + 40}%
+                </option>
+              ))}
+            </Select>
           </FormControl>
           <Button
             mt={'7'}
@@ -272,6 +305,6 @@ const PersonalInformation = ({ driverId, driverData }) => {
       </Flex>
     </Stack>
   );
-};
+} 
 
 export default PersonalInformation;

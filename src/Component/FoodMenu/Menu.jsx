@@ -28,7 +28,7 @@ export default function Menu() {
   }
 
   return (
-    <div className="w-64"> {/* Adjust the width here */}
+    <div className="w-64" style={{marginTop:'39px'}}> {/* Adjust the width here */}
       <p className="font-roboto font-bold text-lg leading-6 text-black">Restaurant Profile</p>
       <div className="bg-white shadow-md rounded-lg mb-4 p-4">
         <div className="flex justify-between items-center mb-4">
@@ -61,7 +61,7 @@ export default function Menu() {
               </Link>
             </li>
             <li className="my-2">
-              <Link to="resturant-information" className="flex items-center p-2 rounded hover:bg-blue-200">
+              <Link to={`resturant-information/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                   <path fillRule="evenodd" clipRule="evenodd" d="M12.25 4.66667V12.2459C12.2511 12.4006 12.1907 12.5494 12.082 12.6596C11.9734 12.7698 11.8255 12.8323 11.6707 12.8333H2.32925C2.00957 12.8333 1.75032 12.5743 1.75 12.2547V1.74533C1.75 1.43208 2.01192 1.16667 2.3345 1.16667H8.74825L12.25 4.66667ZM11.0833 5.25H8.16667V2.33333H2.91667V11.6667H11.0833V5.25ZM6.41667 4.08333H4.66667V5.25H6.41667V4.08333ZM4.66667 6.41667H9.33333V7.58333H4.66667V6.41667ZM9.33333 8.75H4.66667V9.91667H9.33333V8.75Z" fill="black" />
                 </svg>
@@ -82,7 +82,7 @@ export default function Menu() {
               </Link>
             </li>
             <li className="my-2">
-              <Link to={`side-items/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
+              <Link to="side-items" className="flex items-center p-2 rounded hover:bg-blue-200">
                 <Image src="/ep_dish.png" alt="Edit" />
                 <span className="pl-2">Side Items</span>
               </Link>

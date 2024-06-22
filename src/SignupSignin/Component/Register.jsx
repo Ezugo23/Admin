@@ -8,13 +8,9 @@ import { Link, useNavigate } from "react-router-dom";
 const Register = () => {
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
-  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
-  const [country, setCountry] = useState("");
-  const [zipCode, setZipCode] = useState("");
   const [state, setState] = useState("");
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
+  const [ address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassWord] = useState("");
   const navigate = useNavigate();
@@ -27,15 +23,8 @@ const Register = () => {
       lastname,
       email,
       phoneNumber,
-      username,
       password,
-      address: {
-        country,
-        zipCode,
-        state,
-        street,
-        city,
-      },
+      address,
     };
 
     try {
@@ -117,16 +106,6 @@ const Register = () => {
                 />
               </div>
               <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700">UserName</label>
-                <input
-                  type="text"
-                  id="username"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
-                  value={username}
-                  onChange={(e) => setUserName(e.target.value)}
-                />
-              </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                 <input
                   type="email"
@@ -157,58 +136,18 @@ const Register = () => {
                 />
               </div>
               <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="country" className="block text-sm font-medium text-gray-700">Country</label>
+                <label htmlFor="city" className="block text-sm font-medium text-gray-700">Address</label>
                 <input
                   type="text"
-                  id="country"
+                  id="address"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                />
-              </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="state" className="block text-sm font-medium text-gray-700">State</label>
-                <input
-                  type="text"
-                  id="state"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                />
-              </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="city" className="block text-sm font-medium text-gray-700">City</label>
-                <input
-                  type="text"
-                  id="city"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                />
-              </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="street" className="block text-sm font-medium text-gray-700">Street</label>
-                <input
-                  type="text"
-                  id="street"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
-                  value={street}
-                  onChange={(e) => setStreet(e.target.value)}
-                />
-              </div>
-              <div className="w-full px-2 mb-4">
-                <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">ZipCode</label>
-                <input
-                  type="text"
-                  id="zipCode"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
-                  value={zipCode}
-                  onChange={(e) => setZipCode(e.target.value)}
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
                 />
               </div>
             </div>
             <div className="text-center">
-              <button type="submit" className="px-5 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">SignUp</button>
+              <button type="submit" className="px-28 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" style={{marginTop:'25px', marginLeft:'40px'}}>SignUp</button>
             </div>
           </form>
           <div className="text-center mt-5">

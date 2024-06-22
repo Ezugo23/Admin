@@ -229,7 +229,7 @@ const Sidebar = () => {
             </AccordionButton>
             <AccordionPanel pb={4}>
               <RouterLink to="/drivers/settings" style={{ textDecoration: 'none' }}>
-                <Flex
+                {/* <Flex
                   alignItems="center"
                   mb={2}
                   fontWeight={activeLink === '/drivers/settings' ? 'bold' : 'normal'}
@@ -241,7 +241,7 @@ const Sidebar = () => {
                   _hover={{ bg: '#4caf50', color: 'white' }}
                 >
                   - Settings
-                </Flex>
+                </Flex> */}
               </RouterLink>
               <RouterLink to="/drivers/list" style={{ textDecoration: 'none' }}>
                 <Flex
@@ -356,7 +356,7 @@ const Sidebar = () => {
             ORDER HISTORY
           </Flex>
         </RouterLink>
-        <RouterLink to="/settings" style={{ textDecoration: 'none' }}>
+        {/* <RouterLink to="/settings" style={{ textDecoration: 'none' }}>
           <Flex
             alignItems="center"
             mb={4}
@@ -370,7 +370,7 @@ const Sidebar = () => {
             <Icon as={FiSettings} mr={2} />
             GENERAL SETTINGS
           </Flex>
-        </RouterLink>
+        </RouterLink> */}
       </Flex>
       <Divider mt={'20'} />
       <VStack>

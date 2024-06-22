@@ -20,8 +20,6 @@ import OweAmount from './pages/drivers/OweAmount';
 import Sellers from './pages/FoodSellers/Sellers';
 import SellersList from './pages/FoodSellers/SellersList';
 import Request from './pages/drivers/component/Request';
-import SuperRegister from './pages/Register/Register'
-import SuperLogin from './pages/Login/Login'
 import { io } from 'socket.io-client';
 import { DriversProvider } from './contexts/DriversContext';
 import EditUser from './pages/users/EditUser/EditUser';
@@ -105,8 +103,6 @@ function App() {
           <Route path="/drivers/oweamount" element={<MainLayout><OweAmount socket={socket} /></MainLayout>} />
           <Route path="/daily-transaction/*" element={<MainLayout><Daily socket={socket} /></MainLayout>} />
           <Route path="/settings" element={<MainLayout><Settings socket={socket} /></MainLayout>} />
-          <Route exact path="/SuperRegister" element={<SuperRegister />} />
-           <Route exact path="/SuperLogin" element={<SuperLogin />}/>
         </Routes>
       </Router>
     </DriversProvider>

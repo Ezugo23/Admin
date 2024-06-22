@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { SpinnerRoundOutlined } from 'spinners-react';
 
-export default function TableMenu() {
+export default function driverDaily() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,8 +15,8 @@ export default function TableMenu() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/v1/restaurantWallet/all-transaction');
-        setData(response.data.transactions);
+        const response = await axios.get('https://swifdropp.onrender.com/api/v1/restaurant/');
+        setData(response.data.restaurants);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -28,7 +28,7 @@ export default function TableMenu() {
 
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 4000); // Set the timer to 4 seconds (4000 milliseconds)
+    }, 4000); // Set the timer to 3 seconds (3000 milliseconds)
 
     return () => clearTimeout(timer);
   }, []);
@@ -39,9 +39,14 @@ export default function TableMenu() {
     }
   };
 
+  const handleRowClick = (id, hasData) => {
+    if (hasData) {
+      navigate(`menu/${id}/personal/${id}`);
+    }
+  };
+
   const filteredData = data.filter((item) =>
-    (item.admin?.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.admin?.email?.toLowerCase().includes(searchTerm.toLowerCase()))
+    item.restaurantName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -62,19 +67,6 @@ export default function TableMenu() {
               </select>
               entries
             </label>
-            <p
-              style={{
-                fontFamily: 'Open Sans, sans-serif',
-                fontWeight: 600,
-                fontSize: '16px',
-                lineHeight: '21.79px',
-                textAlign: 'right',
-                color: '#000000',
-                marginTop: "30px"
-              }}
-            >
-              Daily Total Moved Swift Amount
-            </p>
           </div>
           <div className="search-container ml-auto">
             <label htmlFor="search">Search:</label>
@@ -103,17 +95,22 @@ export default function TableMenu() {
                 </tr>
               </thead>
               <tbody>
-                {currentData.map((item) => (
-                  <tr key={item._id} className="table-row" style={{ borderBottom: 'none' }}>
-                    <td style={{ border: 'none' }}>{new Date(item.createdAt).toLocaleDateString()}</td>
-                    <td style={{ border: 'none' }}>₦{item.amountMoved}</td>
-                    <td style={{ border: 'none' }}>{item.totalOrders}</td>
-                    <td style={{ border: 'none' }}>{item.invoiceID}</td>
-                    <td style={{ border: 'none' }}>
-                      {item.admin ? `${item.admin.username} (${item.admin.email})` : 'Anonymous'}
-                    </td>
-                  </tr>
-                ))}
+                {currentData.map((item) => {
+                  const hasData = item.totalOrders > 0 || item.totalItems > 0; // Check if the restaurant has orders or items
+                  return (
+                    <tr key={item._id} className="table-row cursor-pointer" onClick={() => handleRowClick(item._id, hasData)} style={{ borderBottom: 'none' }}>
+                      <td style={{ border: 'none' }}>
+                        <strong>{item.restaurantName}</strong>
+                        <br />
+                        {item.address}
+                      </td>
+                      <td style={{ border: 'none' }}>${item.wallet.availableBalance}</td>
+                      <td style={{ border: 'none' }}>{item.totalOrders}</td>
+                      <td style={{ border: 'none' }}>${item.wallet.swiftWallet}</td>
+                      <td style={{ border: 'none' }}>{item.averageRating}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           )}

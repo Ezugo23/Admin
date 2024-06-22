@@ -156,7 +156,7 @@ const DriversList = () => {
           >
             <Thead bg="white">
               <Tr>
-                <Th
+                {/* <Th
                   fontSize="0.738rem"
                   textAlign="center"
                   color={'#181616'}
@@ -164,7 +164,7 @@ const DriversList = () => {
                   fontWeight={400}
                 >
                   ID
-                </Th>
+                </Th> */}
                 <Th
                   fontSize="0.738rem"
                   textAlign="center"
@@ -246,14 +246,14 @@ const DriversList = () => {
                   textAlign="center"
                   bg={index % 2 === 0 ? '#f9fafc' : 'white'}
                 >
-                  <Td
+                  {/* <Td
                     fontSize="0.675rem"
                     color="#121111"
                     textAlign="center"
                     whiteSpace={'nowrap'}
                   >
                     {driver._id}
-                  </Td>
+                  </Td> */}
                   <Td>
                     <Image
                       src={driver.image}
@@ -307,7 +307,7 @@ const DriversList = () => {
                     textAlign="center"
                     whiteSpace={'nowrap'}
                   >
-                    {driver.balance}
+                    ₦{driver.balance}
                   </Td>
                   <Td
                     fontSize="0.675rem"
