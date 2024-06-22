@@ -58,7 +58,6 @@ const PersonalInformation = ({ driverId, driverData }) => {
     for (const key in normalizedCurrentData) {
       if (normalizedCurrentData[key] !== normalizedInitialData[key]) {
         if (key === 'feePercentage') {
-          // Handle the case where the user deleted the input for feePercentage
           if (
             isNaN(normalizedCurrentData[key]) &&
             !isNaN(normalizedInitialData[key])
@@ -177,14 +176,20 @@ const PersonalInformation = ({ driverId, driverData }) => {
   }
 
   return (
-    <Stack w={'full'}>
+    <Stack
+      w={'full'}
+      bg={'#FFFFFF'}
+      p={'15px'}
+      borderRadius={'10px'}
+      boxShadow={'lg'}
+    >
       <Text>Drivers' Info</Text>
-      <Divider />
+      <Divider border={'2px solid #dfdfdf'} />
       <Flex as={'form'} gap={'7'}>
         <Box w={'30%'}>
           <Text>Upload Image</Text>
           <Stack
-            border={'1px solid black'}
+            border={'1px solid #dfdfdf'}
             p={'30px'}
             mt={'5px'}
             position="relative"
@@ -238,6 +243,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               value={`${formData.firstname} ${formData.lastname}`}
               name="name"
               onChange={handleFormChange}
+              _focus={{ borderColor: '#4DB6AC' }}
             />
           </FormControl>
           <FormControl>
@@ -248,6 +254,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               value={formData.email}
               name="email"
               onChange={handleFormChange}
+              _focus={{ borderColor: '#4DB6AC' }}
             />
           </FormControl>
           <FormControl>
@@ -258,6 +265,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               value={formData.phoneNumber}
               name="phoneNumber"
               onChange={handleFormChange}
+              _focus={{ borderColor: '#4DB6AC' }}
             />
           </FormControl>
           <FormControl>
@@ -268,6 +276,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               value={formData.NIN}
               name="NIN"
               onChange={handleFormChange}
+              _focus={{ borderColor: '#4DB6AC' }}
             />
           </FormControl>
           <FormControl>
@@ -278,6 +287,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               px={'5px'}
               name="address"
               onChange={handleFormChange}
+              _focus={{ borderColor: '#4DB6AC' }}
             />
           </FormControl>
         </Stack>
@@ -290,6 +300,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               name="vehicleType"
               value={formData.vehicleType}
               onChange={handleFormChange}
+              _focus={{ borderColor: '#4DB6AC' }}
             >
               <option value="car">Car</option>
               <option value="truck">Truck</option>
@@ -307,6 +318,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               py="15px"
               value={formData.vehiclePlateNumber}
               name="vehiclePlateNumber"
+              _focus={{ borderColor: '#4DB6AC' }}
               onChange={handleFormChange}
             />
           </FormControl>
@@ -318,6 +330,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               value={formData.feePercentage}
               name="feePercentage"
               onChange={handleFormChange}
+              _focus={{ borderColor: '#4DB6AC' }}
             >
               {[...Array(61)].map((_, i) => (
                 <option key={i + 40} value={i + 40}>

@@ -52,7 +52,7 @@ const DeliveryHistory = ({ driverId }) => {
       const response = await axios.get(
         `https://swifdropp.onrender.com/api/v1/driver/${driverId}/orders`
       );
-      console.log('Fetched data:', response.data);
+      // console.log('Fetched data:', response.data);
 
       let ordersArray = [];
       if (Array.isArray(response.data)) {
@@ -260,7 +260,7 @@ const DeliveryHistory = ({ driverId }) => {
           bg="white"
           p={4}
           borderRadius="md"
-          boxShadow="md"
+          boxShadow="lg"
           _hover={{ boxShadow: 'lg' }}
           justify={'center'}
           align={'center'}
