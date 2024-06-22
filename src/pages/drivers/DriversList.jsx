@@ -233,6 +233,15 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
+                  Withdrawn
+                </Th>
+                <Th
+                  fontSize="0.738rem"
+                  textAlign="center"
+                  color={'#181616'}
+                  textTransform={'capitalize'}
+                  fontWeight={400}
+                >
                   Delivered
                 </Th>
                 <Th
@@ -320,6 +329,14 @@ const DriversList = () => {
                     whiteSpace={'nowrap'}
                   >
                     ₦{driver.balance}
+                  </Td>
+                  <Td
+                    fontSize="0.675rem"
+                    color="#121111"
+                    textAlign="center"
+                    whiteSpace={'nowrap'}
+                  >
+                    ₦{driver.totalSuccessfulWithdrawals}
                   </Td>
                   <Td
                     fontSize="0.675rem"
