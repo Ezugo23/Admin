@@ -94,6 +94,11 @@ const Users = () => {
     return <div>Error: {error}</div>;
   }
 
+  const filteredAdmins = admins.filter((admin) =>
+    admin.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  // const currentAdmins = filteredAdmins.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <div className="contain">
       <ToastContainer />
@@ -210,7 +215,7 @@ const Users = () => {
               <FaAngleRight />
             </button>
           </div>
-        </div>
+        </div> 
       </div>
     </div>
   );
