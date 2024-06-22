@@ -31,6 +31,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const fileInputRef = React.useRef(null);
+
   useEffect(() => {
     // Convert feePercentage from decimal to percentage when setting the initial form data
     if (driverData && driverData.feePercentage) {
@@ -63,10 +64,6 @@ const PersonalInformation = ({ driverId, driverData }) => {
         if (key !== 'image') {
           formDataToSend.append(key, value);
         }
-      formDataToSend.append('image', file);
-
-      Object.entries(formData).forEach(([key, value]) => {
-        formDataToSend.append(key, value);
       });
 
       const response = await axios.patch(

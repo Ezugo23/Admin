@@ -37,7 +37,7 @@ const Login = () => {
   
       if (responseData.token) {
         localStorage.setItem('token', responseData.token);
-        localStorage.setItem('adminId', responseData.adminId); // Store adminId in localStorage
+        localStorage.setItem('adminId', responseData.id); // Store adminId in localStorage
         navigate('/Dashboard');
       }
   
