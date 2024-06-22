@@ -60,7 +60,7 @@ const DriverProfileSidebar = ({ driverId, driverData }) => {
       as="nav"
       pos="relative"
       minW="100"
-      h="full"
+      maxHh="full"
       bg={useColorModeValue('white', 'gray.900')}
       boxShadow="md"
       borderRadius="lg"

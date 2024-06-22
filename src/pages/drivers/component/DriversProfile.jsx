@@ -4,6 +4,8 @@ import { Routes, Route, Navigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import DriverProfileSidebar from './DriversProfileSidebar';
 import PersonalInformation from './PersonalInformation';
+import DeliveryHistory from './DeliveryHistory';
+import ChangePassword from './ChangePassword';
 
 const DriversProfile = () => {
   const { driverId } = useParams();
@@ -37,11 +39,11 @@ const DriversProfile = () => {
   }
 
   return (
-    <Flex>
+    <Flex gap={'5'}>
       <Box flex="0 0 auto">
         <DriverProfileSidebar driverId={driverId} driverData={driverData} />
       </Box>
-      <Box flex="1" p={4}>
+      <Box flex="1" overflowX={'auto'}>
         <Routes>
           <Route path="/" element={<Navigate to="personal" />} />
           <Route
@@ -53,9 +55,21 @@ const DriversProfile = () => {
               />
             }
           />
-          {/* Uncomment and add other routes */}
-          {/* <Route path="change-password" element={<ChangePassword />} />
-          <Route path="company-info" element={<CompanyInformation />} />
+          <Route
+            path="delivery"
+            element={
+              <DeliveryHistory
+                driverId={driverId}
+                // driverData={driverData}
+              />
+            }
+          />
+
+          <Route
+            path="change-password"
+            element={<ChangePassword driverId={driverId} />}
+          />
+          {/* <Route path="company-info" element={<CompanyInformation />} />
           <Route path="license" element={<DriverLicense />} />
           <Route path="vehicle" element={<RegisteredVehicle />} />
           <Route path="schedule" element={<Schedule />} />
