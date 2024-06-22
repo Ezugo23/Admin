@@ -21,23 +21,22 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
-
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import {
   RiEditLine,
   RiDeleteBinLine,
   RiErrorWarningLine,
 } from 'react-icons/ri';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { useDrivers } from '../../contexts/DriversContext';
 
 const DriversList = () => {
-  const { drivers, totalItems, pageSize } = useDrivers();
+  const { drivers, totalItems, pageSize, toggleAvailability } = useDrivers();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const toast = useToast();
 
   const filteredDrivers = drivers.filter((driver) =>
-    `${driver.name} ${driver.lastname}`
+    `${driver.firstname} ${driver.lastname}`
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
   );
@@ -79,57 +78,26 @@ const DriversList = () => {
   };
 
   const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = Math.min(startIndex + pageSize, drivers.length);
+  const endIndex = Math.min(startIndex + pageSize, filteredDrivers.length);
   const currentDrivers = filteredDrivers.slice(startIndex, endIndex);
   const navigate = useNavigate();
 
-  const toggleAvailability = async (driverId, currentStatus) => {
+  const handleToggleAvailability = async (driverId, currentAvailability) => {
     try {
-      console.log(
-        `Toggling availability for driver ID: ${driverId}, current status: ${currentStatus}`
-      );
-
-      const response = await fetch(
-        `https://swifdropp.onrender.com/api/v1/driver/availability-driver/${driverId}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ available: !currentStatus }),
-        }
-      );
-
-      console.log('Response status:', response.status);
-
-      if (response.ok) {
-        toast({
-          title: 'Success',
-          description: 'Driver availability has been updated.',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-          position: 'top',
-        });
-      } else {
-        const errorData = await response.json();
-        console.error('Error response data:', errorData);
-        toast({
-          title: 'Error',
-          description: `Failed to update driver availability: ${
-            errorData.message || 'Unknown error'
-          }`,
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-          position: 'top',
-        });
-      }
+      await toggleAvailability(driverId, currentAvailability);
+      toast({
+        title: 'Driver Availability Updated',
+        description: `Driver availability toggled successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
     } catch (error) {
-      console.error('Error during fetch:', error);
+      console.error('Error toggling driver availability:', error);
       toast({
         title: 'Error',
-        description: 'Failed to update driver availability.',
+        description: 'Failed to toggle driver availability. Please try again.',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -188,7 +156,7 @@ const DriversList = () => {
           >
             <Thead bg="white">
               <Tr>
-                <Th
+                {/* <Th
                   fontSize="0.738rem"
                   textAlign="center"
                   color={'#181616'}
@@ -196,6 +164,15 @@ const DriversList = () => {
                   fontWeight={400}
                 >
                   ID
+                </Th> */}
+                <Th
+                  fontSize="0.738rem"
+                  textAlign="center"
+                  color={'#181616'}
+                  textTransform={'capitalize'}
+                  fontWeight={400}
+                >
+                  Avatar
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -204,7 +181,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  AVATAR
+                  Name
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -213,7 +190,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  NAME
+                  Phone
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -222,7 +199,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  PHONE
+                  Email
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -231,7 +208,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  EMAIL
+                  Balance
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -240,7 +217,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  BALANCE
+                  Delivered
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -249,17 +226,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  DELIVERED
-                </Th>
-
-                <Th
-                  fontSize="0.738rem"
-                  textAlign="center"
-                  color={'#181616'}
-                  textTransform={'capitalize'}
-                  fontWeight={400}
-                >
-                  STATUS
+                  Status
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -268,7 +235,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  ACTION
+                  Action
                 </Th>
               </Tr>
             </Thead>
@@ -278,16 +245,15 @@ const DriversList = () => {
                   key={index}
                   textAlign="center"
                   bg={index % 2 === 0 ? '#f9fafc' : 'white'}
-                  // onClick={() => navigate('/driversprofile')}
                 >
-                  <Td
+                  {/* <Td
                     fontSize="0.675rem"
                     color="#121111"
                     textAlign="center"
                     whiteSpace={'nowrap'}
                   >
                     {driver._id}
-                  </Td>
+                  </Td> */}
                   <Td>
                     <Image
                       src={driver.image}
@@ -299,24 +265,26 @@ const DriversList = () => {
                       boxSize="40px"
                     />
                   </Td>
-                  <Td
-                    fontSize="0.675rem"
-                    color="#121111"
-                    textAlign="center"
-                    whiteSpace={'nowrap'}
-                  >
-                    <Box noOfLines={2} maxWidth="10rem">
+                  <Td>
+                    <Box>
                       <Text
-                        isTruncated={true}
-                        fontSize={'0.675rem'}
-                        color={'#000000'}
+                        fontSize="0.675rem"
+                        color="#121111"
+                        textAlign="center"
+                        whiteSpace={'nowrap'}
                       >
-                        {driver.name} {driver.lastname}
+                        {driver.firstname} {driver.lastname}
                       </Text>
-                      <Text fontSize={'0.575rem'}>{driver.vehicleType}</Text>
+                      <Text
+                        fontSize="0.675rem"
+                        color="#121111"
+                        textAlign="center"
+                        whiteSpace={'nowrap'}
+                      >
+                        {driver.vehicleType}
+                      </Text>
                     </Box>
                   </Td>
-
                   <Td
                     fontSize="0.675rem"
                     color="#121111"
@@ -339,7 +307,7 @@ const DriversList = () => {
                     textAlign="center"
                     whiteSpace={'nowrap'}
                   >
-                    {driver.balance}
+                    ₦{driver.balance}
                   </Td>
                   <Td
                     fontSize="0.675rem"
@@ -349,18 +317,17 @@ const DriversList = () => {
                   >
                     {driver.delivered}
                   </Td>
-
                   <Td>
                     <Badge
-                      colorScheme={driver.status === 'Active' ? 'green' : 'red'}
+                      colorScheme={driver.isActive ? 'green' : 'red'}
                       borderRadius={'7rem'}
                       textTransform={'capitalize'}
                       px={2}
                     >
-                      {driver.status}
+                      {driver.isActive ? 'Active' : 'Inactive'}
                     </Badge>
                   </Td>
-                  <Td textAlign="center" whiteSpace={'nowrap'}>
+                  <Td>
                     <HStack justify={'center'}>
                       <Tooltip label="Request" aria-label="Request Tooltip">
                         <IconButton
@@ -374,6 +341,7 @@ const DriversList = () => {
                           onClick={() => navigate(`/request/${driver._id}`)}
                         />
                       </Tooltip>
+
                       <Tooltip label="Edit" aria-label="Edit Tooltip">
                         <IconButton
                           icon={<RiEditLine />}
@@ -408,13 +376,20 @@ const DriversList = () => {
                         />
                       </Tooltip>
                       <Tooltip
-                        label="Toggle Availability"
-                        aria-label="Toggle Availability Tooltip"
+                        label={
+                          driver.isAvailable
+                            ? 'Driver is available'
+                            : 'Driver is not available'
+                        }
+                        aria-label="Availability Tooltip"
                       >
                         <Switch
-                          isChecked={driver.available}
+                          isChecked={driver.isAvailable}
                           onChange={() =>
-                            toggleAvailability(driver._id, driver.available)
+                            handleToggleAvailability(
+                              driver._id,
+                              driver.isAvailable
+                            )
                           }
                           colorScheme="teal"
                         />

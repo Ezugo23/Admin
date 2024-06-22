@@ -390,7 +390,7 @@ const Request = () => {
                     textAlign="center"
                     whiteSpace={'nowrap'}
                   >
-                    {order.deliveryFee}
+                    {order.driverFee}
                   </Td>{' '}
                   <Td
                     fontSize="0.675rem"
