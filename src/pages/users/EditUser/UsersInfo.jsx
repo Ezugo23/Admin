@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CustomInput from "../../../Component/CustomInput";
+import CustomInput from "../../../Component/CustomInput/CustomInput";
 
 export default function UsersInfo() {
     const [selectedOption, setSelectedOption] = useState("Active");

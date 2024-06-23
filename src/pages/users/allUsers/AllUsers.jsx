@@ -127,19 +127,19 @@ const AllUsers = () => {
                           : "bg-[#FF5252] text-white"
                       }`}
                     >
-                      {admin.status === true ? <p>Active</p> : <p onClick={() => setOpenModal(true)}>Suspend</p>}
+                      {admin.status === true ? <p>Active</p> : <p>Suspend</p>}
                     </button>
                   </td>
                   <td>{admin.totalPaid}</td>
 
                   <td className="flex items-center gap-3">
-                    <Link to='/users/editUser' className="action-item  cursor-pointer flex items-center gap-2">
+                    <Link to='/users/editUser' className="action-item cursor-pointer flex items-center gap-2">
                       <FaEdit /> Edit
                     </Link>
-                    <span className="action-item  cursor-pointer flex items-center gap-1">
+                    <span onClick={() => setOpenModal(true)} className="action-item cursor-pointer flex items-center gap-1">
                       <img src="/suspendLogo.svg" alt="suspend" /> Suspend
                     </span>
-                    <span className="action-item  text-sm  cursor-pointer flex items-center gap-2">
+                    <span className="action-item text-sm cursor-pointer flex items-center gap-2">
                       <FaTrash /> Delete
                     </span>
                   </td>
