@@ -210,7 +210,7 @@ const WithdrawalHistory = () => {
                     textAlign="center"
                     whiteSpace={'nowrap'}
                   >
-                    #{driver.amount}
+                    ₦{driver.amount}
                   </Td>
                   <Td
                     fontSize="0.675rem"
