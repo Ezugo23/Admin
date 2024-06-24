@@ -4,7 +4,6 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../style/user.css';
-
 export default function Personal() {
   const { id } = useParams();
   const [restaurant, setRestaurant] = useState(null);
@@ -16,6 +15,7 @@ export default function Personal() {
     image: '',
     logo: ''
   });
+  const [initialFormData, setInitialFormData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,14 +23,16 @@ export default function Personal() {
         const response = await axios.get(`https://swifdropp.onrender.com/api/v1/restaurant/byId/${id}`);
         const fetchedRestaurant = response.data.restaurant;
         setRestaurant(fetchedRestaurant);
-        setFormData({
+        const initialData = {
           firstname: fetchedRestaurant.firstname,
           lastname: fetchedRestaurant.lastname,
           phoneNumber: fetchedRestaurant.phoneNumber,
           email: fetchedRestaurant.email,
           image: fetchedRestaurant.image,
           logo: fetchedRestaurant.logo
-        });
+        };
+        setFormData(initialData);
+        setInitialFormData(initialData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -97,11 +99,13 @@ export default function Personal() {
     }
   };
 
+  const isFormModified = JSON.stringify(formData) !== JSON.stringify(initialFormData);
+
   if (!restaurant) {
     return <div>Loading...</div>;
   }
-
   return (
+  <>
     <div className="flex justify-center" style={{ marginTop: '2%', marginLeft: '20px' }}>
       <ToastContainer position="top-center" />
       <div className="w-[100%] max-w-4xl">
@@ -194,8 +198,9 @@ export default function Personal() {
                   </div>
                   <button
                     type="submit"
-                    className="text-white py-2 px-20 rounded"
+                    className={`text-white py-2 px-20 rounded ${isFormModified ? '' : 'opacity-50 cursor-not-allowed'}`}
                     style={{ marginTop: '20px', backgroundColor: '#4DB6AC', display: 'flex', marginRight: '220px' }}
+                    disabled={!isFormModified}
                   >
                     Submit
                   </button>
@@ -206,5 +211,6 @@ export default function Personal() {
         </form>
       </div>
     </div>
+    </>
   );
 }

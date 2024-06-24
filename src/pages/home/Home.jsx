@@ -5,6 +5,7 @@ import GoogleBar from '../home/GoogleBar';
 
 const Home = () => {
   return (
+    
     <Box>
       <Text>Dashboard</Text>
 

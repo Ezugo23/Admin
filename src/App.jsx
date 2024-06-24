@@ -26,6 +26,7 @@ import EditUser from './pages/users/EditUser/EditUser';
 
 function App() {
   const [socket, setSocket] = useState(null);
+  
 
   useEffect(() => {
     const newSocket = io('wss://swifdropp.onrender.com');
