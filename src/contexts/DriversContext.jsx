@@ -36,11 +36,17 @@ export const DriversProvider = ({ children }) => {
 
   const toggleAvailability = async (driverId, currentStatus) => {
     try {
+      const token = localStorage.getItem('token');
       const response = await axios.patch(
         `https://swifdropp.onrender.com/api/v1/driver/availability-driver/${driverId}`,
-        { isAvailable: !currentStatus }
+        { isAvailable: !currentStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
-
+  
       if (response.status === 200) {
         const updatedDrivers = drivers.map((driver) =>
           driver._id === driverId
@@ -55,6 +61,48 @@ export const DriversProvider = ({ children }) => {
       console.error('Error toggling availability:', error);
     }
   };
+  
+  const handleApprove = async (driverId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.patch(`https://swifdropp.onrender.com/api/v1/approve-driver/${driverId}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Fetch updated data
+      const response = await axios.get('https://swifdropp.onrender.com/api/v1/driver', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setDrivers(response.data.drivers);
+    } catch (error) {
+      console.error('Error approving driver:', error);
+    }
+  };
+  
+  const handleToggleStatus = async (driverId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.patch(`https://swifdropp.onrender.com/api/v1/${driverId}/toggle-driver-status`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Fetch updated data
+      const response = await axios.get('https://swifdropp.onrender.com/api/v1/driver', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setDrivers(response.data.drivers);
+    } catch (error) {
+      console.error('Error toggling driver status:', error);
+    }
+  };
+  
+
 
   const deleteDriver = async (driverId) => {
     try {
@@ -99,6 +147,8 @@ export const DriversProvider = ({ children }) => {
         toggleAvailability,
         deleteDriver,
         fetchUpdatedDrivers,
+        handleApprove,
+        handleToggleStatus
       }}
     >
       {children}

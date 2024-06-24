@@ -30,7 +30,8 @@ import {
 import { useDrivers } from '../../contexts/DriversContext';
 
 const DriversList = () => {
-  const { drivers, totalItems, pageSize, toggleAvailability, deleteDriver } =
+  const { drivers, totalItems, pageSize, toggleAvailability, deleteDriver, handleApprove,
+    handleToggleStatus } =
     useDrivers();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
@@ -130,6 +131,80 @@ const DriversList = () => {
       });
     }
   };
+  const handleApproveDriver = async (driverId) => {
+    try {
+      await handleApprove(driverId);
+      toast({
+        title: 'Driver Approved',
+        description: `Driver approved successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      console.error('Error approving driver:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to approve driver. Please try again.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  // Function to handle driver activation
+  const handleActivateDriver = async (driverId) => {
+    try {
+      await handleToggleStatus(driverId);
+      toast({
+        title: 'Driver Activated',
+        description: `Driver activated successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      console.error('Error activating driver:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to activate driver. Please try again.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  // Function to handle driver suspension
+  const handleSuspendDriver = async (driverId) => {
+    try {
+      await handleToggleStatus(driverId);
+      toast({
+        title: 'Driver Suspended',
+        description: `Driver suspended successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      console.error('Error suspending driver:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to suspend driver. Please try again.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+  
 
   return (
     <Box>
@@ -347,14 +422,18 @@ const DriversList = () => {
                     {driver.delivered}
                   </Td>
                   <Td>
-                    <Badge
-                      colorScheme={driver.isActive ? 'green' : 'red'}
-                      borderRadius={'7rem'}
-                      textTransform={'capitalize'}
-                      px={2}
-                    >
-                      {driver.isActive ? 'Active' : 'Inactive'}
-                    </Badge>
+                  <Badge
+  colorScheme={driver.isActive ? (driver.approved ? 'green' : 'orange') : 'red'}
+  borderRadius={'7rem'}
+  textTransform={'capitalize'}
+  px={2}
+>
+  {driver.isActive ? (driver.approved ? 'Active' : 'Pending') : 'Suspended'}
+</Badge>
+
+
+
+
                   </Td>
                   <Td>
                     <HStack justify={'center'}>
@@ -382,17 +461,33 @@ const DriversList = () => {
                           h="2.0rem"
                         />
                       </Tooltip>
-                      <Tooltip label="Suspend" aria-label="Suspend Tooltip">
-                        <IconButton
-                          icon={<RiErrorWarningLine />}
-                          color="black"
-                          cursor="pointer"
-                          bg="#EFEFEF"
-                          aria-label=""
-                          w="1.5rem"
-                          h="2.0rem"
-                        />
-                      </Tooltip>
+                      // Inside the map function where the error line button is rendered
+                      <Tooltip label={driver.approved ? 'Activate/Suspend' : 'Approve'} aria-label="Approve/Activate/Suspend Tooltip">
+  <IconButton
+    icon={<RiErrorWarningLine />}
+    color="black"
+    cursor="pointer"
+    bg="#EFEFEF"
+    aria-label=""
+    w="1.5rem"
+    h="2.0rem"
+    onClick={() => {
+      if (driver.approved) {
+        // If the driver is approved, toggle the status (activate/suspend)
+        if (driver.isActive) {
+          handleSuspendDriver(driver._id);
+        } else {
+          handleActivateDriver(driver._id);
+        }
+      } else {
+        // If the driver is not approved, approve the driver
+        handleApproveDriver(driver._id);
+      }
+    }}
+  />
+</Tooltip>
+
+
                       <Tooltip label="Delete" aria-label="Delete Tooltip">
                         <IconButton
                           icon={<RiDeleteBinLine />}
