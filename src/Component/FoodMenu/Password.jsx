@@ -41,7 +41,7 @@ export default function Password() {
           <input
             id="newPassword"
             type="password"
-            className="w-[70%] h-12 border-gray-100 rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm mr-4"
+            className="w-full h-12 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm pl-12"
             placeholder="Enter your new password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}

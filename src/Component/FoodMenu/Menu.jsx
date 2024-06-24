@@ -82,7 +82,7 @@ export default function Menu() {
               </Link>
             </li>
             <li className="my-2">
-              <Link to="side-items" className="flex items-center p-2 rounded hover:bg-blue-200">
+              <Link to={`side-items/${id}`} className="flex items-center p-2 rounded hover:bg-blue-200">
                 <Image src="/ep_dish.png" alt="Edit" />
                 <span className="pl-2">Side Items</span>
               </Link>

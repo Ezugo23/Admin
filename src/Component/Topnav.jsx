@@ -1,10 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Flex,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Input,
   InputGroup,
   InputRightElement,
@@ -13,18 +10,30 @@ import {
   Badge,
   Avatar,
   Divider,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from '@chakra-ui/react';
+import { BsBoxArrowRight } from 'react-icons/bs';
 import { FiAlignLeft, FiBell, FiSearch } from 'react-icons/fi';
-import { useLocation, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
 const TopNav = () => {
-  const location = useLocation();
-  const pathnames = location.pathname.split('/').filter((x) => x);
+  const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage dropdown visibility
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('adminId');
+     navigate('/login');
+  };
 
   return (
     <Box bg={'#f9f9f9'} p={4}>
       <Flex justify="space-between" align="center" justifyContent="flex-end">
-
         <Flex align="center">
           <InputGroup width="200px" borderRadius={15} mr={4}>
             <Input
@@ -82,7 +91,29 @@ const TopNav = () => {
             mr={4}
             w={'50'}
           />
-          <IconButton aria-label="Menu" icon={<FiAlignLeft />} />
+
+          {/* Menu Button */}
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="Options"
+              icon={<FiAlignLeft />}
+              onClick={toggleMenu}
+            />
+            <MenuList>
+            <div
+              className="flex items-center px-4 py-2 text-red-500 cursor-pointer"
+              onClick={handleLogout}
+            >
+              <BsBoxArrowRight
+                className="text-lg mr-2"
+                onClick={handleLogout}
+              />
+              Logout
+            </div>
+            </MenuList>
+          </Menu>
+
         </Flex>
       </Flex>
       <Divider mt={'5'} borderWidth={'1px'} color={'black'} />
