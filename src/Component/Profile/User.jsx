@@ -1,12 +1,8 @@
 import {
   Box,
-  Button,
   FormControl,
-  FormLabel,
   Input,
   Image,
-  InputGroup,
-  InputLeftElement,
 } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -51,10 +47,9 @@ export default function User() {
           address: response.data.admin.address,
           userType: response.data.admin.userType,
         });
-        setImagePreviewUrl(response.data.admin.profileImage);
+        setImagePreviewUrl(response.data.admin.image);
       } catch (error) {
         console.error('Error fetching admin data:', error);
-        console.log('Error response data:', error.response.data);
         setShowErrorModal(true);
       }
     };
@@ -92,7 +87,11 @@ export default function User() {
     }
 
     try {
-      await axios.patch(url, data);
+      await axios.patch(url, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       setShowModal(true);
     } catch (error) {
       console.error('Error updating admin data:', error);
@@ -112,7 +111,7 @@ export default function User() {
         [name]: value,
       });
     }
-  };
+  }
 
   return (
     <>

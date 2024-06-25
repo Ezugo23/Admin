@@ -30,7 +30,9 @@ import {
 import { useDrivers } from '../../contexts/DriversContext';
 
 const DriversList = () => {
-  const { drivers, totalItems, pageSize, toggleAvailability } = useDrivers();
+  const { drivers, totalItems, pageSize, toggleAvailability, deleteDriver, handleApprove,
+    handleToggleStatus } =
+    useDrivers();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const toast = useToast();
@@ -41,7 +43,7 @@ const DriversList = () => {
       .includes(searchTerm.toLowerCase())
   );
 
-  const totalPages = Math.ceil(totalItems / pageSize);
+  const totalPages = Math.ceil(filteredDrivers.length / pageSize);
 
   const handlePageChange = (page) => {
     if (page < 1 || page > totalPages) return;
@@ -106,6 +108,104 @@ const DriversList = () => {
     }
   };
 
+  const handleDeleteDriver = async (driverId) => {
+    try {
+      await deleteDriver(driverId);
+      toast({
+        title: 'Driver Deleted',
+        description: `Driver deleted successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      console.error('Error deleting driver:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to delete driver. Please try again.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+  const handleApproveDriver = async (driverId) => {
+    try {
+      await handleApprove(driverId);
+      toast({
+        title: 'Driver Approved',
+        description: `Driver approved successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      console.error('Error approving driver:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to approve driver. Please try again.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  // Function to handle driver activation
+  const handleActivateDriver = async (driverId) => {
+    try {
+      await handleToggleStatus(driverId);
+      toast({
+        title: 'Driver Activated',
+        description: `Driver activated successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      console.error('Error activating driver:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to activate driver. Please try again.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  // Function to handle driver suspension
+  const handleSuspendDriver = async (driverId) => {
+    try {
+      await handleToggleStatus(driverId);
+      toast({
+        title: 'Driver Suspended',
+        description: `Driver suspended successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      console.error('Error suspending driver:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to suspend driver. Please try again.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+  
+
   return (
     <Box>
       <HStack justify={'space-between'} mb={'5'}>
@@ -156,15 +256,6 @@ const DriversList = () => {
           >
             <Thead bg="white">
               <Tr>
-                {/* <Th
-                  fontSize="0.738rem"
-                  textAlign="center"
-                  color={'#181616'}
-                  textTransform={'capitalize'}
-                  fontWeight={400}
-                >
-                  ID
-                </Th> */}
                 <Th
                   fontSize="0.738rem"
                   textAlign="center"
@@ -217,6 +308,15 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
+                  Withdrawn
+                </Th>
+                <Th
+                  fontSize="0.738rem"
+                  textAlign="center"
+                  color={'#181616'}
+                  textTransform={'capitalize'}
+                  fontWeight={400}
+                >
                   Delivered
                 </Th>
                 <Th
@@ -246,14 +346,6 @@ const DriversList = () => {
                   textAlign="center"
                   bg={index % 2 === 0 ? '#f9fafc' : 'white'}
                 >
-                  {/* <Td
-                    fontSize="0.675rem"
-                    color="#121111"
-                    textAlign="center"
-                    whiteSpace={'nowrap'}
-                  >
-                    {driver._id}
-                  </Td> */}
                   <Td>
                     <Image
                       src={driver.image}
@@ -272,6 +364,10 @@ const DriversList = () => {
                         color="#121111"
                         textAlign="center"
                         whiteSpace={'nowrap'}
+                        onClick={() =>
+                          navigate(`/driversprofile/${driver._id}`)
+                        }
+                        cursor={'pointer'}
                       >
                         {driver.firstname} {driver.lastname}
                       </Text>
@@ -315,17 +411,29 @@ const DriversList = () => {
                     textAlign="center"
                     whiteSpace={'nowrap'}
                   >
+                    ₦{driver.totalSuccessfulWithdrawals}
+                  </Td>
+                  <Td
+                    fontSize="0.675rem"
+                    color="#121111"
+                    textAlign="center"
+                    whiteSpace={'nowrap'}
+                  >
                     {driver.delivered}
                   </Td>
                   <Td>
-                    <Badge
-                      colorScheme={driver.isActive ? 'green' : 'red'}
-                      borderRadius={'7rem'}
-                      textTransform={'capitalize'}
-                      px={2}
-                    >
-                      {driver.isActive ? 'Active' : 'Inactive'}
-                    </Badge>
+                  <Badge
+  colorScheme={driver.isActive ? (driver.approved ? 'green' : 'orange') : 'red'}
+  borderRadius={'7rem'}
+  textTransform={'capitalize'}
+  px={2}
+>
+  {driver.isActive ? (driver.approved ? 'Active' : 'Pending') : 'Suspended'}
+</Badge>
+
+
+
+
                   </Td>
                   <Td>
                     <HStack justify={'center'}>
@@ -353,17 +461,33 @@ const DriversList = () => {
                           h="2.0rem"
                         />
                       </Tooltip>
-                      <Tooltip label="Suspend" aria-label="Suspend Tooltip">
-                        <IconButton
-                          icon={<RiErrorWarningLine />}
-                          color="black"
-                          cursor="pointer"
-                          bg="#EFEFEF"
-                          aria-label=""
-                          w="1.5rem"
-                          h="2.0rem"
-                        />
-                      </Tooltip>
+                      // Inside the map function where the error line button is rendered
+                      <Tooltip label={driver.approved ? 'Activate/Suspend' : 'Approve'} aria-label="Approve/Activate/Suspend Tooltip">
+  <IconButton
+    icon={<RiErrorWarningLine />}
+    color="black"
+    cursor="pointer"
+    bg="#EFEFEF"
+    aria-label=""
+    w="1.5rem"
+    h="2.0rem"
+    onClick={() => {
+      if (driver.approved) {
+        // If the driver is approved, toggle the status (activate/suspend)
+        if (driver.isActive) {
+          handleSuspendDriver(driver._id);
+        } else {
+          handleActivateDriver(driver._id);
+        }
+      } else {
+        // If the driver is not approved, approve the driver
+        handleApproveDriver(driver._id);
+      }
+    }}
+  />
+</Tooltip>
+
+
                       <Tooltip label="Delete" aria-label="Delete Tooltip">
                         <IconButton
                           icon={<RiDeleteBinLine />}
@@ -373,6 +497,7 @@ const DriversList = () => {
                           aria-label=""
                           w="1.5rem"
                           h="2.0rem"
+                          onClick={() => handleDeleteDriver(driver._id)}
                         />
                       </Tooltip>
                       <Tooltip

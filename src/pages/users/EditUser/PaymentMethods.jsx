@@ -16,7 +16,7 @@ export default function PaymentMethods() {
                     <h2 className="font-medium">Swifty Microfinance Bank</h2>
                 </div>
             </div>
-
+{/* 
             <div className="bg-[#4CAF50] text-white rounded-3xl w-[42%] p-4">
                 <div className="flex justify-between">
                     <img src="/mastercard-logo.svg" alt="" />
@@ -34,7 +34,7 @@ export default function PaymentMethods() {
                     <p>235</p>
                    </div>
                 </div>
-            </div>
+            </div> */}
             </div>
             <p className="font-medium my-5">Recent transactions</p>
             {PaymentMethodsData.map(transaction => (
