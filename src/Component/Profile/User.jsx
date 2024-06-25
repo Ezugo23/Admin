@@ -111,7 +111,7 @@ export default function User() {
         [name]: value,
       });
     }
-  };
+  }
 
   return (
     <>
