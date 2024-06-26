@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../administrators/styles/users.css";
 import { FaEdit, FaPlus, FaTrash } from "react-icons/fa";
 import PaginationButton from "./paginationButton";
@@ -15,47 +15,49 @@ const AllUsers = () => {
   };
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const [allUsers, setAllUsers] = useState([]);
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const [admins] = useState([
-    {
-      id: "03DR456",
-      image: "/John.svg",
-      name: "John Cage",
-      phone: "+1 (266) 314-5642",
-      address: "02111., 50, G. Washington ave. app 5, Boston, USA",
-      email: "info@yourmail.com",
-      status: true,
-      totalPaid: "$235.55",
-    },
-    {
-      id: "25DFR3",
-      image: "/Linda.svg",
-      name: "Linda Bernstein",
-      phone: "+1 (366) 314-2345",
-      address: "02111., 83, A. Lincoln ave. app 12, Boston, USA",
-      email: "name@yourmail.com",
-      status: true,
-      totalPaid: "$345.30",
-    },
-    {
-      id: "4RT56FD",
-      image: "/Natalie.svg",
-      name: "Natalie Vachini",
-      phone: "+1 (366) 214-7890",
-      address: "02113., 70, Charter str. app 5, Boston, USA",
-      email: "support@yourmail.com",
-      status: false,
-      totalPaid: "$145.65",
-    },
-  ]);
+  useEffect(() => {
+    if(error) {
+        setTimeout(() => {
+            setError('')
+        }, 3000);
+    }
+}, [error])
 
-  const filteredAdmins = admins.filter((admin) =>
-    admin.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const getAllUsers = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`https://swifdropp.onrender.com/api/v1/user/profile/`);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+
+      const data = await response.json();
+      setAllUsers(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching all users:', error);
+      setLoading(false);
+      setError('Failed to fetch data. Please try again.')
+    }
+  };
+
+  useEffect(() => {
+    getAllUsers();
+  }, [])
+
+  const filteredAdmins = allUsers.filter((admin) =>
+    admin.firstname.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const currentAdmins = filteredAdmins.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
+    <>
     <div className="contain">
       <div className="header">
         <h2 className="header-title">All Users</h2>
@@ -65,6 +67,8 @@ const AllUsers = () => {
         </span>
       </div>
       <div className="main-container">
+      {error && <p className="text-center  text-base text-red-800">{error}</p>}
+      {loading && <p className="text-center">Loading...</p>}
         <div className="entries-container mb-4">
           <label>
             Show
@@ -90,7 +94,7 @@ const AllUsers = () => {
           <table className="table min-w-full">
             <thead className="table-header">
               <tr>
-                <th>ID</th>
+                <th>NO</th>
                 <th>IMAGES</th>
                 <th>NAME, ADDRESS</th>
                 <th>PHONE</th>
@@ -101,39 +105,39 @@ const AllUsers = () => {
               </tr>
             </thead>
             <tbody>
-              {currentAdmins.map((admin) => (
+              {currentAdmins.map((admin, index) => (
                 <tr key={admin.id} className="table-row">
-                  <td>{admin.id}</td>
+                  <td>{index + 1}</td>
                   <td>
                     <img src={admin.image} alt="Profile" className="image" />
                   </td>
                   <td>
                     <div className="name-phone-container">
                       <div className="text-sm">
-                        <div className="!text-sm">{admin.name}</div>
+                        <div className="!text-sm">{admin.firstname}</div>
                         <div className="text-gray-400 text-xs">
                           {admin.address}
                         </div>
                       </div>
                     </div>
                   </td>
-                  <td>{admin.phone}</td>
+                  <td>{admin.phoneNumber}</td>
                   <td>{admin.email}</td>
                   <td>
                     <button
                       className={`px-4 py-1 mx-1 rounded-3xl border ${
-                        admin.status === true
+                        admin.isActive === true
                           ? "border-[#4DB6AC] text-[#4DB6AC]"
                           : "bg-[#FF5252] text-white"
                       }`}
                     >
-                      {admin.status === true ? <p>Active</p> : <p>Suspend</p>}
+                      {admin.isActive === true ? <p>Active</p> : <p>Suspend</p>}
                     </button>
                   </td>
                   <td>{admin.totalPaid}</td>
 
                   <td className="flex items-center gap-3">
-                    <Link to='/users/editUser' className="action-item cursor-pointer flex items-center gap-2">
+                    <Link to={`/users/editUser/${admin._id}`} className="action-item cursor-pointer flex items-center gap-2" >
                       <FaEdit /> Edit
                     </Link>
                     <span onClick={() => setOpenModal(true)} className="action-item cursor-pointer flex items-center gap-1">
@@ -160,6 +164,7 @@ const AllUsers = () => {
       </div>
       {openModal && <SuspendModal setOpenModal={setOpenModal} />}
     </div>
+    </>
   );
 };
 
