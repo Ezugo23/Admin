@@ -21,28 +21,29 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
-
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import {
   RiEditLine,
   RiDeleteBinLine,
   RiErrorWarningLine,
 } from 'react-icons/ri';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { useDrivers } from '../../contexts/DriversContext';
 
 const DriversList = () => {
-  const { drivers, totalItems, pageSize } = useDrivers();
+  const { drivers, totalItems, pageSize, toggleAvailability, deleteDriver, handleApprove,
+    handleToggleStatus } =
+    useDrivers();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const toast = useToast();
 
   const filteredDrivers = drivers.filter((driver) =>
-    `${driver.name} ${driver.lastname}`
+    `${driver.firstname} ${driver.lastname}`
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
   );
 
-  const totalPages = Math.ceil(totalItems / pageSize);
+  const totalPages = Math.ceil(filteredDrivers.length / pageSize);
 
   const handlePageChange = (page) => {
     if (page < 1 || page > totalPages) return;
@@ -79,57 +80,26 @@ const DriversList = () => {
   };
 
   const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = Math.min(startIndex + pageSize, drivers.length);
+  const endIndex = Math.min(startIndex + pageSize, filteredDrivers.length);
   const currentDrivers = filteredDrivers.slice(startIndex, endIndex);
   const navigate = useNavigate();
 
-  const toggleAvailability = async (driverId, currentStatus) => {
+  const handleToggleAvailability = async (driverId, currentAvailability) => {
     try {
-      console.log(
-        `Toggling availability for driver ID: ${driverId}, current status: ${currentStatus}`
-      );
-
-      const response = await fetch(
-        `https://swifdropp.onrender.com/api/v1/driver/availability-driver/${driverId}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ available: !currentStatus }),
-        }
-      );
-
-      console.log('Response status:', response.status);
-
-      if (response.ok) {
-        toast({
-          title: 'Success',
-          description: 'Driver availability has been updated.',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-          position: 'top',
-        });
-      } else {
-        const errorData = await response.json();
-        console.error('Error response data:', errorData);
-        toast({
-          title: 'Error',
-          description: `Failed to update driver availability: ${
-            errorData.message || 'Unknown error'
-          }`,
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-          position: 'top',
-        });
-      }
+      await toggleAvailability(driverId, currentAvailability);
+      toast({
+        title: 'Driver Availability Updated',
+        description: `Driver availability toggled successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
     } catch (error) {
-      console.error('Error during fetch:', error);
+      console.error('Error toggling driver availability:', error);
       toast({
         title: 'Error',
-        description: 'Failed to update driver availability.',
+        description: 'Failed to toggle driver availability. Please try again.',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -137,6 +107,104 @@ const DriversList = () => {
       });
     }
   };
+
+  const handleDeleteDriver = async (driverId) => {
+    try {
+      await deleteDriver(driverId);
+      toast({
+        title: 'Driver Deleted',
+        description: `Driver deleted successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      console.error('Error deleting driver:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to delete driver. Please try again.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+  const handleApproveDriver = async (driverId) => {
+    try {
+      await handleApprove(driverId);
+      toast({
+        title: 'Driver Approved',
+        description: `Driver approved successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      console.error('Error approving driver:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to approve driver. Please try again.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  // Function to handle driver activation
+  const handleActivateDriver = async (driverId) => {
+    try {
+      await handleToggleStatus(driverId);
+      toast({
+        title: 'Driver Activated',
+        description: `Driver activated successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      console.error('Error activating driver:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to activate driver. Please try again.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  // Function to handle driver suspension
+  const handleSuspendDriver = async (driverId) => {
+    try {
+      await handleToggleStatus(driverId);
+      toast({
+        title: 'Driver Suspended',
+        description: `Driver suspended successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    } catch (error) {
+      console.error('Error suspending driver:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to suspend driver. Please try again.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+  
 
   return (
     <Box>
@@ -195,7 +263,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  ID
+                  Avatar
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -204,7 +272,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  AVATAR
+                  Name
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -213,7 +281,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  NAME
+                  Phone
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -222,7 +290,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  PHONE
+                  Email
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -231,7 +299,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  EMAIL
+                  Balance
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -240,7 +308,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  BALANCE
+                  Withdrawn
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -249,17 +317,7 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  DELIVERED
-                </Th>
-
-                <Th
-                  fontSize="0.738rem"
-                  textAlign="center"
-                  color={'#181616'}
-                  textTransform={'capitalize'}
-                  fontWeight={400}
-                >
-                  STATUS
+                  Delivered
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -268,7 +326,16 @@ const DriversList = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  ACTION
+                  Status
+                </Th>
+                <Th
+                  fontSize="0.738rem"
+                  textAlign="center"
+                  color={'#181616'}
+                  textTransform={'capitalize'}
+                  fontWeight={400}
+                >
+                  Action
                 </Th>
               </Tr>
             </Thead>
@@ -278,16 +345,7 @@ const DriversList = () => {
                   key={index}
                   textAlign="center"
                   bg={index % 2 === 0 ? '#f9fafc' : 'white'}
-                  // onClick={() => navigate('/driversprofile')}
                 >
-                  <Td
-                    fontSize="0.675rem"
-                    color="#121111"
-                    textAlign="center"
-                    whiteSpace={'nowrap'}
-                  >
-                    {driver._id}
-                  </Td>
                   <Td>
                     <Image
                       src={driver.image}
@@ -299,24 +357,30 @@ const DriversList = () => {
                       boxSize="40px"
                     />
                   </Td>
-                  <Td
-                    fontSize="0.675rem"
-                    color="#121111"
-                    textAlign="center"
-                    whiteSpace={'nowrap'}
-                  >
-                    <Box noOfLines={2} maxWidth="10rem">
+                  <Td>
+                    <Box>
                       <Text
-                        isTruncated={true}
-                        fontSize={'0.675rem'}
-                        color={'#000000'}
+                        fontSize="0.675rem"
+                        color="#121111"
+                        textAlign="center"
+                        whiteSpace={'nowrap'}
+                        onClick={() =>
+                          navigate(`/driversprofile/${driver._id}`)
+                        }
+                        cursor={'pointer'}
                       >
-                        {driver.name} {driver.lastname}
+                        {driver.firstname} {driver.lastname}
                       </Text>
-                      <Text fontSize={'0.575rem'}>{driver.vehicleType}</Text>
+                      <Text
+                        fontSize="0.675rem"
+                        color="#121111"
+                        textAlign="center"
+                        whiteSpace={'nowrap'}
+                      >
+                        {driver.vehicleType}
+                      </Text>
                     </Box>
                   </Td>
-
                   <Td
                     fontSize="0.675rem"
                     color="#121111"
@@ -339,7 +403,15 @@ const DriversList = () => {
                     textAlign="center"
                     whiteSpace={'nowrap'}
                   >
-                    {driver.balance}
+                    ₦{driver.balance}
+                  </Td>
+                  <Td
+                    fontSize="0.675rem"
+                    color="#121111"
+                    textAlign="center"
+                    whiteSpace={'nowrap'}
+                  >
+                    ₦{driver.totalSuccessfulWithdrawals}
                   </Td>
                   <Td
                     fontSize="0.675rem"
@@ -349,18 +421,21 @@ const DriversList = () => {
                   >
                     {driver.delivered}
                   </Td>
-
                   <Td>
-                    <Badge
-                      colorScheme={driver.status === 'Active' ? 'green' : 'red'}
-                      borderRadius={'7rem'}
-                      textTransform={'capitalize'}
-                      px={2}
-                    >
-                      {driver.status}
-                    </Badge>
+                  <Badge
+  colorScheme={driver.isActive ? (driver.approved ? 'green' : 'orange') : 'red'}
+  borderRadius={'7rem'}
+  textTransform={'capitalize'}
+  px={2}
+>
+  {driver.isActive ? (driver.approved ? 'Active' : 'Pending') : 'Suspended'}
+</Badge>
+
+
+
+
                   </Td>
-                  <Td textAlign="center" whiteSpace={'nowrap'}>
+                  <Td>
                     <HStack justify={'center'}>
                       <Tooltip label="Request" aria-label="Request Tooltip">
                         <IconButton
@@ -374,6 +449,7 @@ const DriversList = () => {
                           onClick={() => navigate(`/request/${driver._id}`)}
                         />
                       </Tooltip>
+
                       <Tooltip label="Edit" aria-label="Edit Tooltip">
                         <IconButton
                           icon={<RiEditLine />}
@@ -385,17 +461,33 @@ const DriversList = () => {
                           h="2.0rem"
                         />
                       </Tooltip>
-                      <Tooltip label="Suspend" aria-label="Suspend Tooltip">
-                        <IconButton
-                          icon={<RiErrorWarningLine />}
-                          color="black"
-                          cursor="pointer"
-                          bg="#EFEFEF"
-                          aria-label=""
-                          w="1.5rem"
-                          h="2.0rem"
-                        />
-                      </Tooltip>
+                      // Inside the map function where the error line button is rendered
+                      <Tooltip label={driver.approved ? 'Activate/Suspend' : 'Approve'} aria-label="Approve/Activate/Suspend Tooltip">
+  <IconButton
+    icon={<RiErrorWarningLine />}
+    color="black"
+    cursor="pointer"
+    bg="#EFEFEF"
+    aria-label=""
+    w="1.5rem"
+    h="2.0rem"
+    onClick={() => {
+      if (driver.approved) {
+        // If the driver is approved, toggle the status (activate/suspend)
+        if (driver.isActive) {
+          handleSuspendDriver(driver._id);
+        } else {
+          handleActivateDriver(driver._id);
+        }
+      } else {
+        // If the driver is not approved, approve the driver
+        handleApproveDriver(driver._id);
+      }
+    }}
+  />
+</Tooltip>
+
+
                       <Tooltip label="Delete" aria-label="Delete Tooltip">
                         <IconButton
                           icon={<RiDeleteBinLine />}
@@ -405,16 +497,24 @@ const DriversList = () => {
                           aria-label=""
                           w="1.5rem"
                           h="2.0rem"
+                          onClick={() => handleDeleteDriver(driver._id)}
                         />
                       </Tooltip>
                       <Tooltip
-                        label="Toggle Availability"
-                        aria-label="Toggle Availability Tooltip"
+                        label={
+                          driver.isAvailable
+                            ? 'Driver is available'
+                            : 'Driver is not available'
+                        }
+                        aria-label="Availability Tooltip"
                       >
                         <Switch
-                          isChecked={driver.available}
+                          isChecked={driver.isAvailable}
                           onChange={() =>
-                            toggleAvailability(driver._id, driver.available)
+                            handleToggleAvailability(
+                              driver._id,
+                              driver.isAvailable
+                            )
                           }
                           colorScheme="teal"
                         />

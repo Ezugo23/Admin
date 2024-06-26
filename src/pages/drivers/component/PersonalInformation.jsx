@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   HStack,
   VStack,
@@ -17,22 +17,100 @@ import {
   Select,
   Skeleton,
   useToast,
+  Spinner,
 } from '@chakra-ui/react';
 import { ChevronDownIcon, CloseIcon } from '@chakra-ui/icons';
+import { FaUser } from 'react-icons/fa';
 import axios from 'axios';
 
 const PersonalInformation = ({ driverId, driverData }) => {
   const [formData, setFormData] = useState(driverData);
+  const [initialFormData, setInitialFormData] = useState(null);
+  const [file, setFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFormChanged, setIsFormChanged] = useState(false);
   const toast = useToast();
+  const fileInputRef = React.useRef(null);
+
+  useEffect(() => {
+    if (driverData) {
+      const initialData = {
+        ...driverData,
+        feePercentage: (driverData.feePercentage * 100).toFixed(0),
+      };
+      setInitialFormData(initialData);
+      setFormData(initialData);
+    }
+  }, [driverData]);
+
+  const hasFormChanged = (currentData, initialData) => {
+    const normalizedCurrentData = {
+      ...currentData,
+      feePercentage: parseFloat(currentData.feePercentage),
+    };
+
+    const normalizedInitialData = {
+      ...initialData,
+      feePercentage: parseFloat(initialData.feePercentage),
+    };
+
+    for (const key in normalizedCurrentData) {
+      if (normalizedCurrentData[key] !== normalizedInitialData[key]) {
+        if (key === 'feePercentage') {
+          if (
+            isNaN(normalizedCurrentData[key]) &&
+            !isNaN(normalizedInitialData[key])
+          ) {
+            return true;
+          }
+        } else {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
 
   const handleUpdateDriverData = async () => {
+    setIsLoading(true);
     try {
+      const formDataToSend = new FormData();
+
+      if (file) {
+        formDataToSend.append('image', file);
+      } else if (formData.image) {
+        formDataToSend.append('image', formData.image);
+      }
+
+      const updatedFormData = {
+        ...formData,
+        feePercentage: formData.feePercentage / 100,
+      };
+
+      Object.entries(updatedFormData).forEach(([key, value]) => {
+        if (key !== 'image') {
+          formDataToSend.append(key, value);
+        }
+      });
+
       const response = await axios.patch(
         `https://swifdropp.onrender.com/api/v1/driver/${driverId}`,
-        formData
+        formDataToSend,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
       );
-      setFormData(response.data.driver);
+      const responseData = {
+        ...response.data.driver,
+        feePercentage: (response.data.driver.feePercentage * 100).toFixed(0),
+      };
+      setFormData(responseData);
+      setInitialFormData(responseData);
       toast({
         title: 'Success',
         description: 'Driver data updated successfully',
@@ -41,6 +119,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
         isClosable: true,
         position: 'top',
       });
+      setIsFormChanged(false);
     } catch (err) {
       setError(err);
       toast({
@@ -51,15 +130,33 @@ const PersonalInformation = ({ driverId, driverData }) => {
         isClosable: true,
         position: 'top',
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
+    const updatedFormData = {
       ...formData,
       [name]: name === 'NIN' ? value.toUpperCase() : value,
-    });
+    };
+    setFormData(updatedFormData);
+    setIsFormChanged(hasFormChanged(updatedFormData, initialFormData));
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const updatedFormData = { ...formData, image: URL.createObjectURL(file) };
+    setFile(file);
+    setPreviewImage(updatedFormData.image);
+    setFormData(updatedFormData);
+    setIsFormChanged(true);
+  };
+
+  const handleChangePhoto = () => {
+    fileInputRef.current.click();
+    setIsFormChanged(true);
   };
 
   if (!driverData) {
@@ -80,20 +177,30 @@ const PersonalInformation = ({ driverId, driverData }) => {
   }
 
   return (
-    <Stack w={'full'}>
+    <Stack
+      w={'full'}
+      bg={'#FFFFFF'}
+      p={'15px'}
+      borderRadius={'10px'}
+      boxShadow={'lg'}
+    >
       <Text>Drivers' Info</Text>
-      <Divider />
+      <Divider border={'2px solid #dfdfdf'} />
       <Flex as={'form'} gap={'7'}>
         <Box w={'30%'}>
           <Text>Upload Image</Text>
           <Stack
-            border={'1px solid black'}
+            border={'1px solid #dfdfdf'}
             p={'30px'}
             mt={'5px'}
             position="relative"
           >
             <Box position="relative">
-              <Image src={driverData.image} w={'100%'} />
+              {driverData.image || previewImage ? (
+                <Image src={previewImage || driverData.image} w={'100%'} />
+              ) : (
+                <Icon as={FaUser} boxSize="100px" color="gray.400" />
+              )}
               <IconButton
                 icon={<CloseIcon />}
                 size="sm"
@@ -106,15 +213,23 @@ const PersonalInformation = ({ driverId, driverData }) => {
                 _hover={{
                   bg: 'red',
                 }}
-                onClick={() => console.log('Remove image')}
+                onClick={() => setPreviewImage(null)}
               />
             </Box>
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+            />
             <Button
               bg={'#3B5998'}
               _hover={{
                 bg: '#3b5998',
               }}
               color={'white'}
+              onClick={handleChangePhoto}
             >
               Change Photo
             </Button>
@@ -129,6 +244,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               value={`${formData.firstname} ${formData.lastname}`}
               name="name"
               onChange={handleFormChange}
+              _focus={{ borderColor: '#4DB6AC' }}
             />
           </FormControl>
           <FormControl>
@@ -139,6 +255,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               value={formData.email}
               name="email"
               onChange={handleFormChange}
+              _focus={{ borderColor: '#4DB6AC' }}
             />
           </FormControl>
           <FormControl>
@@ -149,6 +266,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               value={formData.phoneNumber}
               name="phoneNumber"
               onChange={handleFormChange}
+              _focus={{ borderColor: '#4DB6AC' }}
             />
           </FormControl>
           <FormControl>
@@ -159,6 +277,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               value={formData.NIN}
               name="NIN"
               onChange={handleFormChange}
+              _focus={{ borderColor: '#4DB6AC' }}
             />
           </FormControl>
           <FormControl>
@@ -169,6 +288,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               px={'5px'}
               name="address"
               onChange={handleFormChange}
+              _focus={{ borderColor: '#4DB6AC' }}
             />
           </FormControl>
         </Stack>
@@ -181,6 +301,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
               name="vehicleType"
               value={formData.vehicleType}
               onChange={handleFormChange}
+              _focus={{ borderColor: '#4DB6AC' }}
             >
               <option value="car">Car</option>
               <option value="truck">Truck</option>
@@ -198,18 +319,26 @@ const PersonalInformation = ({ driverId, driverData }) => {
               py="15px"
               value={formData.vehiclePlateNumber}
               name="vehiclePlateNumber"
+              _focus={{ borderColor: '#4DB6AC' }}
               onChange={handleFormChange}
             />
           </FormControl>
           <FormControl>
             <FormLabel>Percentage</FormLabel>
-            <Input
+            <Select
               border="2px solid #e8e8ff"
               py="15px"
               value={formData.feePercentage}
               name="feePercentage"
               onChange={handleFormChange}
-            />
+              _focus={{ borderColor: '#4DB6AC' }}
+            >
+              {[...Array(61)].map((_, i) => (
+                <option key={i + 40} value={i + 40}>
+                  {i + 40}%
+                </option>
+              ))}
+            </Select>
           </FormControl>
           <Button
             mt={'7'}
@@ -220,6 +349,9 @@ const PersonalInformation = ({ driverId, driverData }) => {
             _hover={{
               bg: '#4db6ac',
             }}
+            isLoading={isLoading}
+            loadingText="Saving..."
+            isDisabled={!isFormChanged}
           >
             Save
           </Button>

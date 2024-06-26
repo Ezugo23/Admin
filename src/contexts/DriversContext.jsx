@@ -1,4 +1,3 @@
-// this is context is for the driver list
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
@@ -19,6 +18,8 @@ export const DriversProvider = ({ children }) => {
         const response = await axios.get(
           'https://swifdropp.onrender.com/api/v1/driver'
         );
+        console.log('Fetched drivers data:', response.data.drivers);
+
         setDrivers(response.data.drivers);
         setTotalItems(response.data.drivers.length);
       } catch (error) {
@@ -26,18 +27,130 @@ export const DriversProvider = ({ children }) => {
       }
     };
 
-    // this is where im doing the Initial fetch
     fetchDrivers();
 
-    // it refetches every 1 minutes, doing this for a better user experience
     const intervalId = setInterval(fetchDrivers, 60000);
 
-    // Cleanup function
     return () => clearInterval(intervalId);
   }, []);
 
+  const toggleAvailability = async (driverId, currentStatus) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.patch(
+        `https://swifdropp.onrender.com/api/v1/driver/availability-driver/${driverId}`,
+        { isAvailable: !currentStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (response.status === 200) {
+        const updatedDrivers = drivers.map((driver) =>
+          driver._id === driverId
+            ? { ...driver, isAvailable: !currentStatus }
+            : driver
+        );
+        setDrivers(updatedDrivers);
+      } else {
+        console.error('Failed to toggle availability:', response.data);
+      }
+    } catch (error) {
+      console.error('Error toggling availability:', error);
+    }
+  };
+  
+  const handleApprove = async (driverId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.patch(`https://swifdropp.onrender.com/api/v1/approve-driver/${driverId}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Fetch updated data
+      const response = await axios.get('https://swifdropp.onrender.com/api/v1/driver', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setDrivers(response.data.drivers);
+    } catch (error) {
+      console.error('Error approving driver:', error);
+    }
+  };
+  
+  const handleToggleStatus = async (driverId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.patch(`https://swifdropp.onrender.com/api/v1/${driverId}/toggle-driver-status`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // Fetch updated data
+      const response = await axios.get('https://swifdropp.onrender.com/api/v1/driver', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setDrivers(response.data.drivers);
+    } catch (error) {
+      console.error('Error toggling driver status:', error);
+    }
+  };
+  
+
+
+  const deleteDriver = async (driverId) => {
+    try {
+      const response = await axios.delete(
+        `https://swifdropp.onrender.com/api/v1/driver/${driverId}`
+      );
+
+      if (response.status === 200) {
+        const updatedDrivers = drivers.filter(
+          (driver) => driver._id !== driverId
+        );
+        setDrivers((prevDrivers) =>
+          prevDrivers.filter((driver) => driver._id !== driverId)
+        );
+        setTotalItems((prevTotalItems) => prevTotalItems - 1); // Update the totalItems count
+      } else {
+        console.error('Failed to delete driver:', response.data);
+      }
+    } catch (error) {
+      console.error('Error deleting driver:', error);
+    }
+  };
+
+  const fetchUpdatedDrivers = async () => {
+    try {
+      const response = await axios.get(
+        'https://swifdropp.onrender.com/api/v1/driver'
+      );
+      setDrivers(response.data.drivers);
+      setTotalItems(response.data.drivers.length);
+    } catch (error) {
+      console.error('Error fetching updated drivers:', error);
+    }
+  };
+
   return (
-    <DriversContext.Provider value={{ drivers, totalItems, pageSize }}>
+    <DriversContext.Provider
+      value={{
+        drivers,
+        totalItems,
+        pageSize,
+        toggleAvailability,
+        deleteDriver,
+        fetchUpdatedDrivers,
+        handleApprove,
+        handleToggleStatus
+      }}
+    >
       {children}
     </DriversContext.Provider>
   );

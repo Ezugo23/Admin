@@ -16,13 +16,13 @@ const Login = () => {
 
   async function login(e) {
     e.preventDefault();
-
+  
     const regData = {
       email,
       password,
       companyPassword
     };
-
+  
     try {
       setLoading(true);
       const response = await fetch("https://swifdropp.onrender.com/api/v1/login-admin", {
@@ -34,25 +34,26 @@ const Login = () => {
       });
       const responseData = await response.json();
       console.log(responseData);
-
+  
       if (responseData.token) {
         localStorage.setItem('token', responseData.token);
+        localStorage.setItem('adminId', responseData.id); // Store adminId in localStorage
         navigate('/Dashboard');
       }
-
+  
       if (responseData.error) {
         toast.error(responseData.error);
       }
-
+  
       if (responseData.errorDetails) {
         toast.error("All fields are required");
         setLoading(false);
       }
-
+  
       if (responseData.message) {
         toast.success(responseData.message);
       }
-
+  
     } catch (error) {
       console.log(error);
     }

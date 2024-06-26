@@ -16,14 +16,13 @@ import Drivers from './pages/drivers/Drivers';
 import DriverSettings from './pages/drivers/DriverSettings';
 import DriversList from './pages/drivers/DriversList';
 import DriversProfile from './pages/drivers/component/DriversProfile';
-import OweAmount from './pages/drivers/OweAmount';
+import WithdrawalHistory from './pages/drivers/WithdrawalHistory';
 import Sellers from './pages/FoodSellers/Sellers';
 import SellersList from './pages/FoodSellers/SellersList';
 import Request from './pages/drivers/component/Request';
-import SuperRegister from './pages/Register/Register'
-import SuperLogin from './pages/Login/Login'
 import { io } from 'socket.io-client';
 import { DriversProvider } from './contexts/DriversContext';
+import { WithdrawalProvider } from './contexts/WithdrawalContext';
 import EditUser from './pages/users/EditUser/EditUser';
 
 function App() {
@@ -57,12 +56,7 @@ function App() {
   }, []);
 
   const MainLayout = ({ children }) => (
-    <Flex
-      h="100vh"
-      direction="row"
-      backgroundColor="#f9f9f9"
-      overflow="hidden"
-    >
+    <Flex h="100vh" direction="row" backgroundColor="#f9f9f9" overflow="hidden">
       <Box as="nav" flex="0 0 auto">
         <Sidebar />
       </Box>
@@ -86,29 +80,142 @@ function App() {
 
   return (
     <DriversProvider>
-      <Router>
-        <Routes>
-          <Route path="/*" element={<Signup socket={socket} />} />
-          <Route path="/Dashboard" element={<MainLayout><Home socket={socket} /></MainLayout>} />
-          <Route path="/profile/*" element={<MainLayout><Profile socket={socket} /></MainLayout>} />
-          <Route path="/foodsellers/*" element={<MainLayout><Sellers socket={socket} /></MainLayout>} />
-          <Route path="/foodsellers/list" element={<MainLayout><SellersList socket={socket} /></MainLayout>} />
-          <Route path="/ordersHistory/*" element={<MainLayout><History socket={socket} /></MainLayout>} />
-          <Route path="/users/admin" element={<MainLayout><Users socket={socket} /></MainLayout>} />
-          <Route path="/users/allusers" element={<MainLayout><AllUsers socket={socket} /></MainLayout>} />
-          <Route path="/users/editUser/:id" element={<MainLayout><EditUser socket={socket} /></MainLayout>} />
-          <Route path="/drivers" element={<MainLayout><Drivers socket={socket} /></MainLayout>} />
-          <Route path="/driversprofile/:driverId/*" element={<MainLayout><DriversProfile socket={socket} /></MainLayout>} />
-          <Route path="/drivers/settings" element={<MainLayout><DriverSettings socket={socket} /></MainLayout>} />
-          <Route path="/drivers/list" element={<MainLayout><DriversList socket={socket} /></MainLayout>} />
-          <Route path="/request/:id" element={<MainLayout><Request socket={socket} /></MainLayout>} />
-          <Route path="/drivers/oweamount" element={<MainLayout><OweAmount socket={socket} /></MainLayout>} />
-          <Route path="/daily-transaction/*" element={<MainLayout><Daily socket={socket} /></MainLayout>} />
-          <Route path="/settings" element={<MainLayout><Settings socket={socket} /></MainLayout>} />
-          <Route exact path="/SuperRegister" element={<SuperRegister />} />
-           <Route exact path="/SuperLogin" element={<SuperLogin />}/>
-        </Routes>
-      </Router>
+      <WithdrawalProvider>
+        <Router>
+          <Routes>
+            <Route path="/*" element={<Signup socket={socket} />} />
+            <Route
+              path="/Dashboard"
+              element={
+                <MainLayout>
+                  <Home socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/profile/*"
+              element={
+                <MainLayout>
+                  <Profile socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/foodsellers/*"
+              element={
+                <MainLayout>
+                  <Sellers socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/foodsellers/list"
+              element={
+                <MainLayout>
+                  <SellersList socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/ordersHistory/*"
+              element={
+                <MainLayout>
+                  <History socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/users/admin"
+              element={
+                <MainLayout>
+                  <Users socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/users/allusers"
+              element={
+                <MainLayout>
+                  <AllUsers socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/users/editUser/:id"
+              element={
+                <MainLayout>
+                  <EditUser socket={socket} />
+                </MainLayout>
+              }
+            />
+
+            <Route
+              path="/drivers"
+              element={
+                <MainLayout>
+                  <Drivers socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/driversprofile/:driverId/*"
+              element={
+                <MainLayout>
+                  <DriversProfile socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/drivers/settings"
+              element={
+                <MainLayout>
+                  <DriverSettings socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/drivers/list"
+              element={
+                <MainLayout>
+                  <DriversList socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/request/:id"
+              element={
+                <MainLayout>
+                  <Request socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/drivers/withdrawalhistory"
+              element={
+                <MainLayout>
+                  <WithdrawalHistory socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/daily-transaction/*"
+              element={
+                <MainLayout>
+                  <Daily socket={socket} />
+                </MainLayout>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <MainLayout>
+                  <Settings socket={socket} />
+                </MainLayout>
+              }
+            />
+          </Routes>
+        </Router>
+      </WithdrawalProvider>
     </DriversProvider>
   );
 }

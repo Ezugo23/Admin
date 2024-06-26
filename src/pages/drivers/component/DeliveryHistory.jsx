@@ -8,7 +8,6 @@ import {
   Th,
   Thead,
   Tr,
-  Badge,
   HStack,
   VStack,
   Text,
@@ -20,22 +19,19 @@ import {
   Tooltip,
   Skeleton,
 } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
 import {
   FaCalendarAlt,
   FaClock,
   FaArrowLeft,
   FaArrowRight,
 } from 'react-icons/fa';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const Request = () => {
+const DeliveryHistory = ({ driverId }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [loading, setLoading] = useState(true);
-  const { id } = useParams();
-
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -48,17 +44,32 @@ const Request = () => {
     }, 70000);
 
     return () => clearTimeout(timeoutId);
-  }, []);
+  }, [driverId]);
 
   const fetchOrders = async () => {
     try {
       setLoading(true);
-
       const response = await axios.get(
-        `https://swifdropp.onrender.com/api/v1/driver/ongoing-delivery/${id}`
+        `https://swifdropp.onrender.com/api/v1/driver/${driverId}/orders`
       );
-      console.log('Fetched data:', response.data);
-      setOrders(response.data.orders);
+      // console.log('Fetched data:', response.data);
+
+      let ordersArray = [];
+      if (Array.isArray(response.data)) {
+        ordersArray = response.data;
+      } else if (typeof response.data === 'object') {
+        ordersArray = Object.values(response.data);
+      }
+
+      const flattenedOrders = ordersArray.flatMap((item) =>
+        Array.isArray(item) ? item : [item]
+      );
+
+      const validOrders = flattenedOrders.filter(
+        (order) => order && typeof order === 'object' && order.orderId
+      );
+
+      setOrders(validOrders);
       setError('');
     } catch (error) {
       console.error('Error fetching orders:', error);
@@ -68,6 +79,86 @@ const Request = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  const formatTime = (dateString) => {
+    const options = { hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleTimeString(undefined, options);
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const filteredOrders = orders.filter((order) =>
+    `${order.username || ''} ${order.pickUpAddress || ''} ${
+      order.deliveryAddress || ''
+    }`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentOrders = filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+
+  const renderPaginationButtons = () => {
+    const pageNumbers = [];
+    const maxPagesToShow = 5;
+
+    if (totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    } else {
+      let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+      let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+      if (endPage - startPage + 1 < maxPagesToShow) {
+        startPage = Math.max(1, endPage - maxPagesToShow + 1);
+      }
+
+      if (startPage > 1) {
+        pageNumbers.push(1);
+        if (startPage > 2) {
+          pageNumbers.push('...');
+        }
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        pageNumbers.push(i);
+      }
+
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+          pageNumbers.push('...');
+        }
+        pageNumbers.push(totalPages);
+      }
+    }
+
+    return pageNumbers.map((page, index) => (
+      <Button
+        key={index}
+        onClick={() => typeof page === 'number' && handlePageChange(page)}
+        isActive={currentPage === page}
+        variant={currentPage === page ? '#4CAF50' : 'white'}
+        disabled={typeof page !== 'number'}
+        bg={currentPage === page ? '#4CAF50' : 'white'}
+        color={currentPage === page ? 'white' : 'black'}
+        _hover={{
+          bg: currentPage === page ? '#45a049' : '#f5f5f5',
+        }}
+      >
+        {page}
+      </Button>
+    ));
+  };
+
   if (loading) {
     return (
       <Box>
@@ -75,7 +166,6 @@ const Request = () => {
           <Skeleton height="20px" width="150px" />
           <Skeleton height="40px" width="200px" />
         </HStack>
-
         <Box bg={'white'} p={'5'}>
           <HStack justifyContent={'flex-end'} mb={'10px'}>
             <Skeleton height="20px" width="80px" />
@@ -159,28 +249,8 @@ const Request = () => {
     );
   }
 
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
-  const formatTime = (dateString) => {
-    const options = { hour: '2-digit', minute: '2-digit' };
-    return new Date(dateString).toLocaleTimeString(undefined, options);
-  };
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const filteredOrders = orders.filter((order) =>
-    `${order.user.name} ${order.restaurant.name} ${order.user.deliveryAddress}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
-
   if (error) {
-    return <Text>Error: {Text}</Text>;
+    return <Text>Error: {error}</Text>;
   }
 
   if (orders.length === 0) {
@@ -190,20 +260,20 @@ const Request = () => {
           bg="white"
           p={4}
           borderRadius="md"
-          boxShadow="md"
+          boxShadow="lg"
           _hover={{ boxShadow: 'lg' }}
           justify={'center'}
           align={'center'}
           h={'200px'}
-          w={'300px'}
+          w={'350px'}
           transition="all 0.7s"
         >
-          <Text>No request available for this driver</Text>
+          <Text>No request history available for this driver</Text>
           <Button
             _hover={{ bg: '#4caf50', color: 'white' }}
             bg={'#4caf50'}
             color={'white'}
-            onClick={() => navigate('/drivers/list')}
+            onClick={() => navigate(-1)}
           >
             Okay
           </Button>
@@ -212,15 +282,10 @@ const Request = () => {
     );
   }
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentOrders = filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
-
   return (
-    <Box>
+    <Box overflowX={'auto'}>
       <Text fontSize={'1.125rem'} fontWeight={'400'} mb={'5'}>
-        All Delivery Requests of Driver:
+        All Delivery Requests History of Driver:
       </Text>
 
       <Box bg={'white'} p={'5'}>
@@ -260,7 +325,7 @@ const Request = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  ID
+                  #
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -269,7 +334,7 @@ const Request = () => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  CUSTOMER
+                  DATE TIME
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -316,15 +381,6 @@ const Request = () => {
                 >
                   STATUS
                 </Th>
-                <Th
-                  fontSize="0.738rem"
-                  textAlign="center"
-                  color={'#181616'}
-                  textTransform={'capitalize'}
-                  fontWeight={400}
-                >
-                  DATE TIME
-                </Th>
               </Tr>
             </Thead>
             <Tbody bg="#fefefd">
@@ -333,7 +389,6 @@ const Request = () => {
                   key={index}
                   textAlign="center"
                   bg={index % 2 === 0 ? '#f9fafc' : 'white'}
-                  // onClick={() => handleRowClick(request.id)}
                   style={{ cursor: 'pointer' }}
                 >
                   <Td
@@ -342,15 +397,35 @@ const Request = () => {
                     textAlign="center"
                     whiteSpace={'nowrap'}
                   >
-                    {index + 1}
+                    {indexOfFirstItem + index + 1}
                   </Td>
-                  <Td
-                    fontSize="0.675rem"
-                    color="#121111"
-                    textAlign="center"
-                    whiteSpace={'nowrap'}
-                  >
-                    {order.user.name}{' '}
+                  <Td textAlign="center" whiteSpace={'nowrap'}>
+                    <HStack>
+                      <Tooltip label="Date" aria-label="Date Tooltip">
+                        <IconButton
+                          icon={<FaCalendarAlt />}
+                          color="black"
+                          cursor="pointer"
+                          bg="#EFEFEF"
+                          aria-label=""
+                          w="1.5rem"
+                          h="2.0rem"
+                        />
+                      </Tooltip>
+                      <Text>{formatDate(order.orderDate)}</Text>
+                      <Tooltip label="Time" aria-label="Time Tooltip">
+                        <IconButton
+                          icon={<FaClock />}
+                          color="black"
+                          cursor="pointer"
+                          bg="#EFEFEF"
+                          aria-label=""
+                          w="1.5rem"
+                          h="2.0rem"
+                        />
+                      </Tooltip>
+                      <Text>{formatTime(order.orderDate)}</Text>
+                    </HStack>
                   </Td>
                   <Td
                     fontSize="0.675rem"
@@ -364,7 +439,7 @@ const Request = () => {
                         fontSize={'0.675rem'}
                         color={'#000000'}
                       >
-                        {order.restaurant.address}{' '}
+                        {order.pickUpAddress}
                       </Text>
                     </Box>
                   </Td>
@@ -374,7 +449,7 @@ const Request = () => {
                     textAlign="center"
                     whiteSpace={'nowrap'}
                   >
-                    {order.user.deliveryAddress}{' '}
+                    {order.deliveryAddress}
                   </Td>
                   <Td
                     fontSize="0.675rem"
@@ -390,8 +465,8 @@ const Request = () => {
                     textAlign="center"
                     whiteSpace={'nowrap'}
                   >
-                    {order.driverFee}
-                  </Td>{' '}
+                    #{order.Fee}
+                  </Td>
                   <Td
                     fontSize="0.675rem"
                     color="#121111"
@@ -399,36 +474,6 @@ const Request = () => {
                     whiteSpace={'nowrap'}
                   >
                     {order.orderStatus}
-                  </Td>
-                  <Td textAlign="center" whiteSpace={'nowrap'}>
-                    <HStack>
-                      <Tooltip label="Date" aria-label="Date Tooltip">
-                        <IconButton
-                          icon={<FaCalendarAlt />}
-                          color="black"
-                          cursor="pointer"
-                          bg="#EFEFEF"
-                          aria-label=""
-                          w="1.5rem"
-                          h="2.0rem"
-                        />
-                      </Tooltip>
-
-                      <Text>{formatDate(order.orderDate)}</Text>
-                      <Tooltip label="Time" aria-label="Time Tooltip">
-                        <IconButton
-                          icon={<FaClock />}
-                          color="black"
-                          cursor="pointer"
-                          bg="#EFEFEF"
-                          aria-label=""
-                          w="1.5rem"
-                          h="2.0rem"
-                        />
-                      </Tooltip>
-
-                      <Text>{formatTime(order.orderDate)}</Text>
-                    </HStack>
                   </Td>
                 </Tr>
               ))}
@@ -448,21 +493,19 @@ const Request = () => {
               onClick={() => handlePageChange(currentPage - 1)}
               isDisabled={currentPage === 1}
               aria-label="Previous Page"
+              bg="white"
+              color="black"
+              _hover={{ bg: '#4CAF50' }}
             />
-            {[...Array(totalPages).keys()].map((page) => (
-              <Button
-                key={page + 1}
-                onClick={() => handlePageChange(page + 1)}
-                isDisabled={currentPage === page + 1}
-              >
-                {page + 1}
-              </Button>
-            ))}
+            {renderPaginationButtons()}
             <IconButton
               icon={<FaArrowRight />}
               onClick={() => handlePageChange(currentPage + 1)}
               isDisabled={currentPage === totalPages}
               aria-label="Next Page"
+              bg="white"
+              color="black"
+              _hover={{ bg: 'white' }}
             />
           </HStack>
         </Flex>
@@ -471,4 +514,4 @@ const Request = () => {
   );
 };
 
-export default Request;
+export default DeliveryHistory;
