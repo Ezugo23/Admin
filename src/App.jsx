@@ -96,7 +96,7 @@ function App() {
           <Route path="/ordersHistory/*" element={<MainLayout><History socket={socket} /></MainLayout>} />
           <Route path="/users/admin" element={<MainLayout><Users socket={socket} /></MainLayout>} />
           <Route path="/users/allusers" element={<MainLayout><AllUsers socket={socket} /></MainLayout>} />
-          <Route path="/users/editUser" element={<MainLayout><EditUser socket={socket} /></MainLayout>} />
+          <Route path="/users/editUser/:id" element={<MainLayout><EditUser socket={socket} /></MainLayout>} />
           <Route path="/drivers" element={<MainLayout><Drivers socket={socket} /></MainLayout>} />
           <Route path="/driversprofile/:driverId/*" element={<MainLayout><DriversProfile socket={socket} /></MainLayout>} />
           <Route path="/drivers/settings" element={<MainLayout><DriverSettings socket={socket} /></MainLayout>} />
