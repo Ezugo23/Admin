@@ -168,13 +168,14 @@ function App() {
               }
             />
             <Route
-              path="/users/editUser"
+              path="/users/editUser/:id"
               element={
                 <MainLayout>
                   <EditUser socket={socket} />
                 </MainLayout>
               }
             />
+
             <Route
               path="/drivers"
               element={

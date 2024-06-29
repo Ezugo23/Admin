@@ -1,13 +1,87 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from 'axios'
 import ChangePassword from "./ChangePassword";
 import UsersInfo from "./UsersInfo";
 import PaymentMethods from "./PaymentMethods";
 import './EditUser.css'
 import OrderHistory from "./OrderHistory";
+import { useParams } from "react-router-dom";
 
 export default function EditUser() {
-    const [activePage, setActivePage] = useState('Personal Info')
+    const {id} = useParams();
+    const [activePage, setActivePage] = useState('Personal Info');
+    const [newPassword, setNewPassword] = useState('');
+    const [message, setMessage] = useState('');
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [values, setValues] = useState({
+        id: 'id',
+        firstname: '',
+        lastname: '',
+        email: '',
+        username: '',
+        phoneNumber: '',
+        code: '',
+        state: '',
+        country: '',
+        address: '',
+        image: ''
+    })
+    useEffect(() => {
+        axios.get(`https://swifdropp.onrender.com/api/v1/user/profile/${id}`)
+        .then(res => {
+            const data= res.data.data;
+            setValues({
+                username: data.username,
+                firstname: data.firstname,
+                lastname: data.lastname,
+                email: data.email,
+                phoneNumber: data.phoneNumber,
+                code: data.latestAddress ? data.latestAddress.code : 'NIL',
+                state: data.latestAddress ? data.latestAddress.state : 'NIL',
+                country: data.latestAddress ? data.latestAddress.country : 'NIL',
+                address: data.latestAddress ? data.latestAddress.address : 'NIL',
+                image: data.image
+        });
+        })
+        .catch(err => console.log(err))
+    }, [id])
     
+    useEffect(() => {
+        if(message) {
+            setTimeout(() => {
+                setMessage('')
+            }, 3000);
+        }
+    }, [message])
+
+    const handleChangePassword = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`https://swifdropp.onrender.com/api/v1/user/changepassword/verifyadmin/${id}`, {
+                newPassword: newPassword
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.status === 200) {
+                setNewPassword('')
+                setMessage('Password changed successfully!');
+                setIsSuccess(true)
+            } else {
+                setMessage('Failed to change password.');
+                setIsSuccess(false)
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            setMessage('An error occurred.');
+            setIsSuccess(false);
+        }
+    };
+    const handleSubmit = () => {
+        
+      }
     return(
         <div>
             <p className="font-bold text-2xl">Edit User</p>
@@ -15,10 +89,10 @@ export default function EditUser() {
                 <div className="grid-col-1">
                     <div className="bg-white shadow p-4 rounded-sm">
                         <div className="flex gap-4 items-center mb-2">
-                            <img src="/Linda.svg" alt="" className="w-[2.5rem] h-[2.5rem] rounded-full"/>
+                            <img src={values.image} alt="" className="w-[2.5rem] h-[2.5rem] rounded-full"/>
                             <div>
-                                <p>Amelia</p>
-                                <p>Lopes</p>
+                                <p>{values.firstname}</p>
+                                <p>{values.lastname}</p>
                             </div>
                         </div>
                         <div className="flex flex-col items-start">
@@ -50,8 +124,8 @@ export default function EditUser() {
                         : undefined
                         }
                 </div>
-                {activePage === 'Personal Info' && <UsersInfo />}
-                {activePage === 'Change Password' && <ChangePassword />}
+                {activePage === 'Personal Info' && <UsersInfo values={values} setValues={setValues} handleSubmit={handleSubmit}/>}
+                {activePage === 'Change Password' && <ChangePassword isSuccess={isSuccess} message={message} newPassword={newPassword} setNewPassword={setNewPassword} handleChangePassword={handleChangePassword} />}
                 {activePage === 'Payment Methods' && <PaymentMethods />}
                 {activePage === 'Order History' && <OrderHistory />}
             </div>
