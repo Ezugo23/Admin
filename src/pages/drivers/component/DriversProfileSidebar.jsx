@@ -88,13 +88,13 @@ const DriverProfileSidebar = ({ driverId, driverData }) => {
         <SidebarLink to="change-password" icon={<FaLock />} driverId={driverId}>
           Change Password
         </SidebarLink>
-        <SidebarLink
+        {/* <SidebarLink
           to="company-info"
           icon={<FaBuilding />}
           driverId={driverId}
         >
           Company Information
-        </SidebarLink>
+        </SidebarLink> */}
         {/* <SidebarLink to="license" icon={<FaIdCard />} driverId={driverId}>
           Driver License
         </SidebarLink>
@@ -104,13 +104,13 @@ const DriverProfileSidebar = ({ driverId, driverData }) => {
         <SidebarLink to="schedule" icon={<FaCalendar />} driverId={driverId}>
           Schedule
         </SidebarLink> */}
-        <SidebarLink
+        {/* <SidebarLink
           to="payment-method"
           icon={<FaMoneyCheckAlt />}
           driverId={driverId}
         >
           Payment Method
-        </SidebarLink>
+        </SidebarLink> */}
         <SidebarLink
           to="payout-management"
           icon={<FaCreditCard />}
@@ -121,13 +121,13 @@ const DriverProfileSidebar = ({ driverId, driverData }) => {
         <SidebarLink to="delivery" icon={<FaTruck />} driverId={driverId}>
           Delivery Request History
         </SidebarLink>
-        <SidebarLink
+        {/* <SidebarLink
           to="request-history"
           icon={<FaHistory />}
           driverId={driverId}
         >
           Dispute
-        </SidebarLink>
+        </SidebarLink> */}
       </VStack>
     </Box>
   );
