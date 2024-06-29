@@ -171,6 +171,15 @@ const WithdrawalHistory = () => {
                 >
                   Transaction Id
                 </Th>
+                <Th
+                  fontSize="0.738rem"
+                  textAlign="center"
+                  color={'#ffffff'}
+                  textTransform={'capitalize'}
+                  fontWeight={400}
+                >
+                  Status
+                </Th>
               </Tr>
             </Thead>
             <Tbody bg="#fefefd">
@@ -237,6 +246,14 @@ const WithdrawalHistory = () => {
                     {driver.reference.length > 10
                       ? `${driver.reference.substring(0, 10)}...`
                       : driver.reference}
+                  </Td>
+                  <Td
+                    fontSize="0.675rem"
+                    color="#121111"
+                    textAlign="center"
+                    whiteSpace={'nowrap'}
+                  >
+                    {driver.status}
                   </Td>
                 </Tr>
               ))}
