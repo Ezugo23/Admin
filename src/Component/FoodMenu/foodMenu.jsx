@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { BsPlus } from "react-icons/bs";
 import { SpinnerRoundOutlined } from 'spinners-react';
 
 export default function foodMenu() {
+  const { id } = useParams();
   const [data, setData] = useState([
     {
       _id: '1',
@@ -111,7 +112,7 @@ export default function foodMenu() {
               </thead>
               <tbody>
                 {currentData.map((item, index) => (
-                  <tr key={item._id} className="table-row cursor-pointer" onClick={() => handleRowClick(item._id)} style={{ borderBottom: 'none' }}>
+                  <tr key={item._id} className="table-row cursor-pointer" style={{ borderBottom: 'none' }}>
                     <td style={{ border: 'none' }}>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                     <td style={{ border: 'none' }}>
                       <img src={item.image} alt="" />
@@ -137,7 +138,7 @@ export default function foodMenu() {
                       </button>
                     </td>
                     <td className="flex items-center gap-3" style={{ border: 'none' }}>
-                      <Link to='/users/editUser' className="action-item cursor-pointer flex items-center gap-2">
+                      <Link to={`/foodsellers/menu/${id}/food-group/${item._id}`} className="action-item cursor-pointer flex items-center gap-2">
                         <FaEdit /> Edit
                       </Link>
                       <span className="action-item cursor-pointer flex items-center gap-1">
