@@ -100,9 +100,9 @@ export default function EditFood() {
                   <tr key={item._id} className="table-row cursor-pointer" style={{ borderBottom: 'none' }}>
                     <td style={{ border: 'none' }}>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                     <td style={{ border: 'none' }}>
-                      <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`}>
+                    <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`}>
                         <strong>{item.menuName}</strong>
-                      </Link>
+                    </Link>
                     </td>
                     <td style={{ border: 'none' }}>{item.allFoods}</td>
                     <td style={{ border: 'none' }}>
@@ -111,7 +111,7 @@ export default function EditFood() {
                       </button>
                     </td>
                     <td className="flex items-center gap-3" style={{ border: 'none' }}>
-                      <Link to={`/foodsellers/menu/${item._id}/edit`} style={{display:'flex'}}>
+                      <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`} style={{display:'flex'}}>
                         <FaEdit size={15}/> Edit
                       </Link>
                       <span className="action-item cursor-pointer flex items-center gap-1">
@@ -138,6 +138,7 @@ export default function EditFood() {
                     </td>
                   </tr>
                 ))}
+                 
               </tbody>
             </table>
           )}

@@ -24,6 +24,9 @@ import { io } from 'socket.io-client';
 import { DriversProvider } from './contexts/DriversContext';
 import { WithdrawalProvider } from './contexts/WithdrawalContext';
 import EditUser from './pages/users/EditUser/EditUser';
+import OweAmount from './pages/FoodSellers/Owe'
+import Payment from './Component/FoodMenu/Swift/Payment'
+import HistorySwift from './Component/FoodMenu/Swift/History'
 
 function App() {
   const [socket, setSocket] = useState(null);
@@ -116,6 +119,30 @@ function App() {
                 </MainLayout>
               }
             />
+              <Route
+              path="/foodsellers/oweamount"
+              element={
+                <MainLayout>
+                  <OweAmount socket={socket} />
+                </MainLayout>
+              }
+            />
+             <Route
+              path="/foodsellers/swiftamount"
+              element={
+                <MainLayout>
+                  <Payment socket={socket} />
+                </MainLayout>
+              }
+            />
+              <Route
+              path="/foodsellers/swiftamount/history"
+              element={
+                <MainLayout>
+                  <HistorySwift socket={socket} />
+                </MainLayout>
+              }
+            />
             <Route
               path="/ordersHistory/*"
               element={
@@ -141,13 +168,14 @@ function App() {
               }
             />
             <Route
-              path="/users/editUser"
+              path="/users/editUser/:id"
               element={
                 <MainLayout>
                   <EditUser socket={socket} />
                 </MainLayout>
               }
             />
+
             <Route
               path="/drivers"
               element={
