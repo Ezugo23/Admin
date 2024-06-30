@@ -97,7 +97,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
       });
 
       const response = await axios.patch(
-        `https://swifdropp.onrender.com/api/v1/driver/${driverId}`,
+        `https://delivery-chimelu-new.onrender.com/api/v1/driver/${driverId}`,
         formDataToSend,
         {
           headers: {

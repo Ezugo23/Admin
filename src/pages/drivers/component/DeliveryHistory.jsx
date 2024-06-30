@@ -50,7 +50,7 @@ const DeliveryHistory = ({ driverId }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://swifdropp.onrender.com/api/v1/driver/${driverId}/orders`
+        `https://delivery-chimelu-new.onrender.com/api/v1/driver/${driverId}/orders`
       );
       // console.log('Fetched data:', response.data);
 

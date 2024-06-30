@@ -41,7 +41,7 @@ export default function Add({ onClose }) {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/menu/menusrestaurant/${storedRestaurantId}`);
+      const response = await fetch(`https://delivery-chimelu-new.onrender.com/api/v1/menu/menusrestaurant/${storedRestaurantId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch menu items");
       }
@@ -94,7 +94,7 @@ export default function Add({ onClose }) {
     setCreatingDiscount(true);
     try {
       const storedRestaurantId = localStorage.getItem('userId');
-      const response = await fetch(`https://swifdropp.onrender.com/api/v1/restaurant/restaurantDiscount/create/${storedRestaurantId}`, {
+      const response = await fetch(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/restaurantDiscount/create/${storedRestaurantId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

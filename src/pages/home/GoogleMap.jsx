@@ -81,7 +81,7 @@ const GoogleMapComponent = () => {
     const fetchOrders = async () => {
       try {
         const response = await fetch(
-          'https://swifdropp.onrender.com/api/v1/orders/'
+          'https://delivery-chimelu-new.onrender.com/api/v1/orders/'
         );
         const data = await response.json();
         setOrders(data);

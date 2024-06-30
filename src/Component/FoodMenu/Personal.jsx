@@ -20,7 +20,7 @@ export default function Personal() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://swifdropp.onrender.com/api/v1/restaurant/byId/${id}`);
+        const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/byId/${id}`);
         const fetchedRestaurant = response.data.restaurant;
         setRestaurant(fetchedRestaurant);
         const initialData = {
@@ -52,7 +52,7 @@ export default function Personal() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.patch(`https://swifdropp.onrender.com/api/v1/restaurant/${id}`, formData);
+      const response = await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/${id}`, formData);
       setRestaurant(response.data.restaurant);
       toast.success('Edited successfully');
     } catch (error) {
@@ -66,7 +66,7 @@ export default function Personal() {
     const uploadFormData = new FormData();
     uploadFormData.append('image', file);
     try {
-      const response = await axios.patch(`https://swifdropp.onrender.com/api/v1/restaurant/${id}`, uploadFormData, {
+      const response = await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/${id}`, uploadFormData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -85,7 +85,7 @@ export default function Personal() {
     const uploadFormData = new FormData();
     uploadFormData.append('logo', file);
     try {
-      const response = await axios.patch(`https://swifdropp.onrender.com/api/v1/restaurant/${id}`, uploadFormData, {
+      const response = await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/${id}`, uploadFormData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

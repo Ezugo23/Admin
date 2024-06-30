@@ -14,11 +14,11 @@ const GoogleBar = () => {
       try {
         const [itemsRes, ordersRes, restaurantsRes, usersRes, driversRes] =
           await Promise.all([
-            fetch('https://swifdropp.onrender.com/api/v1/restaurant/sumFoods'),
-            fetch('https://swifdropp.onrender.com/api/v1/orders/sumOrders/sum'),
-            fetch('https://swifdropp.onrender.com/api/v1/restaurant'),
-            fetch('https://swifdropp.onrender.com/api/v1/user/sumallusers'),
-            fetch('https://swifdropp.onrender.com/api/v1/driver/'),
+            fetch('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/sumFoods'),
+            fetch('https://delivery-chimelu-new.onrender.com/api/v1/orders/sumOrders/sum'),
+            fetch('https://delivery-chimelu-new.onrender.com/api/v1/restaurant'),
+            fetch('https://delivery-chimelu-new.onrender.com/api/v1/user/sumallusers'),
+            fetch('https://delivery-chimelu-new.onrender.com/api/v1/driver/'),
           ]);
 
         const itemsData = await itemsRes.json();

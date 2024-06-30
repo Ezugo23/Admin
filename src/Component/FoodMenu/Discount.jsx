@@ -23,7 +23,7 @@ const Discount = () => {
         navigate('/signin');
         return;
       }
-      const response = await fetch(`https://swifdropp.onrender.com/api/v1/restaurant/${storedRestaurantId}/restaurantDiscount`);
+      const response = await fetch(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/${storedRestaurantId}/restaurantDiscount`);
       const data = await response.json();
       setDiscounts(data.data);
     } catch (error) {
@@ -47,7 +47,7 @@ const Discount = () => {
 
     try {
       const response = await fetch(
-        `https://swifdropp.onrender.com/api/v1/restaurant/delete-discount/${discountId}`,
+        `https://delivery-chimelu-new.onrender.com/api/v1/restaurant/delete-discount/${discountId}`,
         {
           method: 'DELETE',
         }

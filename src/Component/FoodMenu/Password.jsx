@@ -13,7 +13,7 @@ export default function Password() {
     try {
       setLoading(true);
       const response = await axios.post(
-        `https://swifdropp.onrender.com/api/v1/restaurant/changepassword/verifyadmin/${id}`,
+        `https://delivery-chimelu-new.onrender.com/api/v1/restaurant/changepassword/verifyadmin/${id}`,
         { newPassword }
       );
       setLoading(false);

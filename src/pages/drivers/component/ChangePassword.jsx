@@ -32,7 +32,7 @@ const ChangePassword = ({ driverId }) => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `https://swifdropp.onrender.com/api/v1/driver/password-new/${driverId}`,
+        `https://delivery-chimelu-new.onrender.com/api/v1/driver/password-new/${driverId}`,
         {
           method: 'PUT',
           headers: {

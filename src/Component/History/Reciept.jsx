@@ -17,7 +17,7 @@ const Reciept = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`https://swifdropp.onrender.com/api/v1/orders/${orderId}`);
+        const response = await fetch(`https://delivery-chimelu-new.onrender.com/api/v1/orders/${orderId}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -34,7 +34,7 @@ const Reciept = () => {
   const handleAcceptOrder = async () => {
     try {
       setAcceptingOrder(true);
-      const response = await axios.post(`https://swifdropp.onrender.com/api/v1/restaurant/confirmorder/${orderId}`);
+      const response = await axios.post(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/confirmorder/${orderId}`);
       
       if (response.status === 200) {
         toast.success("Order accepted successfully");
@@ -55,7 +55,7 @@ const Reciept = () => {
   const handleCancelOrder = async () => {
     try {
       setCancelingOrder(true);
-      const response = await axios.post(`https://swifdropp.onrender.com/api/v1/restaurant/declineorder/${orderId}`);
+      const response = await axios.post(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/declineorder/${orderId}`);
       
       if (response.status === 200) {
         toast.error("Order declined ❌");
@@ -76,7 +76,7 @@ const Reciept = () => {
   const handleReassignRider = async () => {
     try {
       setReassigningRider(true);
-      const response = await axios.put(`https://swifdropp.onrender.com/api/v1/driver/cancel/${orderId}`);
+      const response = await axios.put(`https://delivery-chimelu-new.onrender.com/api/v1/driver/cancel/${orderId}`);
       
       if (response.status === 200) {
         toast.success("Rider reassigned successfully");
