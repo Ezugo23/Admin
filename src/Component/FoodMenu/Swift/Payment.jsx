@@ -94,6 +94,7 @@ export default function Payment() {
                 backgroundColor: '#4CAF50',
                 marginRight: '30px',
                 marginLeft: '30px',
+                color:'white'
               }}
               onClick={handlePayAll}
             >
