@@ -27,7 +27,7 @@ export default function EditUser() {
         image: ''
     })
     useEffect(() => {
-        axios.get(`https://swifdropp.onrender.com/api/v1/user/profile/${id}`)
+        axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/user/profile/${id}`)
         .then(res => {
             const data= res.data.data;
             setValues({
@@ -57,7 +57,7 @@ export default function EditUser() {
     const handleChangePassword = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`https://swifdropp.onrender.com/api/v1/user/changepassword/verifyadmin/${id}`, {
+            const response = await axios.post(`https://delivery-chimelu-new.onrender.com/api/v1/user/changepassword/verifyadmin/${id}`, {
                 newPassword: newPassword
             }, {
                 headers: {

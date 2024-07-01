@@ -27,7 +27,7 @@ export default function Forgot({ onClose }) {
     }
     axios
       .post(
-        `https://swifdropp.onrender.com/api/v1/restaurant/changepassword/${storedRestaurantId}`,
+        `https://delivery-chimelu-new.onrender.com/api/v1/restaurant/changepassword/${storedRestaurantId}`,
         {
           currentPassword: oldPassword,
           newPassword: newPassword,

@@ -24,7 +24,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const data = await fetch(`https://swifdropp.onrender.com/api/v1/admin/resetpassword/${resetToken}`, {
+      const data = await fetch(`https://delivery-chimelu-new.onrender.com/api/v1/admin/resetpassword/${resetToken}`, {
         method: "PUT",
         headers: {
           "Content-type": "application/json",

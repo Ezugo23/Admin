@@ -30,7 +30,7 @@ const AllUsers = () => {
   const getAllUsers = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`https://swifdropp.onrender.com/api/v1/user/profile/`);
+      const response = await fetch(`https://delivery-chimelu-new.onrender.com/api/v1/user/profile/`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch data');

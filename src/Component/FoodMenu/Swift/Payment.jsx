@@ -1,51 +1,27 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { Switch } from '@chakra-ui/react';
+import axios from 'axios';
 
 export default function Payment() {
-  const [data, setData] = useState([
-    {
-      _id: '1',
-      restaurantName: 'Restaurant A',
-      wallet: { swiftWallet: 5000, availableBalance: 3000 },
-      isAvailable: true,
-    },
-    {
-      _id: '2',
-      restaurantName: 'Restaurant B',
-      wallet: { swiftWallet: 8000, availableBalance: 4500 },
-      isAvailable: false,
-    },
-    {
-      _id: '3',
-      restaurantName: 'Restaurant C',
-      wallet: { swiftWallet: 12000, availableBalance: 7000 },
-      isAvailable: true,
-    },
-    {
-      _id: '3',
-      restaurantName: 'Restaurant C',
-      wallet: { swiftWallet: 12000, availableBalance: 7000 },
-      isAvailable: false,
-    },
-    {
-      _id: '3',
-      restaurantName: 'Restaurant C',
-      wallet: { swiftWallet: 12000, availableBalance: 7000 },
-      isAvailable: true,
-    },
-    {
-      _id: '3',
-      restaurantName: 'Restaurant C',
-      wallet: { swiftWallet: 12000, availableBalance: 7000 },
-      isAvailable: false,
-    },
-  ]);
+  const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch data from API
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/restaurants/with-money');
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleClick = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -53,9 +29,35 @@ export default function Payment() {
     }
   };
 
-  const handleRowClick = (id, hasData) => {
-    if (hasData) {
-      navigate(`menu/${id}/personal/${id}`);
+  const handlePayAll = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put('https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/move-swift-balance', null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      alert('Payment processed successfully');
+    } catch (error) {
+      console.error('Error processing payment:', error);
+      alert('Failed to process payment');
+    }
+  };
+
+  const toggleCleared = async (id) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.put(`https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/${id}/toggle-cleared`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const updatedWallet = response.data;
+      setData((prevData) =>
+        prevData.map((item) => (item._id === id ? { ...item, cleared: updatedWallet.cleared } : item))
+      );
+    } catch (error) {
+      console.error('Error toggling cleared status:', error);
     }
   };
 
@@ -85,9 +87,31 @@ export default function Payment() {
           </label>
           <div className="search-container ml-auto">
             <p htmlFor="search">Pay all active swift balance</p>
-            <button style={{ width: "171px", height: '45px', backgroundColor: '#4CAF50', marginRight: '30px', marginLeft: '30px' }}>Pay</button>
-            <Link to={'/foodsellers/swiftamount/history'} >
-            <button style={{ width: "171px", height: '45px', borderColor: '#4CAF50', marginLeft: '30px', color:'#4CAF50', border:'solid #4CAF50 1px' }}>Payment History</button>
+            <button
+              style={{
+                width: '171px',
+                height: '45px',
+                backgroundColor: '#4CAF50',
+                marginRight: '30px',
+                marginLeft: '30px',
+              }}
+              onClick={handlePayAll}
+            >
+              Pay
+            </button>
+            <Link to={'/foodsellers/swiftamount/history'}>
+              <button
+                style={{
+                  width: '171px',
+                  height: '45px',
+                  borderColor: '#4CAF50',
+                  marginLeft: '30px',
+                  color: '#4CAF50',
+                  border: 'solid #4CAF50 1px',
+                }}
+              >
+                Payment History
+              </button>
             </Link>
           </div>
         </div>
@@ -104,20 +128,24 @@ export default function Payment() {
             </thead>
             <tbody>
               {currentData.map((item, index) => {
-                const hasData = item.wallet.swiftWallet > 0; // Check if the restaurant has a swift wallet balance
+                const hasData = item.swiftWallet > 0; // Check if the restaurant has a swift wallet balance
                 const serialNumber = (currentPage - 1) * itemsPerPage + index + 1; // Calculate the serial number
 
                 return (
-                  <tr key={item._id} className="table-row cursor-pointer" onClick={() => handleRowClick(item._id, hasData)} style={{ borderBottom: 'none' }}>
+                  <tr
+                    key={item._id}
+                    className="table-row"
+                    style={{ borderBottom: 'none' }}
+                  >
                     <td style={{ border: 'none' }}>{serialNumber}</td>
                     <td style={{ border: 'none' }}>
                       <strong>{item.restaurantName}</strong>
                     </td>
-                    <td style={{ border: 'none' }}>₦{item.wallet.swiftWallet}</td>
-                    <td style={{ border: 'none' }}>₦{item.wallet.availableBalance}</td>
+                    <td style={{ border: 'none' }}>₦{item.swiftWallet}</td>
+                    <td style={{ border: 'none' }}>₦{item.availableBalance}</td>
                     <td className="action-cell" style={{ border: 'none' }}>
                       <span className="action-item cursor-pointer flex items-center gap-3">
-                        <Switch isChecked={item.isAvailable} />
+                        <Switch isChecked={item.cleared} onChange={() => toggleCleared(item._id)} />
                       </span>
                     </td>
                   </tr>

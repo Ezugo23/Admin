@@ -17,7 +17,7 @@ export default function TableMenu() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://swifdropp.onrender.com/api/v1/restaurant/');
+        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
         setData(response.data.restaurants);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -49,9 +49,9 @@ export default function TableMenu() {
 
   const handleApprove = async (id) => {
     try {
-      await axios.patch(`https://swifdropp.onrender.com/api/v1/approve-restaurant/${id}`);
+      await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/approve-restaurant/${id}`);
       // Fetch updated data
-      const response = await axios.get('https://swifdropp.onrender.com/api/v1/restaurant/');
+      const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
       setData(response.data.restaurants);
     } catch (error) {
       console.error('Error approving restaurant:', error);
@@ -60,9 +60,9 @@ export default function TableMenu() {
 
   const handleToggleStatus = async (id) => {
     try {
-      await axios.patch(`https://swifdropp.onrender.com/api/v1/${id}/toggle-restaurant-status`);
+      await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/${id}/toggle-restaurant-status`);
       // Fetch updated data
-      const response = await axios.get('https://swifdropp.onrender.com/api/v1/restaurant/');
+      const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
       setData(response.data.restaurants);
     } catch (error) {
       console.error('Error toggling restaurant status:', error);
@@ -71,11 +71,11 @@ export default function TableMenu() {
 
   const handleToggleAvailability = async (id, isAvailable) => {
     try {
-      await axios.patch(`https://swifdropp.onrender.com/api/v1/restaurant/available/${id}`, {
+      await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/available/${id}`, {
         isAvailable: !isAvailable
       });
       // Fetch updated data
-      const response = await axios.get('https://swifdropp.onrender.com/api/v1/restaurant/');
+      const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
       setData(response.data.restaurants);
     } catch (error) {
       console.error('Error toggling availability:', error);

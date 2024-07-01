@@ -12,7 +12,7 @@ const ForgotPassword = () => {
     };
     try {
       const data = await fetch(
-        "https://swifdropp.onrender.com/api/v1/admin/forgotpassword",
+        "https://delivery-chimelu-new.onrender.com/api/v1/admin/forgotpassword",
         {
           method: "POST",
           headers: {

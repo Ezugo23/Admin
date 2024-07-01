@@ -10,7 +10,7 @@ const WithdrawalProvider = ({ children }) => {
   const fetchWithdrawals = async () => {
     try {
       const response = await axios.get(
-        'https://swifdropp.onrender.com/api/v1/wallet/allTransfer'
+        'https://delivery-chimelu-new.onrender.com/api/v1/wallet/allTransfer'
       );
       setWithdrawals(response.data.withdrawals);
       setLoading(false);

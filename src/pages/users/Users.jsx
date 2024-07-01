@@ -17,7 +17,7 @@ const Users = () => {
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
-        const response = await axios.get('https://swifdropp.onrender.com/api/v1/admin/');
+        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/admin/');
         setAdmins(response.data.admins);
       } catch (err) {
         setError(err.message);
@@ -38,7 +38,7 @@ const Users = () => {
   const handleToggleStatus = async (adminId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`https://swifdropp.onrender.com/api/v1/${adminId}/toggle-admin-status`, null, {
+      await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/${adminId}/toggle-admin-status`, null, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -60,7 +60,7 @@ const Users = () => {
   const handleDelete = async (adminId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`https://swifdropp.onrender.com/api/v1/admin/${adminId}/delete`, {
+      await axios.delete(`https://delivery-chimelu-new.onrender.com/api/v1/admin/${adminId}/delete`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

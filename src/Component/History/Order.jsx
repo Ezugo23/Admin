@@ -18,7 +18,7 @@ const Order = () => {
   useEffect(() => {
     const fetchOrderOverview = async () => {
       try {
-        const response = await fetch('https://swifdropp.onrender.com/api/v1/orders/count-orders/status');
+        const response = await fetch('https://delivery-chimelu-new.onrender.com/api/v1/orders/count-orders/status');
         if (!response.ok) {
           throw new Error('Failed to fetch order overview');
         }

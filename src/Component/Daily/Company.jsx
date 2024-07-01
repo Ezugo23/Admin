@@ -17,7 +17,7 @@ export default function Company() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://swifdropp.onrender.com/api/v1/restaurant/');
+        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
         setData(response.data.restaurants);
       } catch (error) {
         console.error('Error fetching data:', error);
