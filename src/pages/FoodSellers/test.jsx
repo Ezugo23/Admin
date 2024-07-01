@@ -9,6 +9,7 @@ import Main from '../../Component/FoodMenu/Info'
 import Edit from '../../Component/FoodMenu/EditFood'
 import Food from '../../Component/FoodMenu/foodMenu'
 import Group from '../../Component/FoodMenu/foodGroup'
+import History from '../../Component/FoodMenu/HistoryOrder'
 export default function Test() {
   const { id } = useParams();
   return (
@@ -26,6 +27,7 @@ export default function Test() {
         <Route path="add-menu/:id" element={<Edit />} />
         <Route path="food-menu/:menuId" element={<Food />} />
         <Route path="food-group/:menuId" element={<Group />} />
+        <Route path="order-history/:id" element={<History />} />
       </Routes>
     </div>
     </>
