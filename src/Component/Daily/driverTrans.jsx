@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { SpinnerRoundOutlined } from 'spinners-react';
@@ -10,27 +9,22 @@ const DriverTrans = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
-  const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
-        setData(response.data.restaurants);
+        const response = await axios.get('http://localhost:8080/api/v1/driver/update/driver-sales');
+        setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setError('Error fetching data. Please try again later.');
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 4000); // Set the timer to 4 seconds
-
-    return () => clearTimeout(timer);
   }, []);
 
   const handleClick = (newPage) => {
@@ -39,8 +33,13 @@ const DriverTrans = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   const filteredData = data.filter((item) =>
-    item.restaurantName.toLowerCase().includes(searchTerm.toLowerCase())
+    item.date.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -55,25 +54,22 @@ const DriverTrans = () => {
               key: 'pending',
               text: 'Total Drivers Wallet',
               color: '#4CAF50',
-              // icon: <p className="top">33%</p>,
             },
             {
               key: 'confirm',
               text: 'Total Paid',
               color: '#348238',
-              // icon: <p className="top2">33%</p>,
             },
           ].map((data, index) => (
             <div
               key={index}
-              className="p-7 text-black flex flex-col justify-end items-start rounded-xl  shadow-lg"
-              style={{ backgroundColor: 'white', borderColor: data.color, borderWidth: 1 }}
+              className="p-7 text-black flex flex-col justify-end items-start rounded-xl shadow-lg"
+              style={{ backgroundColor: 'white', borderColor: data.color, borderWidth: 1, margin: '10px' }}
             >
               <div className="flex flex-col items-start">
                 <p className="text-xl font-bold">3</p>
                 <p className="text-13 font-bold">{data.text}</p>
               </div>
-              {data.icon && <div className="absolute top-4 right-4">{data.icon}</div>}
             </div>
           ))}
         </div>
@@ -109,6 +105,10 @@ const DriverTrans = () => {
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                 <SpinnerRoundOutlined size={50} color="green" />
               </div>
+            ) : error ? (
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                <p>{error}</p>
+              </div>
             ) : (
               <table className="table min-w-full" style={{ borderCollapse: 'collapse' }}>
                 <thead className="table-header" style={{ backgroundColor: 'green', color: 'white' }}>
@@ -122,15 +122,10 @@ const DriverTrans = () => {
                 <tbody>
                   {currentData.map((item) => (
                     <tr key={item._id} className="table-row" style={{ borderBottom: 'none' }}>
-                      <td style={{ border: 'none' }}>
-                        <strong>{item.restaurantName}</strong>
-                        <br />
-                        {item.address}
-                      </td>
-                      <td style={{ border: 'none' }}>${item.wallet.availableBalance}</td>
+                      <td style={{ border: 'none' }}>{formatDate(item.date)}</td>
+                      <td style={{ border: 'none' }}>₦{item.totalSales}</td>
                       <td style={{ border: 'none' }}>{item.totalOrders}</td>
-                      <td style={{ border: 'none' }}>${item.wallet.swiftWallet}</td>
-                      {/* <td style={{ border: 'none' }}>{item.averageRating}</td> */}
+                      <td style={{ border: 'none' }}>{item.totalDrivers}</td>
                     </tr>
                   ))}
                 </tbody>
