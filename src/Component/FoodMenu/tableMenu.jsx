@@ -16,6 +16,12 @@ export default function TableMenu() {
 
   useEffect(() => {
     const fetchData = async () => {
+      const adminId = localStorage.getItem('adminId');
+      if (!adminId) {
+        navigate('/Login');
+        return;
+      }
+
       try {
         const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
         setData(response.data.restaurants);

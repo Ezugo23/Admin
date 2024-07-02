@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { FiX } from 'react-icons/fi'; // Import the close icon
-import './style.css';
 
-export default function AddMenu({ setShowAddBackdrop, setFetchSideItems }) {
+export default function AddMenu({ setShowAddBackdrop, fetchSideItems }) {
   const [values, setValues] = useState({
     name: "",
     price: "",
@@ -22,7 +22,7 @@ export default function AddMenu({ setShowAddBackdrop, setFetchSideItems }) {
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!values.name) {
       setErrors({
@@ -31,28 +31,33 @@ export default function AddMenu({ setShowAddBackdrop, setFetchSideItems }) {
       return;
     }
 
-    // Simulate a successful creation (replace this with actual API logic if needed)
-    setIsCreating(true); // Set state to indicate creation process started
+    try {
+      setIsCreating(true); // Set state to indicate creation process started
 
-    setTimeout(() => {
-      // Simulate success after 1 second (replace with actual API call)
+      // Send a POST request to create a new side menu item
+      const result = await axios.post(`https://delivery-chimelu-new.onrender.com/api/v1/foods/additive/${id}`, values);
+      console.log(result);
+      
       setShowAddBackdrop(false);
       setIsCreating(false); // Set state to indicate creation process finished
 
-      // Optionally fetch updated data after successful creation
-      setFetchSideItems(true);
-    }, 1000);
+      // Update sideItems state in the parent component after successful creation
+      fetchSideItems();
+    } catch (error) {
+      console.error('Error adding side menu additives:', error);
+      setIsCreating(false); // Set state to indicate creation process finished (even if it failed)
+    }
   };
 
   return (
-    <div className="fixed top-0 left-0 h-screen bgTrans w-screen z-[400]">
-      <form onSubmit={handleSubmit} className="w-80 fixed top-1/2 left-1/2 -translate-y-1/2 z-[500] p-3 flex flex-col -translate-x-1/2 bg-white rounded-3xl ">
+    <div className="fixed top-0 left-0 h-screen w-full bg-gray-800 bg-opacity-50 flex items-center justify-center z-[400]">
+      <form onSubmit={handleSubmit} className="w-80 p-3 flex flex-col bg-white rounded-3xl">
         <div className="flex justify-end">
           <FiX className="cursor-pointer close-icon" onClick={handleClose} size={20}/>
         </div>
         <p className="font-bold text-lg text-center mb-2">Add Side Item</p>
         <div className="space-y-3">
-          <div className="">
+          <div>
             <p className="mb-2 font-semibold">Name</p>
             <input
               type="text"
@@ -63,7 +68,7 @@ export default function AddMenu({ setShowAddBackdrop, setFetchSideItems }) {
             />
             {errors.name && <p className="text-red-500">{errors.name}</p>}
           </div>
-          <div className="">
+          <div>
             <p className="mb-2 font-semibold">Price</p>
             <input
               type="text"
@@ -76,7 +81,6 @@ export default function AddMenu({ setShowAddBackdrop, setFetchSideItems }) {
             {errors.price && <p className="text-red-500">{errors.price}</p>}
           </div>
         </div>
-        {/* Display "Creating..." text when creation process is ongoing */}
         <button type="submit" className="px-8 py-3 rounded-md shadow-md bg-green-500 text-white font-semibold text-sm mt-5 duration-300 active:scale-95" disabled={isCreating}>
           {isCreating ? 'Creating...' : 'Create'}
         </button>
