@@ -17,7 +17,7 @@ const DriversProfile = () => {
     const fetchDriverData = async () => {
       try {
         const response = await axios.get(
-          `https://swifdropp.onrender.com/api/v1/driver/${driverId}`
+          `https://delivery-chimelu-new.onrender.com/api/v1/driver/${driverId}`
         );
         setDriverData(response.data.driver);
       } catch (err) {

@@ -45,7 +45,7 @@ export default function Edit({ onClose, discount }) {
       return;
     }
     try {
-      const response = await fetch(`https://swifdropp.onrender.com/api/v1/menu/menusrestaurant/${storedRestaurantId}`);
+      const response = await fetch(`https://delivery-chimelu-new.onrender.com/api/v1/menu/menusrestaurant/${storedRestaurantId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch menu items");
       }
@@ -104,7 +104,7 @@ export default function Edit({ onClose, discount }) {
     }
   
     try {
-      const response = await fetch(`https://swifdropp.onrender.com/api/v1/restaurant/restaurantDiscount/edit/${discount._id}`, {
+      const response = await fetch(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/restaurantDiscount/edit/${discount._id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

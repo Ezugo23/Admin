@@ -15,7 +15,7 @@ export default function TableMenu() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://swifdropp.onrender.com/api/v1/restaurantWallet/all-transaction');
+        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/all-transaction');
         setData(response.data.transactions);
       } catch (error) {
         console.error('Error fetching data:', error);

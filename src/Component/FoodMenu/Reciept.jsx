@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
 import Spinner from 'react-bootstrap/Spinner';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './Order.css';
+import '../History/Order.css';
 
 const Reciept = () => {
-  const { orderId } = useParams();
+  const { orderId, id } = useParams();
   const [order, setOrder] = useState(null);
   const [acceptingOrder, setAcceptingOrder] = useState(false);
   const [cancelingOrder, setCancelingOrder] = useState(false);
@@ -17,11 +16,56 @@ const Reciept = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`https://delivery-chimelu-new.onrender.com/api/v1/orders/${orderId}`);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
+        // Replace this with the actual data you want to use
+        const data = {
+          orderId: '12345',
+          orderDate: '2023-06-15T00:00:00.000Z',
+          orderStatus: 'PENDING',
+          userId: {
+            username: 'John Doe',
+            email: 'john.doe@example.com',
+            phoneNumber: '1234567890',
+          },
+          restaurantId: {
+            restaurantName: 'Sample Restaurant',
+            email: 'restaurant@example.com',
+            phoneNumber: '0987654321',
+            address: '123 Restaurant St, Food City',
+          },
+          deliveryAddress: {
+            address: '456 Customer St, Home Town',
+          },
+          orderItems: [
+            {
+              foodId: {
+                title: 'Burger',
+                price: 1000,
+                discount: 0.1,
+              },
+              quantity: 2,
+              additives: [
+                { name: 'Cheese', price: 50 },
+                { name: 'Bacon', price: 100 },
+              ],
+            },
+            {
+              foodId: {
+                title: 'Fries',
+                price: 500,
+                discount: 0,
+              },
+              quantity: 1,
+              additives: [],
+            },
+          ],
+          assignedDriver: {
+            username: 'Rider 1',
+          },
+          driverFee: 200,
+          deliveryFee: 150,
+          serviceFee: 50,
+          grandTotal: 2000,
+        };
         setOrder(data);
       } catch (error) {
         console.error('Error fetching order:', error);
@@ -34,17 +78,11 @@ const Reciept = () => {
   const handleAcceptOrder = async () => {
     try {
       setAcceptingOrder(true);
-      const response = await axios.post(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/confirmorder/${orderId}`);
-      
-      if (response.status === 200) {
-        toast.success("Order accepted successfully");
-        setOrder(prevOrder => ({
-          ...prevOrder,
-          orderStatus: 'CONFIRMED'
-        }));
-      } else {
-        throw new Error('Failed to confirm order');
-      }
+      toast.success("Order accepted successfully");
+      setOrder(prevOrder => ({
+        ...prevOrder,
+        orderStatus: 'CONFIRMED'
+      }));
     } catch (error) {
       setError(error.message);
     } finally {
@@ -55,17 +93,11 @@ const Reciept = () => {
   const handleCancelOrder = async () => {
     try {
       setCancelingOrder(true);
-      const response = await axios.post(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/declineorder/${orderId}`);
-      
-      if (response.status === 200) {
-        toast.error("Order declined ❌");
-        setOrder(prevOrder => ({
-          ...prevOrder,
-          orderStatus: 'DECLINED'
-        }));
-      } else {
-        throw new Error('Failed to cancel order');
-      }
+      toast.error("Order declined ❌");
+      setOrder(prevOrder => ({
+        ...prevOrder,
+        orderStatus: 'DECLINED'
+      }));
     } catch (error) {
       setError(error.message);
     } finally {
@@ -76,26 +108,17 @@ const Reciept = () => {
   const handleReassignRider = async () => {
     try {
       setReassigningRider(true);
-      const response = await axios.put(`https://delivery-chimelu-new.onrender.com/api/v1/driver/cancel/${orderId}`);
-      
-      if (response.status === 200) {
-        toast.success("Rider reassigned successfully");
-        setOrder(prevOrder => ({
-          ...prevOrder,
-          orderStatus: 'CONFIRMED'
-        }));
-      } else if (response.status === 400 && response.data.error === 	'Driver cannot cancel order, it is already on the way') {
-        toast.error("Order can't be reassigned, it's already on the way");
-      } else {
-        throw new Error('Failed to reassign rider');
-      }
+      toast.success("Rider reassigned successfully");
+      setOrder(prevOrder => ({
+        ...prevOrder,
+        orderStatus: 'CONFIRMED'
+      }));
     } catch (error) {
       setError(error.message);
     } finally {
       setReassigningRider(false);
     }
   };
-
 
   if (!order) {
     return <div>Loading...</div>;
@@ -110,7 +133,7 @@ const Reciept = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <p style={{ margin: 0 }}>Invoice Layout</p>
         <div style={{ display: 'flex', gap: '10px' }}>
-          <Link to="/ordersHistory" style={{ textDecoration: 'none' }}>
+          <Link to="/order-history" style={{ textDecoration: 'none' }}>
             <p style={{
               boxSizing: 'border-box',
               width: '4rem',
@@ -256,45 +279,39 @@ const Reciept = () => {
         <hr className="border-#979797" style={{ border: 'solid #979797 0.2px' }} />
         {order.orderItems.map((item, index) => (
           <div key={index} style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-   <div>
-  <p style={{
-    textAlign: 'center',
-    fontFamily: 'Roboto',
-    fontWeight: '400',
-    fontSize: '17px',
-    lineHeight: '16.58px',
-    color: 'black',
-    marginRight: '115px'
-  }}>
-    {item.foodId.title} (₦{item.foodId.price}) 
-    {item.foodId.discount ? ` - Discounted Price: ₦${item.foodId.price * (1 - item.foodId.discount)}` : ''}
-  </p>
-  
-  <p style={{
-    textAlign: 'center',
-    fontFamily: 'Roboto',
-    fontWeight: '700',
-    fontSize: '14px',
-    lineHeight: '16.58px',
-    color: 'black',
-    marginLeft: '20px'
-  }}>Side Items: <span>{item.additives.map(additive => `${additive.name} (₦${additive.price})`).join(', ')}</span></p>
-
-</div>
-
-
-<div style={{ display: 'flex', gap: '85px', marginLeft: '10px' }}>
-  <p style={{ textAlign: 'center' }}>{item.quantity}</p>
-  <p style={{ textAlign: 'center' }}>
-      {item.foodId.price * (1 - item.foodId.discount || 0) + item.additives.reduce((total, additive) => total + additive.price, 0)}
-    </p>
-    <p style={{ marginRight: '40px' }}>
-      {item.quantity * (item.foodId.price * (1 - item.foodId.discount || 0) + item.additives.reduce((total, additive) => total + additive.price, 0))}
-    </p>
-</div>
-
-
-
+            <div>
+              <p style={{
+                textAlign: 'center',
+                fontFamily: 'Roboto',
+                fontWeight: '400',
+                fontSize: '17px',
+                lineHeight: '16.58px',
+                color: 'black',
+                marginRight: '115px'
+              }}>
+                {item.foodId.title} (₦{item.foodId.price}) 
+                {item.foodId.discount ? ` - Discounted Price: ₦${item.foodId.price * (1 - item.foodId.discount)}` : ''}
+              </p>
+              
+              <p style={{
+                textAlign: 'center',
+                fontFamily: 'Roboto',
+                fontWeight: '700',
+                fontSize: '14px',
+                lineHeight: '16.58px',
+                color: 'black',
+                marginLeft: '20px'
+              }}>Side Items: <span>{item.additives.map(additive => `${additive.name} (₦${additive.price})`).join(', ')}</span></p>
+            </div>
+            <div style={{ display: 'flex', gap: '85px', marginLeft: '10px' }}>
+              <p style={{ textAlign: 'center' }}>{item.quantity}</p>
+              <p style={{ textAlign: 'center' }}>
+                {item.foodId.price * (1 - item.foodId.discount || 0) + item.additives.reduce((total, additive) => total + additive.price, 0)}
+              </p>
+              <p style={{ marginRight: '40px' }}>
+                {item.quantity * (item.foodId.price * (1 - item.foodId.discount || 0) + item.additives.reduce((total, additive) => total + additive.price, 0))}
+              </p>
+            </div>
           </div>
         ))}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: "50px" }}>
@@ -348,26 +365,26 @@ const Reciept = () => {
                 )}
               </button>
               <button
-              className="btn btn-warning"
-              onClick={handleReassignRider}
-              disabled={reassigningRider}
-              style={{
-                boxSizing: 'border-box',
-                width: '8rem',
-                height: '2rem',
-                border: 'solid #FFC107 0.5px',
-                textAlign: 'center',
-                cursor: 'pointer',
-                backgroundColor: '#FFC107',
-                color: 'white'
-              }}
-            >
-              {reassigningRider ? (
-                <Spinner animation="border" size="sm" />
-              ) : (
-                "Reassign Rider"
-              )}
-            </button>
+                className="btn btn-warning"
+                onClick={handleReassignRider}
+                disabled={reassigningRider}
+                style={{
+                  boxSizing: 'border-box',
+                  width: '8rem',
+                  height: '2rem',
+                  border: 'solid #FFC107 0.5px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  backgroundColor: '#FFC107',
+                  color: 'white'
+                }}
+              >
+                {reassigningRider ? (
+                  <Spinner animation="border" size="sm" />
+                ) : (
+                  "Reassign Rider"
+                )}
+              </button>
             </div>
             <p style={{
               fontFamily: 'Roboto',
@@ -410,7 +427,6 @@ const Reciept = () => {
               lineHeight: '23.44px',
               color: '#3B5998'
             }}>NGN {order.grandTotal}</p>
-            
           </div>
         </div>
       </div>

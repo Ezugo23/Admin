@@ -1,36 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { BsPlus } from "react-icons/bs";
 import { SpinnerRoundOutlined } from 'spinners-react';
+import axios from 'axios'; // Import axios for API requests
 
 export default function EditFood() {
   const { id } = useParams();
-  const [data, setData] = useState([
-    {
-      _id: '1',
-      menuName: 'Rice',
-      allFoods: '6',
-      status: true,
-    },
-    {
-      _id: '2',
-      menuName: 'Noodles',
-      allFoods: '10',
-      status: true,
-    },
-    {
-      _id: '3',
-      menuName: 'Pizza',
-      allFoods: '8',
-      status: false,
-    },
-  ]);
+  const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/menu/menusrestaurant/${id}`);
+        setData(response.data); // Assuming API returns an array of menu items
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   const handleClick = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -47,8 +45,8 @@ export default function EditFood() {
   };
 
   const filteredData = data.filter((item) =>
-    item.menuName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -100,18 +98,18 @@ export default function EditFood() {
                   <tr key={item._id} className="table-row cursor-pointer" style={{ borderBottom: 'none' }}>
                     <td style={{ border: 'none' }}>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                     <td style={{ border: 'none' }}>
-                      <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`}>
-                        <strong>{item.menuName}</strong>
+                    <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`}>
+                        <strong>{item.name}</strong>
                       </Link>
                     </td>
-                    <td style={{ border: 'none' }}>{item.allFoods}</td>
+                    <td style={{ border: 'none' }}>{item.foods}</td>
                     <td style={{ border: 'none' }}>
-                      <button className={`px-4 py-1 mx-1 rounded-3xl border ${item.status ? "border-[#4DB6AC] text-[#4DB6AC]" : "bg-[#FF5252] text-white"}`}>
-                        {item.status ? 'Active' : 'Inactive'}
-                      </button>
-                    </td>
+        <button className={`px-4 py-1 mx-1 rounded-3xl border ${item.isAvailable ? "border-[#4DB6AC] text-[#4DB6AC]" : "bg-[#FF5252] text-white"}`}>
+          {item.isAvailable ? 'Active' : 'Inactive'}
+        </button>
+      </td>
                     <td className="flex items-center gap-3" style={{ border: 'none' }}>
-                      <Link to={`/foodsellers/menu/${item._id}/edit`} style={{display:'flex'}}>
+                      <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`} style={{ display:'flex'}}>
                         <FaEdit size={15}/> Edit
                       </Link>
                       <span className="action-item cursor-pointer flex items-center gap-1">

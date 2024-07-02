@@ -23,10 +23,11 @@ export default function EditUser() {
         code: '',
         state: '',
         country: '',
-        address: ''
+        address: '',
+        image: ''
     })
     useEffect(() => {
-        axios.get(`https://swifdropp.onrender.com/api/v1/user/profile/${id}`)
+        axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/user/profile/${id}`)
         .then(res => {
             const data= res.data.data;
             setValues({
@@ -38,7 +39,8 @@ export default function EditUser() {
                 code: data.latestAddress ? data.latestAddress.code : 'NIL',
                 state: data.latestAddress ? data.latestAddress.state : 'NIL',
                 country: data.latestAddress ? data.latestAddress.country : 'NIL',
-                address: data.latestAddress ? data.latestAddress.address : 'NIL'
+                address: data.latestAddress ? data.latestAddress.address : 'NIL',
+                image: data.image
         });
         })
         .catch(err => console.log(err))
@@ -55,7 +57,7 @@ export default function EditUser() {
     const handleChangePassword = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`https://swifdropp.onrender.com/api/v1/user/changepassword/verifyadmin/${id}`, {
+            const response = await axios.post(`https://delivery-chimelu-new.onrender.com/api/v1/user/changepassword/verifyadmin/${id}`, {
                 newPassword: newPassword
             }, {
                 headers: {
@@ -87,10 +89,10 @@ export default function EditUser() {
                 <div className="grid-col-1">
                     <div className="bg-white shadow p-4 rounded-sm">
                         <div className="flex gap-4 items-center mb-2">
-                            <img src="/Linda.svg" alt="" className="w-[2.5rem] h-[2.5rem] rounded-full"/>
+                            <img src={values.image} alt="" className="w-[2.5rem] h-[2.5rem] rounded-full"/>
                             <div>
-                                <p>Amelia</p>
-                                <p>Lopes</p>
+                                <p>{values.firstname}</p>
+                                <p>{values.lastname}</p>
                             </div>
                         </div>
                         <div className="flex flex-col items-start">

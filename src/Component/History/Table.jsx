@@ -14,7 +14,7 @@ const Table = ({ filter }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://swifdropp.onrender.com/api/v1/orders/');
+        const response = await fetch('https://delivery-chimelu-new.onrender.com/api/v1/orders/');
         const result = await response.json();
         const formattedData = result.map(order => {
           const date = new Date(order.orderDate);

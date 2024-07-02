@@ -16,7 +16,7 @@ export const DriversProvider = ({ children }) => {
     const fetchDrivers = async () => {
       try {
         const response = await axios.get(
-          'https://swifdropp.onrender.com/api/v1/driver'
+          'https://delivery-chimelu-new.onrender.com/api/v1/driver'
         );
         // console.log('Fetched drivers data:', response.data.drivers);
 
@@ -38,7 +38,7 @@ export const DriversProvider = ({ children }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.patch(
-        `https://swifdropp.onrender.com/api/v1/driver/availability-driver/${driverId}`,
+        `https://delivery-chimelu-new.onrender.com/api/v1/driver/availability-driver/${driverId}`,
         { isAvailable: !currentStatus },
         {
           headers: {
@@ -66,7 +66,7 @@ export const DriversProvider = ({ children }) => {
     try {
       const token = localStorage.getItem('token');
       await axios.patch(
-        `https://swifdropp.onrender.com/api/v1/approve-driver/${driverId}`,
+        `https://delivery-chimelu-new.onrender.com/api/v1/approve-driver/${driverId}`,
         null,
         {
           headers: {
@@ -76,7 +76,7 @@ export const DriversProvider = ({ children }) => {
       );
       // Fetch updated data
       const response = await axios.get(
-        'https://swifdropp.onrender.com/api/v1/driver',
+        'https://delivery-chimelu-new.onrender.com/api/v1/driver',
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ export const DriversProvider = ({ children }) => {
     try {
       const token = localStorage.getItem('token');
       await axios.patch(
-        `https://swifdropp.onrender.com/api/v1/${driverId}/toggle-driver-status`,
+        `https://delivery-chimelu-new.onrender.com/api/v1/${driverId}/toggle-driver-status`,
         null,
         {
           headers: {
@@ -103,7 +103,7 @@ export const DriversProvider = ({ children }) => {
       );
       // Fetch updated data
       const response = await axios.get(
-        'https://swifdropp.onrender.com/api/v1/driver',
+        'https://delivery-chimelu-new.onrender.com/api/v1/driver',
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -119,7 +119,7 @@ export const DriversProvider = ({ children }) => {
   const deleteDriver = async (driverId) => {
     try {
       const response = await axios.delete(
-        `https://swifdropp.onrender.com/api/v1/driver/${driverId}`
+        `https://delivery-chimelu-new.onrender.com/api/v1/driver/${driverId}`
       );
 
       if (response.status === 200) {
@@ -141,7 +141,7 @@ export const DriversProvider = ({ children }) => {
   const fetchUpdatedDrivers = async () => {
     try {
       const response = await axios.get(
-        'https://swifdropp.onrender.com/api/v1/driver'
+        'https://delivery-chimelu-new.onrender.com/api/v1/driver'
       );
       setDrivers(response.data.drivers);
       setTotalItems(response.data.drivers.length);

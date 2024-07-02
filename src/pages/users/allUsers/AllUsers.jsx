@@ -31,7 +31,7 @@ const AllUsers = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://swifdropp.onrender.com/api/v1/user/profile/`
+        `https://delivery-chimelu-new.onrender.com/api/v1/user/profile/`
       );
 
       if (!response.ok) {

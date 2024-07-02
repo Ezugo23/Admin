@@ -37,7 +37,7 @@ export default function User() {
       }
 
       try {
-        const response = await axios.get(`https://swifdropp.onrender.com/api/v1/admin/${adminId}`);
+        const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/admin/${adminId}`);
         setAdminData(response.data.admin);
         setFormData({
           firstname: response.data.admin.firstname,
@@ -76,7 +76,7 @@ export default function User() {
   const handleEditProfile = async (e) => {
     e.preventDefault();
     const adminId = localStorage.getItem('adminId');
-    const url = `https://swifdropp.onrender.com/api/v1/admin/${adminId}`;
+    const url = `https://delivery-chimelu-new.onrender.com/api/v1/admin/${adminId}`;
 
     const data = new FormData();
     for (const key in formData) {

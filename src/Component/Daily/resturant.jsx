@@ -28,7 +28,7 @@ const Resturant = () => {
   useEffect(() => {
     const fetchCompanyDetails = async () => {
       try {
-        const response = await axios.get('https://swifdropp.onrender.com/api/v1/company/details/6581527dc96a438562098fef');
+        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/company/details/6581527dc96a438562098fef');
         const { pendingRestauransbal, totalRestauransbal, totalSwiftBal } = response.data;
         setCompanyBalances({
           pendingRestauransbal,

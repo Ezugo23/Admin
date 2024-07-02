@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  HStack,
-  VStack,
   Input,
   Text,
   FormControl,
@@ -17,21 +15,14 @@ import {
   Select,
   Skeleton,
   useToast,
-  Spinner,
 } from '@chakra-ui/react';
-import { ChevronDownIcon, CloseIcon } from '@chakra-ui/icons';
+import { CloseIcon } from '@chakra-ui/icons';
 import { FaUser } from 'react-icons/fa';
-import axios from 'axios';
 
-const PersonalInformation = ({ driverId, driverData }) => {
+const foodGroup = ({ driverData }) => {
   const [formData, setFormData] = useState(driverData);
-  const [initialFormData, setInitialFormData] = useState(null);
-  const [file, setFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [isFormChanged, setIsFormChanged] = useState(false);
-  const toast = useToast();
   const fileInputRef = React.useRef(null);
 
   useEffect(() => {
@@ -40,100 +31,9 @@ const PersonalInformation = ({ driverId, driverData }) => {
         ...driverData,
         feePercentage: (driverData.feePercentage * 100).toFixed(0),
       };
-      setInitialFormData(initialData);
       setFormData(initialData);
     }
   }, [driverData]);
-
-  const hasFormChanged = (currentData, initialData) => {
-    const normalizedCurrentData = {
-      ...currentData,
-      feePercentage: parseFloat(currentData.feePercentage),
-    };
-
-    const normalizedInitialData = {
-      ...initialData,
-      feePercentage: parseFloat(initialData.feePercentage),
-    };
-
-    for (const key in normalizedCurrentData) {
-      if (normalizedCurrentData[key] !== normalizedInitialData[key]) {
-        if (key === 'feePercentage') {
-          if (
-            isNaN(normalizedCurrentData[key]) &&
-            !isNaN(normalizedInitialData[key])
-          ) {
-            return true;
-          }
-        } else {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  };
-
-  const handleUpdateDriverData = async () => {
-    setIsLoading(true);
-    try {
-      const formDataToSend = new FormData();
-
-      if (file) {
-        formDataToSend.append('image', file);
-      } else if (formData.image) {
-        formDataToSend.append('image', formData.image);
-      }
-
-      const updatedFormData = {
-        ...formData,
-        feePercentage: formData.feePercentage / 100,
-      };
-
-      Object.entries(updatedFormData).forEach(([key, value]) => {
-        if (key !== 'image') {
-          formDataToSend.append(key, value);
-        }
-      });
-
-      const response = await axios.patch(
-        `https://delivery-chimelu-new.onrender.com/api/v1/driver/${driverId}`,
-        formDataToSend,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-      const responseData = {
-        ...response.data.driver,
-        feePercentage: (response.data.driver.feePercentage * 100).toFixed(0),
-      };
-      setFormData(responseData);
-      setInitialFormData(responseData);
-      toast({
-        title: 'Success',
-        description: 'Driver data updated successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-        position: 'top',
-      });
-      setIsFormChanged(false);
-    } catch (err) {
-      setError(err);
-      toast({
-        title: 'Error',
-        description: err.message,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-        position: 'top',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -142,13 +42,12 @@ const PersonalInformation = ({ driverId, driverData }) => {
       [name]: name === 'NIN' ? value.toUpperCase() : value,
     };
     setFormData(updatedFormData);
-    setIsFormChanged(hasFormChanged(updatedFormData, initialFormData));
+    setIsFormChanged(true);
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     const updatedFormData = { ...formData, image: URL.createObjectURL(file) };
-    setFile(file);
     setPreviewImage(updatedFormData.image);
     setFormData(updatedFormData);
     setIsFormChanged(true);
@@ -172,10 +71,6 @@ const PersonalInformation = ({ driverId, driverData }) => {
     );
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
   return (
     <Stack
       w={'full'}
@@ -186,7 +81,7 @@ const PersonalInformation = ({ driverId, driverData }) => {
     >
       <Text>Drivers' Info</Text>
       <Divider border={'2px solid #dfdfdf'} />
-      <Flex as={'form'} gap={'7'}>
+      <Flex gap={'7'}>
         <Box w={'30%'}>
           <Text>Upload Image</Text>
           <Stack
@@ -342,15 +237,13 @@ const PersonalInformation = ({ driverId, driverData }) => {
           </FormControl>
           <Button
             mt={'7'}
-            onClick={handleUpdateDriverData}
+            onClick={() => console.log('Save button clicked')}
             bg={'#4DB6AC'}
             color={'white'}
             py={'25px'}
             _hover={{
               bg: '#4db6ac',
             }}
-            isLoading={isLoading}
-            loadingText="Saving..."
             isDisabled={!isFormChanged}
           >
             Save
@@ -361,4 +254,4 @@ const PersonalInformation = ({ driverId, driverData }) => {
   );
 };
 
-export default PersonalInformation;
+export default foodGroup;

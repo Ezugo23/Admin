@@ -25,7 +25,7 @@ const Login = () => {
   
     try {
       setLoading(true);
-      const response = await fetch("https://swifdropp.onrender.com/api/v1/login-admin", {
+      const response = await fetch("https://delivery-chimelu-new.onrender.com/api/v1/login-admin", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

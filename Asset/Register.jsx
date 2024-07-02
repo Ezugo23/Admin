@@ -41,7 +41,7 @@ const Register = () => {
 
     try {
       const data = await fetch(
-        "https://swifdropp.onrender.com/api/v1/register-admin",
+        "https://delivery-chimelu-new.onrender.com/api/v1/register-admin",
         {
           method: "POST",
           headers: {

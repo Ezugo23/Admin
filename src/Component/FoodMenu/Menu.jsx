@@ -12,7 +12,7 @@ export default function Menu() {
   useEffect(() => {
     const fetchRestaurant = async () => {
       try {
-        const response = await axios.get(`https://swifdropp.onrender.com/api/v1/restaurant/byId/${id}`); 
+        const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/byId/${id}`); 
         setRestaurant(response.data.restaurant);
         setWallet(response.data.wallet);
       } catch (error) {
