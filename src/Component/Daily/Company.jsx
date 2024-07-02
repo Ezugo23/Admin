@@ -93,7 +93,7 @@ export default function Company() {
                 lineHeight: '21.79px',
               }}
             >
-              Approve
+              Pay
             </button>
           </div>
         </div>
@@ -108,9 +108,9 @@ export default function Company() {
                 <tr>
                   <th style={{ color: 'white', border: 'none' }}>Date</th>
                   <th style={{ color: 'white', border: 'none' }}>Amount</th>
-                  <th style={{ color: 'white', border: 'none' }}>Total Orders</th>
-                  <th style={{ color: 'white', border: 'none' }}>Transaction Id</th>
-                  <th style={{ color: 'white', border: 'none' }}>Name Of Admin</th>
+                  <th style={{ color: 'white', border: 'none' }}>Invoice</th>
+                  <th style={{ color: 'white', border: 'none' }}>Status</th>
+                  {/* <th style={{ color: 'white', border: 'none' }}>Name Of Admin</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -126,7 +126,7 @@ export default function Company() {
                       <td style={{ border: 'none' }}>${item.wallet.availableBalance}</td>
                       <td style={{ border: 'none' }}>{item.totalOrders}</td>
                       <td style={{ border: 'none' }}>${item.wallet.swiftWallet}</td>
-                      <td style={{ border: 'none' }}>{item.averageRating}</td>
+                  
                     </tr>
                   );
                 })}

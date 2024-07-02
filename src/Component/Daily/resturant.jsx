@@ -76,7 +76,7 @@ const Resturant = () => {
   return (
     <>
       <div className="p-6 pb-0" style={{ marginTop: "-30px" }}>
-        <p className="text-2xl font-bold" style={{ color: 'black' }}>All Orders</p>
+        {/* <p className="text-2xl font-bold" style={{ color: 'black' }}>All Orders</p> */}
         <div className="grid mt-3 grid-cols-4 gap-3">
           {balanceData.map((data, index) => (
             <Link key={index}>

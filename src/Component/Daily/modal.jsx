@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 export default function Modal({ isOpen, onClose }) {
   if (!isOpen) return null; // Don't render if the modal is not open
@@ -7,7 +7,7 @@ export default function Modal({ isOpen, onClose }) {
     <div className="modal-backdrop" style={modalBackdropStyles}>
       <div className="modal-content" style={modalContentStyles}>
         <div className="background-2" style={background2}>
-          <img src='Vector.png' alt='image'/>
+          <img src='../../../Asset/Vector (2).svg' alt='image'/>
           <p className='text' style={text}>Drag Files Here Or<span style={{color:"#4AA9DE"}}> Browse</span></p>
         </div>
         <div style={second}>
@@ -15,6 +15,7 @@ export default function Modal({ isOpen, onClose }) {
           <div style={amountBoxStyles}>amount</div>
         </div>
         <button onClick={onClose} style={closeButton}>Close</button>
+        <button style={closeButton}>Pay</button>
       </div>
     </div>
   );

@@ -10,11 +10,13 @@ const DriverTrans = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState(null);
+  const [walletData, setWalletData] = useState({ totalWalletBalance: 0, totalPaidMoney: 0 });
+  const [walletLoading, setWalletLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/v1/driver/update/driver-sales');
+        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/driver/update/driver-sales');
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -24,7 +26,19 @@ const DriverTrans = () => {
       }
     };
 
+    const fetchWalletData = async () => {
+      try {
+        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/wallet/calculate/balance-and-paid');
+        setWalletData(response.data);
+      } catch (error) {
+        console.error('Error fetching wallet data:', error);
+      } finally {
+        setWalletLoading(false);
+      }
+    };
+
     fetchData();
+    fetchWalletData();
   }, []);
 
   const handleClick = (newPage) => {
@@ -48,28 +62,34 @@ const DriverTrans = () => {
   return (
     <>
       <div className="p-6 pb-0" style={{ marginTop: "-30px" }}>
-        <div className="grid mt-3 grid-cols-4 gap-3">
+        <div className="grid mt-3 grid-cols-2 gap-6">
           {[
             {
-              key: 'pending',
+              key: 'totalWalletBalance',
               text: 'Total Drivers Wallet',
+              value: walletData.totalWalletBalance,
               color: '#4CAF50',
             },
             {
-              key: 'confirm',
+              key: 'totalPaidMoney',
               text: 'Total Paid',
+              value: walletData.totalPaidMoney,
               color: '#348238',
             },
           ].map((data, index) => (
             <div
               key={index}
-              className="p-7 text-black flex flex-col justify-end items-start rounded-xl shadow-lg"
-              style={{ backgroundColor: 'white', borderColor: data.color, borderWidth: 1, margin: '10px' }}
+              className="p-7 text-black flex flex-col justify-center items-start rounded-xl shadow-lg"
+              style={{ backgroundColor: 'white', borderColor: data.color, borderWidth: 1 }}
             >
-              <div className="flex flex-col items-start">
-                <p className="text-xl font-bold">3</p>
-                <p className="text-13 font-bold">{data.text}</p>
-              </div>
+              {walletLoading ? (
+                <SpinnerRoundOutlined size={50} color={data.color} />
+              ) : (
+                <>
+                  <p className="text-2xl font-bold">₦{data.value}</p>
+                  <p className="text-xl font-semibold">{data.text}</p>
+                </>
+              )}
             </div>
           ))}
         </div>
