@@ -1,35 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BsPlus } from "react-icons/bs";
-import { Routes, Route, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Group from './Groups';
-import AddMenu from './AddMenu'; // Import the AddMenu component
+import AddMenu from './AddMenu';
+import axios from 'axios';
 
-const Side = ({ onDelete }) => {
+export default function Side({ onDelete }) {
   const { id } = useParams();
   const [showAddBackdrop, setShowAddBackdrop] = useState(false);
   const [showEditBackdrop, setShowEditBackdrop] = useState(false);
-  const [sideItems, setSideItems] = useState([
-    { _id: 1, name: "French Fries", price: 500, isAvailable: true },
-    { _id: 2, name: "Onion Rings", price: 700, isAvailable: false },
-    { _id: 3, name: "Mozzarella Sticks", price: 800, isAvailable: true },
-    { _id: 4, name: "Garlic Bread", price: 600, isAvailable: false },
-    { _id: 1, name: "French Fries", price: 500, isAvailable: true },
-    { _id: 2, name: "Onion Rings", price: 700, isAvailable: false },
-    { _id: 3, name: "Mozzarella Sticks", price: 800, isAvailable: true },
-    { _id: 4, name: "Garlic Bread", price: 600, isAvailable: false },
-  ]);
+  const [sideItems, setSideItems] = useState([]);
   const [editItem, setEditItem] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false); 
+  const [restaurantId, setRestaurantId] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchSideItems() {
+      try {
+        const adminId = localStorage.getItem('adminId');
+        if (!adminId) {
+          navigate('/Login');
+          return;
+        }
+        const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/foods/additive/${id}`);
+        setSideItems(response.data);
+      } catch (error) {
+        console.error('Error fetching side items:', error);
+      }
+    }
+    fetchSideItems();
+  }, [id, navigate]);
 
   const handleAddButtonClick = () => {
     setShowAddBackdrop(true);
   };
 
-  const handleToggleAvailability = (itemId) => {
-    const updatedItems = sideItems.map((item) =>
-      item._id === itemId ? { ...item, isAvailable: !item.isAvailable } : item
-    );
-    setSideItems(updatedItems);
+  const handleToggleAvailability = async (itemId) => {
+    const itemToUpdate = sideItems.find(item => item._id === itemId);
+    if (!itemToUpdate) return;
+
+    try {
+      const updatedItems = sideItems.map(item => 
+        item._id === itemId ? { ...item, isAvailable: !item.isAvailable } : item
+      );
+      setSideItems(updatedItems);
+
+      await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/foods/additive/availability/${itemId}`, {
+        isAvailable: !itemToUpdate.isAvailable,
+      });
+    } catch (error) {
+      console.error('Error toggling availability:', error);
+    }
   };
 
   const handleEditButtonClick = (item) => {
@@ -46,27 +68,21 @@ const Side = ({ onDelete }) => {
     setShowDeleteModal(false);
   };
 
-  const deleteSideItem = (itemId) => {
-    setSideItems(sideItems.filter((item) => item._id !== itemId));
-    onDelete(itemId); // Assuming onDelete is a prop function to handle deletion in parent component
-    setShowDeleteModal(false);
-  };
-
   return (
-    <div className="flex flex-col relative"> {/* Container to stack components */}
-      <div className="h-full w-full overflow-y-auto bg-white mx-5" style={{width:'60rem'}}>
+    <div className="flex flex-col relative">
+      <div className="h-full w-full overflow-y-auto bg-white mx-5" style={{ width: '60rem' }}>
         <div className="flex items-center px-3 overflow bg-gray-50 py-4 justify-between">
-          <p className="text-2xl font-semibold" style={{marginBottom:'-24px'}}>Side Menu</p>
+          <p className="text-2xl font-semibold" style={{ marginBottom: '-24px' }}>Side Menu</p>
           <div
             className="flex px-3 py-2 rounded-lg text-base text-white font-semibold bg-blue-900 gap-1 items-center cursor-pointer"
             onClick={handleAddButtonClick}
-            style={{marginBottom:'-10px'}}
+            style={{ marginBottom: '-10px' }}
           >
             <BsPlus className="text-lg stroke-1" />
             <p>Add a New Type</p>
           </div>
         </div>
-        <div className="h-[calc(100vh - 200px)]"> {/* Set a fixed height for the side menu */}
+        <div className="h-[calc(100vh - 200px)]">
           <div className="flex flex-col gap-3">
             {sideItems.map((item) => (
               <div key={item._id} className="flex items-center px-3 justify-between">
@@ -86,20 +102,15 @@ const Side = ({ onDelete }) => {
             ))}
           </div>
         </div>
-        {/* Overlay for AddMenu modal */}
         {showAddBackdrop && (
           <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center z-[400]">
-            <AddMenu
-              setShowAddBackdrop={setShowAddBackdrop}
-            />
+            <AddMenu setShowAddBackdrop={setShowAddBackdrop} />
           </div>
         )}
       </div>
-      <div style={{marginTop:'30px'}}>
+      <div style={{ marginTop: '30px' }}>
         <Group />
       </div>
     </div>
   );
-};
-
-export default Side;
+}
