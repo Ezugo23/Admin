@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../History/Order.css';
 
 const Reciept = () => {
-  const { orderId } = useParams();
+  const { orderId, id } = useParams();
   const [order, setOrder] = useState(null);
   const [acceptingOrder, setAcceptingOrder] = useState(false);
   const [cancelingOrder, setCancelingOrder] = useState(false);
@@ -133,7 +133,7 @@ const Reciept = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <p style={{ margin: 0 }}>Invoice Layout</p>
         <div style={{ display: 'flex', gap: '10px' }}>
-          <Link to="/ordersHistory" style={{ textDecoration: 'none' }}>
+          <Link to="/order-history" style={{ textDecoration: 'none' }}>
             <p style={{
               boxSizing: 'border-box',
               width: '4rem',
