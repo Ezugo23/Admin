@@ -1,112 +1,28 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { FaEdit, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import axios from 'axios';
 
 export default function History() {
-  const [data, setData] = useState([
-    {
-      _id: '1',
-      dateTime: '2024-06-01 12:34',
-      invoice: 'INV12345',
-      deliveryImage: 'https://example.com/image1.jpg',
-      sum: 15000,
-      fee: 500,
-      paymentType: 'Credit Card',
-      restaurantName: 'Delicious Bites', // Added restaurantName
-      wallet: { swiftWallet: 15000, availableBalance: 5000 },
-      admin: 'John Doe',
-    },
-    {
-      _id: '1',
-      dateTime: '2024-06-01 12:34',
-      invoice: 'INV12345',
-      deliveryImage: 'https://example.com/image1.jpg',
-      sum: 15000,
-      fee: 500,
-      paymentType: 'Credit Card',
-      restaurantName: 'Delicious Bites', // Added restaurantName
-      wallet: { swiftWallet: 15000, availableBalance: 5000 },
-      admin: 'John Doe',
-    },
-    {
-      _id: '1',
-      dateTime: '2024-06-01 12:34',
-      invoice: 'INV12345',
-      deliveryImage: 'https://example.com/image1.jpg',
-      sum: 15000,
-      fee: 500,
-      paymentType: 'Credit Card',
-      restaurantName: 'Delicious Bites', // Added restaurantName
-      wallet: { swiftWallet: 15000, availableBalance: 5000 },
-      admin: 'John Doe',
-    },
-    {
-      _id: '1',
-      dateTime: '2024-06-01 12:34',
-      invoice: 'INV12345',
-      deliveryImage: 'https://example.com/image1.jpg',
-      sum: 15000,
-      fee: 500,
-      paymentType: 'Credit Card',
-      restaurantName: 'Delicious Bites', // Added restaurantName
-      wallet: { swiftWallet: 15000, availableBalance: 5000 },
-      admin: 'John Doe',
-    },
-    {
-      _id: '1',
-      dateTime: '2024-06-01 12:34',
-      invoice: 'INV12345',
-      deliveryImage: 'https://example.com/image1.jpg',
-      sum: 15000,
-      fee: 500,
-      paymentType: 'Credit Card',
-      restaurantName: 'Delicious Bites', // Added restaurantName
-      wallet: { swiftWallet: 15000, availableBalance: 5000 },
-      admin: 'John Doe',
-    },
-    {
-      _id: '1',
-      dateTime: '2024-06-01 12:34',
-      invoice: 'INV12345',
-      deliveryImage: 'https://example.com/image1.jpg',
-      sum: 15000,
-      fee: 500,
-      paymentType: 'Credit Card',
-      restaurantName: 'Delicious Bites', // Added restaurantName
-      wallet: { swiftWallet: 15000, availableBalance: 5000 },
-      admin: 'John Doe',
-    },
-    {
-      _id: '1',
-      dateTime: '2024-06-01 12:34',
-      invoice: 'INV12345',
-      deliveryImage: 'https://example.com/image1.jpg',
-      sum: 15000,
-      fee: 500,
-      paymentType: 'Credit Card',
-      restaurantName: 'Delicious Bites', // Added restaurantName
-      wallet: { swiftWallet: 15000, availableBalance: 5000 },
-      admin: 'John Doe',
-    },
-    {
-      _id: '1',
-      dateTime: '2024-06-01 12:34',
-      invoice: 'INV12345',
-      deliveryImage: 'https://example.com/image1.jpg',
-      sum: 15000,
-      fee: 500,
-      paymentType: 'Credit Card',
-      restaurantName: 'Delicious Bites', // Added restaurantName
-      wallet: { swiftWallet: 15000, availableBalance: 5000 },
-      admin: 'John Doe',
-    },
-    // Add more sample data as needed
-  ]);
+  const { id } = useParams();
+  const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/orders/restaurantorderss/${id}`);
+      setData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const handleClick = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -118,6 +34,11 @@ export default function History() {
     if (hasData) {
       navigate(`/history-reciept/${id}`);
     }
+  };
+
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    return date.toLocaleString();
   };
 
   const filteredData = data.filter((item) =>
@@ -163,7 +84,7 @@ export default function History() {
                 <th style={{ color: 'white', border: 'none' }}>INVOICE</th>
                 <th style={{ color: 'white', border: 'none' }}>DELIVERY IMAGE</th>
                 <th style={{ color: 'white', border: 'none' }}>SUM(NGN)</th>
-                <th style={{ color: 'white', border: 'none' }}>FEE(NGN)</th>
+                <th style={{ color: 'white', border: 'none' }}>ORDER STATUS</th>
                 <th style={{ color: 'white', border: 'none' }}>PAYMENT TYPE</th>
                 <th style={{ color: 'white', border: 'none' }}>ACTION</th>
               </tr>
@@ -176,14 +97,20 @@ export default function History() {
                 return (
                   <tr key={item._id} className="table-row cursor-pointer" onClick={() => handleRowClick(item._id, hasData)} style={{ borderBottom: 'none' }}>
                     <td style={{ border: 'none' }}>{serialNumber}</td>
-                    <td style={{ border: 'none' }}>{item.dateTime}</td>
-                    <Link to={`/history-reciept/${item._id}`} className="invoice-link">
-                      <td style={{ border: 'none' }} className="invoice-column">{item.invoice}</td>
+                    <td style={{ border: 'none' }}>{formatDate(item.orderDate)}</td>
+                    <Link to={`/ordersHistory/receipt/${item._id}`} className="invoice-link">
+                    <td style={{ border: 'none' }} className="invoice-column">{item.orderId}</td>
                     </Link>
-                    <td style={{ border: 'none' }}><img src={item.deliveryImage} alt="Delivery" style={{ width: '50px', height: '50px' }} /></td>
-                    <td style={{ border: 'none' }}>₦{item.sum}</td>
-                    <td style={{ border: 'none' }}>₦{item.fee}</td>
-                    <td style={{ border: 'none' }}>{item.paymentType}</td>
+                    <td style={{ border: 'none' }}>
+                      {item.assignedDriver ? (
+                        <img src={item.assignedDriver.image} alt="Delivery" style={{ width: '50px', height: '50px' }} />
+                      ) : (
+                        'No Image'
+                      )}
+                    </td>
+                    <td style={{ border: 'none' }}>₦{item.totalAmount}</td>
+                    <td style={{ border: 'none' }}>{item.orderStatus}</td>
+                    <td style={{ border: 'none' }}>{item.paymentMethod}</td>
                     <td style={{ border: 'none' }}>
                       <Link className="action-item cursor-pointer flex items-center gap-2">
                         <FaEdit /> Edit

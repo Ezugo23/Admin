@@ -109,12 +109,9 @@ export default function EditFood() {
         </button>
       </td>
                     <td className="flex items-center gap-3" style={{ border: 'none' }}>
-                      <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`} style={{ display:'flex'}}>
+                    <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`} style={{ display:'flex'}}>
                         <FaEdit size={15}/> Edit
                       </Link>
-                      <span className="action-item cursor-pointer flex items-center gap-1">
-                        <img src="/suspendLogo.svg" alt="suspend" /> Suspend
-                      </span>
                       <span className="action-item text-sm cursor-pointer flex items-center gap-2">
                         <FaTrash /> Delete
                       </span>

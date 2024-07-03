@@ -45,7 +45,7 @@ export default function User() {
           phoneNumber: response.data.admin.phoneNumber,
           email: response.data.admin.email,
           address: response.data.admin.address,
-          userType: response.data.admin.userType,
+          roles: response.data.admin.roles,
         });
         setImagePreviewUrl(response.data.admin.image);
       } catch (error) {
@@ -83,7 +83,7 @@ export default function User() {
       data.append(key, formData[key]);
     }
     if (imageFile) {
-      data.append('profileImage', imageFile);
+      data.append('image', imageFile);
     }
 
     try {
@@ -101,7 +101,7 @@ export default function User() {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === 'profileImage') {
+    if (name === 'image') {
       const file = files[0];
       setImageFile(file);
       setImagePreviewUrl(URL.createObjectURL(file));
@@ -143,13 +143,28 @@ export default function User() {
         <form className="w-400" onSubmit={handleEditProfile}>
           <div className="space-y-12">
             <div className="border-b border-gray-900/10 pb-12">
-              <Box position="relative" width="100px" height="100px" margin="auto">
+              <Box position="relative" width="150px" height="150px" margin="auto">
                 <FormControl style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <Image src={imagePreviewUrl || '/placeholder-image.png'} alt="profile Image" width="100%" height="100%" />
-                  <label htmlFor="profileImage" style={{ cursor: 'pointer' }}>
-                    <Image src="/edit.png" alt="Edit" bg="#4CAF50" position="absolute" bottom="1px" right="5px" w="30px" borderRadius="20px" />
-                  </label>
-                  <Input type="file" id="profileImage" name="profileImage" onChange={handleChange} style={{ display: 'none' }} />
+                  <Box
+                    width="150px"
+                    height="150px"
+                    borderRadius="50%"
+                    overflow="hidden"
+                    position="relative"
+                    border="3px solid #4CAF50"
+                  >
+                    <Image
+                      src={imagePreviewUrl || '/placeholder-image.png'}
+                      alt="profile Image"
+                      width="100%"
+                      height="100%"
+                      objectFit="cover"
+                    />
+                    <label htmlFor="profileImage" style={{ cursor: 'pointer', position: 'absolute', bottom: '5px', right: '5px' }}>
+                      <Image src="/edit.png" alt="Edit" bg="#4CAF50" w="30px" borderRadius="50%" />
+                    </label>
+                  </Box>
+                  <Input type="file" id="profileImage" name="image" onChange={handleChange} style={{ display: 'none' }} />
                 </FormControl>
               </Box>
 
@@ -240,21 +255,22 @@ export default function User() {
                 </div>
 
                 <div className="sm:col-span-3">
-                  <label htmlFor="userType" className="block text-sm font-medium leading-6 text-gray-900">
-                    User Type
-                  </label>
-                  <div className="mt-2">
-                    <input
-                      type="text"
-                      name="userType"
-                      id="userType"
-                      autoComplete="off"
-                      className="block w-full rounded-md border-0 py-1.5 px-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                      value={formData.userType}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
+  <label htmlFor="roles" className="block text-sm font-medium leading-6 text-gray-900">
+    Admin Role
+  </label>
+  <div className="mt-2">
+    <input
+      type="text"
+      name="roles"
+      id="roles"
+      autoComplete="off"
+      className="block w-full rounded-md border-0 py-1.5 px-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      value={formData.roles}
+      readOnly
+    />
+  </div>
+</div>
+
 
                 <Link
                   className="font-inter font-normal text-base text-green-600 underline"

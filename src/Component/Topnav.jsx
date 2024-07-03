@@ -35,7 +35,7 @@ const TopNav = () => {
     <Box bg={'#f9f9f9'} p={4}>
       <Flex justify="space-between" align="center" justifyContent="flex-end">
         <Flex align="center">
-          <InputGroup width="200px" borderRadius={15} mr={4}>
+          {/* <InputGroup width="200px" borderRadius={15} mr={4}>
             <Input
               type="text"
               placeholder="Search..."
@@ -69,9 +69,9 @@ const TopNav = () => {
                 cursor={'pointer'}
               />
             </InputRightElement>
-          </InputGroup>
+          </InputGroup> */}
 
-          <Box position="relative" mr={4} mt={'2'}>
+          <Box position="relative" mr={9} mt={'2'}>
             <Icon as={FiBell} w={6} h={6} />
             <Badge
               colorScheme="red"
@@ -88,7 +88,7 @@ const TopNav = () => {
             size="sm"
             name="User Avatar"
             src="https://bit.ly/dan-abramov"
-            mr={4}
+            mr={6}
             w={'50'}
           />
 
