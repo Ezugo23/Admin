@@ -258,7 +258,7 @@ const Received = ({ driverId }) => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  PAYMENT-ADMIN
+                ACCOUNT NUMBER
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -267,7 +267,7 @@ const Received = ({ driverId }) => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  TRANSACTION NUMBER
+                  BANK CODE
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -276,7 +276,7 @@ const Received = ({ driverId }) => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  PAID (NGN)
+                  BANK NAME
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -285,7 +285,16 @@ const Received = ({ driverId }) => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  ORDER ID
+                  ACCOUNT NAME
+                </Th>
+                <Th
+                  fontSize="0.738rem"
+                  textAlign="center"
+                  color={'#181616'}
+                  textTransform={'capitalize'}
+                  fontWeight={400}
+                >
+                  RECEIPIENT CODE
                 </Th>
               </Tr>
             </Thead>

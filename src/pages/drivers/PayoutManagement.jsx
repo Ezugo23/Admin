@@ -23,7 +23,7 @@ const PayoutManagement = () => {
           _hover={{ bg: activeTab === 'received' ? '#45A049' : '#ffffff' }}
           border={'2px solid #45A049'}
         >
-          Received
+          Driver Receipients 
         </Button>
         <Button
           onClick={() => handleTabClick('withdrawal')}

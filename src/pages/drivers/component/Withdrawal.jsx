@@ -285,7 +285,7 @@ const Withdrawal = ({ driverId }) => {
                   textTransform={'capitalize'}
                   fontWeight={400}
                 >
-                  ORDER ID
+                  ACCOUNT NAME
                 </Th>
                 <Th
                   fontSize="0.738rem"
@@ -295,6 +295,15 @@ const Withdrawal = ({ driverId }) => {
                   fontWeight={400}
                 >
                   BANK NAME
+                </Th>
+                <Th
+                  fontSize="0.738rem"
+                  textAlign="center"
+                  color={'#181616'}
+                  textTransform={'capitalize'}
+                  fontWeight={400}
+                >
+                  STATUS
                 </Th>
               </Tr>
             </Thead>
