@@ -33,7 +33,7 @@ function App() {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io('wss://swifdropp.onrender.com');
+    const newSocket = io('wss://delivery-chimelu-new.onrender.com');
 
     newSocket.on('connect', () => {
       console.log('Socket connected');

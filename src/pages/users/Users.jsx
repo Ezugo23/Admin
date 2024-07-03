@@ -191,7 +191,7 @@ const Users = () => {
                   </td>
                   <td>{admin.username}</td>
                   <td>{admin.email}</td>
-                  <td>{admin.userType}</td>
+                  <td>{admin.roles.join(', ')}</td>
                   <td>
                     <span
                       className={`status ${

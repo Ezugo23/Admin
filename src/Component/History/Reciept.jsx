@@ -5,8 +5,15 @@ import Spinner from 'react-bootstrap/Spinner';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Order.css';
+import { useNavigate } from 'react-router-dom';
+
+
+
+
+
 
 const Reciept = () => {
+  const navigate = useNavigate();
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
   const [acceptingOrder, setAcceptingOrder] = useState(false);
@@ -109,24 +116,23 @@ const Reciept = () => {
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <p style={{ margin: 0 }}>Invoice Layout</p>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <Link to="/ordersHistory" style={{ textDecoration: 'none' }}>
-            <p style={{
-              boxSizing: 'border-box',
-              width: '4rem',
-              height: '2rem',
-              border: 'solid #F9F9F9 0.5px',
-              textAlign: 'center',
-              cursor: 'pointer',
-              backgroundColor: 'white',
-              margin: 0,
-              lineHeight: '2rem',
-              color: 'black'
-            }}>
-              Back
-            </p>
-          </Link>
-        </div>
+        <button
+  onClick={() => navigate(-1)}
+  style={{
+    boxSizing: 'border-box',
+    width: '4rem',
+    height: '2rem',
+    border: 'solid #F9F9F9 0.5px',
+    textAlign: 'center',
+    cursor: 'pointer',
+    backgroundColor: 'white',
+    margin: 0,
+    lineHeight: '2rem',
+    color: 'black'
+  }}
+>
+  Back
+</button>
       </div>
       <div style={{ backgroundColor: 'white', height: 'auto', marginTop: "70px" }} className='w-full'>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: "40px" }}>

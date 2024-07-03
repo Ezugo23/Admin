@@ -17,7 +17,7 @@ export default function Forgot({ onClose }) {
 
   const handleSubmit = () => {
     console.log('handleSubmit called');
-    const storedRestaurantId = localStorage.getItem('userId');
+    const storedRestaurantId = localStorage.getItem('adminId');
     if (storedRestaurantId) {
       setRestaurantId(storedRestaurantId);
     }
@@ -27,7 +27,7 @@ export default function Forgot({ onClose }) {
     }
     axios
       .post(
-        `https://delivery-chimelu-new.onrender.com/api/v1/restaurant/changepassword/${storedRestaurantId}`,
+        `https://delivery-chimelu-new.onrender.com/api/v1/admin/changepassword/${storedRestaurantId}`,
         {
           currentPassword: oldPassword,
           newPassword: newPassword,
