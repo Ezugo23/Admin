@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import Modal from './modal'; // Import the Modal component
 import { SpinnerRoundOutlined } from 'spinners-react';
 
-export default function Company() {
+export default function SentPendingBal() {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
-  const navigate = useNavigate();
+  const [selectedItem, setSelectedItem] = useState(null); // State for selected item
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
-        setData(response.data.restaurants);
+        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/sent-restaurant-bal');
+        setData(response.data.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -30,7 +29,7 @@ export default function Company() {
 
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 4000); // Set the timer to 3 seconds (3000 milliseconds)
+    }, 4000); // Set the timer to 4 seconds (4000 milliseconds)
 
     return () => clearTimeout(timer);
   }, []);
@@ -41,22 +40,30 @@ export default function Company() {
     }
   };
 
-  const handleRowClick = (id, hasData) => {
-    if (hasData) {
-      navigate(`menu/${id}/personal/${id}`);
+  const handleApproveClick = async (id) => {
+    try {
+      await axios.put(`https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/update-restaurant-bal/${id}`);
+      setData((prevData) =>
+        prevData.map((item) =>
+          item._id === id ? { ...item, approved: true } : item
+        )
+      );
+    } catch (error) {
+      console.error('Error approving item:', error);
     }
   };
 
-  const handleApproveClick = () => {
-    setIsModalOpen(true); // Open the modal
+  const handlePayClick = () => {
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
+    setIsModalOpen(false);
+    setSelectedItem(null);
   };
 
   const filteredData = data.filter((item) =>
-    item.restaurantName.toLowerCase().includes(searchTerm.toLowerCase())
+    item.amountSent.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -79,8 +86,22 @@ export default function Company() {
             </label>
           </div>
           <div className="search-container ml-auto">
+            <input
+              type="text"
+              placeholder="Search by Amount"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                width: "145px",
+                height: '30px',
+                borderRadius: '10px',
+                padding: '5px',
+                fontFamily: 'Open Sans',
+                fontSize: '16px',
+              }}
+            />
             <button
-              onClick={handleApproveClick}
+              onClick={handlePayClick}
               style={{
                 width: "145px",
                 height: '30px',
@@ -91,6 +112,7 @@ export default function Company() {
                 fontSize: '16px',
                 fontWeight: '600',
                 lineHeight: '21.79px',
+                marginLeft: '10px'
               }}
             >
               Pay
@@ -110,26 +132,35 @@ export default function Company() {
                   <th style={{ color: 'white', border: 'none' }}>Amount</th>
                   <th style={{ color: 'white', border: 'none' }}>Invoice</th>
                   <th style={{ color: 'white', border: 'none' }}>Status</th>
-                  {/* <th style={{ color: 'white', border: 'none' }}>Name Of Admin</th> */}
                 </tr>
               </thead>
               <tbody>
-                {currentData.map((item) => {
-                  const hasData = item.totalOrders > 0 || item.totalItems > 0; // Check if the restaurant has orders or items
-                  return (
-                    <tr key={item._id} className="table-row cursor-pointer" onClick={() => handleRowClick(item._id, hasData)} style={{ borderBottom: 'none' }}>
-                      <td style={{ border: 'none' }}>
-                        <strong>{item.restaurantName}</strong>
-                        <br />
-                        {item.address}
-                      </td>
-                      <td style={{ border: 'none' }}>${item.wallet.availableBalance}</td>
-                      <td style={{ border: 'none' }}>{item.totalOrders}</td>
-                      <td style={{ border: 'none' }}>${item.wallet.swiftWallet}</td>
-                  
-                    </tr>
-                  );
-                })}
+                {currentData.map((item) => (
+                  <tr key={item._id} className="table-row" style={{ borderBottom: 'none' }}>
+                    <td style={{ border: 'none' }}>{new Date(item.createdAt).toLocaleDateString()}</td>
+                    <td style={{ border: 'none' }}>₦{item.amountSent}</td>
+                    <td style={{ border: 'none' }}>{item._id.slice(-5)}</td>
+                    <td style={{ border: 'none' }}>
+                      <button
+                        onClick={() => handleApproveClick(item._id)}
+                        style={{
+                          width: "100px",
+                          height: '30px',
+                          borderRadius: '10px',
+                          backgroundColor: item.approved ? '#4CAF50' : '#FFA500',
+                          color: "white",
+                          fontFamily: 'Open Sans',
+                          fontSize: '14px',
+                          fontWeight: '600',
+                          lineHeight: '21.79px',
+                        }}
+                        disabled={item.approved}
+                      >
+                        {item.approved ? 'Approved' : 'Pending'}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           )}

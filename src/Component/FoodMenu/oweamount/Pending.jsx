@@ -20,7 +20,7 @@ export default function Succeed() {
 
   const handleRefund = async (restaurantId, withdrawalId) => {
     try {
-      const response = await axios.put(`http://localhost:8080/api/v1/restaurantWallet/reverse-money/${restaurantId}/${withdrawalId}`);
+      const response = await axios.put(`https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/reverse-money/${restaurantId}/${withdrawalId}`);
       if (response.status === 200) {
         alert('Refund successful');
         fetchOrders(); // Refresh orders after refund
