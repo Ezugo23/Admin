@@ -6,7 +6,7 @@ import DriverProfileSidebar from './DriversProfileSidebar';
 import PersonalInformation from './PersonalInformation';
 import DeliveryHistory from './DeliveryHistory';
 import ChangePassword from './ChangePassword';
-
+import PayoutManagement from '../PayoutManagement';
 const DriversProfile = () => {
   const { driverId } = useParams();
   const [driverData, setDriverData] = useState(null);
@@ -69,12 +69,16 @@ const DriversProfile = () => {
             path="change-password"
             element={<ChangePassword driverId={driverId} />}
           />
+          <Route
+            path="payout-management"
+            element={<PayoutManagement driverId={driverId} />}
+          />
           {/* <Route path="company-info" element={<CompanyInformation />} />
           <Route path="license" element={<DriverLicense />} />
           <Route path="vehicle" element={<RegisteredVehicle />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="payment-method" element={<PaymentMethod />} />
-          <Route path="payout-management" element={<PayoutManagement />} />
+          
           <Route path="delivery" element={<Delivery />} />
           <Route path="request-history" element={<RequestHistory />} /> */}
         </Routes>
