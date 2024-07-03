@@ -9,7 +9,7 @@ const PayoutManagement = () => {
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
-  };
+  }
 
   return (
     <Box width="100%" bg="#ffffff" p="4">
