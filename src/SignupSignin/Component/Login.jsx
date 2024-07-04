@@ -1,28 +1,59 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Spinner from 'react-bootstrap/Spinner';
 import RegisterImage from '../../../Asset/image container.svg';
 import star from '../../../Asset/star 1.svg';
-import toast from 'react-hot-toast';
 import profile from '../../../Asset/BG.svg';
-import Spinner from 'react-bootstrap/Spinner';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [companyPassword, setCompanyPassWord] = useState('');
+  const [companyPassword, setCompanyPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
+  const validateEmail = (email) => {
+    // Simple email validation regex
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const validatePassword = (password) => {
+    // Example password validation (minimum 8 characters)
+    return password.length >= 8;
+  };
+
+  const validateCompanyPassword = (companyPassword) => {
+    // Company password should not be empty
+    return companyPassword.trim() !== '';
+  };
+
   async function login(e) {
     e.preventDefault();
-  
+
+    // Check if email, password, or company password is invalid
+    if (!validateEmail(email)) {
+      toast.error("Invalid email format");
+      return;
+    }
+    if (!validatePassword(password)) {
+      toast.error("Password must be at least 8 characters");
+      return;
+    }
+    if (!validateCompanyPassword(companyPassword)) {
+      toast.error("Invalid company password");
+      return;
+    }
+
     const regData = {
       email,
       password,
       companyPassword
     };
-  
+
     try {
       setLoading(true);
       const response = await fetch("https://delivery-chimelu-new.onrender.com/api/v1/login-admin", {
@@ -34,28 +65,28 @@ const Login = () => {
       });
       const responseData = await response.json();
       console.log(responseData);
-  
+
       if (responseData.token) {
         localStorage.setItem('token', responseData.token);
         localStorage.setItem('adminId', responseData.id); // Store adminId in localStorage
         navigate('/Dashboard');
-      }
-  
-      if (responseData.error) {
-        toast.error(responseData.error);
-      }
-  
-      if (responseData.errorDetails) {
+      } else if (responseData.error) {
+        if (responseData.error === "Invalid credentials") {
+          toast.error("Wrong password. Please try again.");
+        } else {
+          toast.error(responseData.error);
+        }
+      } else if (responseData.errorDetails) {
         toast.error("All fields are required");
-        setLoading(false);
-      }
-  
-      if (responseData.message) {
+      } else if (responseData.message) {
         toast.success(responseData.message);
       }
-  
+
     } catch (error) {
       console.log(error);
+      toast.error("Failed to login. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -88,14 +119,15 @@ const Login = () => {
           {loading && <Spinner animation="border" variant="success" className="mx-auto my-5" />}
           <div className='mt-5'>
             <form onSubmit={login}>
+              <ToastContainer position="top-center" />
               <label htmlFor="email" className='block my-2'>Email:</label>
               <input type="email" id="email" className='w-full rounded p-3 mb-3 border' value={email} onChange={(e) => setEmail(e.target.value)} />
               <label htmlFor="password" className='block my-2'>Password:</label>
               <input type="password" id="password" className='w-full rounded p-3 mb-3 border' value={password} onChange={(e) => setPassword(e.target.value)} />
               <label htmlFor="companyPassword" className='block my-2'>Company Password:</label>
-              <input type="text" id="companyPassword" className='w-full rounded p-3 mb-3 border' value={companyPassword} onChange={(e) => setCompanyPassWord(e.target.value)} />
+              <input type="password" id="companyPassword" className='w-full rounded p-3 mb-3 border' value={companyPassword} onChange={(e) => setCompanyPassword(e.target.value)} />
               <div className='flex justify-between my-4'>
-                <div>
+                <div className='flex justify-between'>
                   <input type="checkbox" id="remember" />
                   <label htmlFor="remember" className='ml-2'>Remember me</label>
                 </div>
@@ -115,7 +147,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Login;

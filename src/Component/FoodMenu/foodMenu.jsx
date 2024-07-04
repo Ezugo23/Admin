@@ -8,11 +8,12 @@ import EditFood from './foodGroup';
 import AddFood from './addGroup';
 
 export default function FoodMenu() {
-  const { menuId, id } = useParams();
+  const { menuId, id, foodId } = useParams();
   const [menuData, setMenuData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedFoodItem, setSelectedFoodItem] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -41,17 +42,25 @@ export default function FoodMenu() {
 
   const handleEditClick = (foodItem) => {
     setSelectedFoodItem(foodItem);
-    setIsModalOpen(true);
+    setIsEditModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
     setSelectedFoodItem(null);
   };
 
   const handleAddButtonClick = () => {
-    setSelectedFoodItem(null);
-    setIsModalOpen(true);
+    setIsAddModalOpen(true);
+  };
+
+  const handleCloseAddModal = () => {
+    setIsAddModalOpen(false);
+  };
+
+  const handleAddFood = (newFoodItem) => {
+    setMenuData((prevMenuData) => [...prevMenuData, newFoodItem]);
+    setIsAddModalOpen(false);
   };
 
   if (loading) {
@@ -165,32 +174,32 @@ export default function FoodMenu() {
         <div className="pagination-con">
           <div
             className="flex px-8 py-2 rounded-lg text-base text-white font-semibold bg-blue-800 gap-1 items-center cursor-pointer ml-6"
-            onClick={handleAddButtonClick} // Add onClick handler here
+            onClick={handleAddButtonClick}
           >
             <BsPlus className="text-lg stroke-1" />
             <p>Add a New Category</p>
           </div>
         </div>
       </div>
-      {isModalOpen && (
-        selectedFoodItem ? (
-          <EditFood
-            onClose={handleCloseModal}
-            foodId={selectedFoodItem._id}
-            id={id}
-            foodData={selectedFoodItem}
-          />
-        ) : (
-          <div className="popup-overlay  overflow-y-auto">
+      {isEditModalOpen && (
+        <EditFood
+          onClose={handleCloseEditModal}
+          foodId={selectedFoodItem._id}
+          id={id}
+          foodData={selectedFoodItem}
+        />
+      )}
+      {isAddModalOpen && (
+        <div className="popup-overlay overflow-y-auto">
           <div className="popup-content overflow-y-auto">
-          <AddFood
-            onClose={handleCloseModal} // Add this line to handle closing the modal
-            menuId={menuId}
-            id={id}
-          />
+            <AddFood
+                  onClose={handleCloseAddModal}
+                  menuId={menuId}
+                  id={id}
+                  onAddFood={handleAddFood}
+            />
           </div>
-          </div>
-        )
+        </div>
       )}
     </div>
   );
