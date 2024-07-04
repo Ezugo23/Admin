@@ -1,11 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Flex,
-  Input,
-  InputGroup,
-  InputRightElement,
-  IconButton,
   Icon,
   Badge,
   Avatar,
@@ -13,66 +9,95 @@ import {
   Menu,
   MenuButton,
   MenuList,
-  MenuItem,
+  IconButton,
 } from '@chakra-ui/react';
 import { BsBoxArrowRight } from 'react-icons/bs';
-import { FiAlignLeft, FiBell, FiSearch } from 'react-icons/fi';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { FiAlignLeft, FiBell } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import { io } from 'socket.io-client';
+import notificationSound from '../../public/Sound Effect Twinkle.mp3'; // Adjust the path as necessary
 
 const TopNav = () => {
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage dropdown visibility
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const notificationRef = useRef(null);
+  const bellIconRef = useRef(null);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleNotification = () => setIsNotificationOpen(!isNotificationOpen);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('adminId');
-     navigate('/login');
+    navigate('/login');
   };
+
+  const handleClickOutside = (event) => {
+    if (
+      notificationRef.current && 
+      !notificationRef.current.contains(event.target) &&
+      bellIconRef.current &&
+      !bellIconRef.current.contains(event.target)
+    ) {
+      setIsNotificationOpen(false);
+    }
+  };
+
+  const playNotificationSound = () => {
+    const audio = new Audio(notificationSound);
+    audio.play().catch((error) => {
+      console.error('Error playing notification sound:', error);
+    });
+  };
+
+  useEffect(() => {
+    const newSocket = io('wss://delivery-chimelu-new.onrender.com');
+
+    newSocket.on('connect', () => {
+      console.log('Socket connected');
+    });
+
+    newSocket.on('newNotification', (message) => {
+      console.log('New order received:', message);
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        message,
+      ]);
+      playNotificationSound();
+    });
+
+    newSocket.on('newOrders', (message) => {
+      console.log('New order received:', message);
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        message,
+      ]);
+      playNotificationSound();
+    });
+
+    newSocket.on('disconnect', () => {
+      console.log('Socket disconnected');
+    });
+
+    return () => {
+      newSocket.close();
+      console.log('Socket connection closed');
+    };
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <Box bg={'#f9f9f9'} p={4}>
       <Flex justify="space-between" align="center" justifyContent="flex-end">
         <Flex align="center">
-          {/* <InputGroup width="200px" borderRadius={15} mr={4}>
-            <Input
-              type="text"
-              placeholder="Search..."
-              w="200px"
-              height="44px"
-              border="none"
-              outline="none"
-              _focus={{
-                outline: 'none',
-                border: 'none',
-              }}
-              _hover={{
-                outline: 'none',
-                border: 'none',
-              }}
-              focusBorderColor="transparent"
-              sx={{
-                '::placeholder': {
-                  fontSize: '14px',
-                  color: '#a89f98',
-                },
-              }}
-              bg={'white'}
-            />
-            <InputRightElement>
-              <Icon
-                as={FiSearch}
-                color="black"
-                marginTop={'1'}
-                fontSize={'20px'}
-                cursor={'pointer'}
-              />
-            </InputRightElement>
-          </InputGroup> */}
-
           <Box position="relative" mr={9} mt={'2'}>
-            <Icon as={FiBell} w={6} h={6} />
+            <Icon as={FiBell} w={6} h={6} onClick={toggleNotification} cursor="pointer" ref={bellIconRef} />
             <Badge
               colorScheme="red"
               borderRadius="full"
@@ -81,8 +106,35 @@ const TopNav = () => {
               right="-1"
               fontSize="0.7em"
             >
-              3
+              {notifications.length}
             </Badge>
+            {isNotificationOpen && (
+              <Box
+                ref={notificationRef}
+                position="absolute"
+                top="8"
+                right="0"
+                bg="white"
+                boxShadow="md"
+                borderRadius="md"
+                p={4}
+                zIndex={10}
+                width="250px"
+                maxHeight="300px" // Set max height for the scroll bar
+                overflowY="auto" // Enable vertical scrolling
+              >
+                <Box>
+                  <Box mb={2} borderBottom="1px solid" borderColor="gray.200">
+                    <strong>Notifications</strong>
+                  </Box>
+                  {notifications.map((notification, index) => (
+                    <Box mb={2} key={index}>
+                      {notification.message}
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            )}
           </Box>
           <Avatar
             size="sm"
@@ -98,22 +150,17 @@ const TopNav = () => {
               as={IconButton}
               aria-label="Options"
               icon={<FiAlignLeft />}
-              onClick={toggleMenu}
             />
             <MenuList>
-            <div
-              className="flex items-center px-4 py-2 text-red-500 cursor-pointer"
-              onClick={handleLogout}
-            >
-              <BsBoxArrowRight
-                className="text-lg mr-2"
+              <div
+                className="flex items-center px-4 py-2 text-red-500 cursor-pointer"
                 onClick={handleLogout}
-              />
-              Logout
-            </div>
+              >
+                <BsBoxArrowRight className="text-lg mr-2" />
+                Logout
+              </div>
             </MenuList>
           </Menu>
-
         </Flex>
       </Flex>
       <Divider mt={'5'} borderWidth={'1px'} color={'black'} />
