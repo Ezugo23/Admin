@@ -24,10 +24,11 @@ import { io } from 'socket.io-client';
 import { DriversProvider } from './contexts/DriversContext';
 import { WithdrawalProvider } from './contexts/WithdrawalContext';
 import EditUser from './pages/users/EditUser/EditUser';
-import OweAmount from './pages/FoodSellers/Owe'
-import Payment from './Component/FoodMenu/Swift/Payment'
-import HistorySwift from './Component/FoodMenu/Swift/History'
-import HistoryRec from './Component/FoodMenu/Reciept'
+import OweAmount from './pages/FoodSellers/Owe';
+import Payment from './Component/FoodMenu/Swift/Payment';
+import HistorySwift from './Component/FoodMenu/Swift/History';
+import HistoryRec from './Component/FoodMenu/Reciept';
+import { PayoutProvider } from './contexts/PayoutContext';
 
 function App() {
   const [socket, setSocket] = useState(null);
@@ -85,172 +86,174 @@ function App() {
   return (
     <DriversProvider>
       <WithdrawalProvider>
-        <Router>
-          <Routes>
-            <Route path="/*" element={<Signup socket={socket} />} />
-            <Route
-              path="/Dashboard"
-              element={
-                <MainLayout>
-                  <Home socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/profile/*"
-              element={
-                <MainLayout>
-                  <Profile socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/foodsellers/*"
-              element={
-                <MainLayout>
-                  <Sellers socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/foodsellers/list"
-              element={
-                <MainLayout>
-                  <SellersList socket={socket} />
-                </MainLayout>
-              }
-            />
-             <Route
-              path="/history-reciept/:id"
-              element={
-                <MainLayout>
-                  <HistoryRec socket={socket} />
-                </MainLayout>
-              }
-            />
+        <PayoutProvider>
+          <Router>
+            <Routes>
+              <Route path="/*" element={<Signup socket={socket} />} />
               <Route
-              path="/foodsellers/oweamount"
-              element={
-                <MainLayout>
-                  <OweAmount socket={socket} />
-                </MainLayout>
-              }
-            />
-             <Route
-              path="/foodsellers/swiftamount"
-              element={
-                <MainLayout>
-                  <Payment socket={socket} />
-                </MainLayout>
-              }
-            />
+                path="/Dashboard"
+                element={
+                  <MainLayout>
+                    <Home socket={socket} />
+                  </MainLayout>
+                }
+              />
               <Route
-              path="/foodsellers/swiftamount/history"
-              element={
-                <MainLayout>
-                  <HistorySwift socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/ordersHistory/*"
-              element={
-                <MainLayout>
-                  <History socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/users/admin"
-              element={
-                <MainLayout>
-                  <Users socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/users/allusers"
-              element={
-                <MainLayout>
-                  <AllUsers socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/users/editUser/:id"
-              element={
-                <MainLayout>
-                  <EditUser socket={socket} />
-                </MainLayout>
-              }
-            />
+                path="/profile/*"
+                element={
+                  <MainLayout>
+                    <Profile socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/foodsellers/*"
+                element={
+                  <MainLayout>
+                    <Sellers socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/foodsellers/list"
+                element={
+                  <MainLayout>
+                    <SellersList socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/history-reciept/:id"
+                element={
+                  <MainLayout>
+                    <HistoryRec socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/foodsellers/oweamount"
+                element={
+                  <MainLayout>
+                    <OweAmount socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/foodsellers/swiftamount"
+                element={
+                  <MainLayout>
+                    <Payment socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/foodsellers/swiftamount/history"
+                element={
+                  <MainLayout>
+                    <HistorySwift socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/ordersHistory/*"
+                element={
+                  <MainLayout>
+                    <History socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/users/admin"
+                element={
+                  <MainLayout>
+                    <Users socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/users/allusers"
+                element={
+                  <MainLayout>
+                    <AllUsers socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/users/editUser/:id"
+                element={
+                  <MainLayout>
+                    <EditUser socket={socket} />
+                  </MainLayout>
+                }
+              />
 
-            <Route
-              path="/drivers"
-              element={
-                <MainLayout>
-                  <Drivers socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/driversprofile/:driverId/*"
-              element={
-                <MainLayout>
-                  <DriversProfile socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/drivers/settings"
-              element={
-                <MainLayout>
-                  <DriverSettings socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/drivers/list"
-              element={
-                <MainLayout>
-                  <DriversList socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/request/:id"
-              element={
-                <MainLayout>
-                  <Request socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/drivers/withdrawalhistory"
-              element={
-                <MainLayout>
-                  <WithdrawalHistory socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/daily-transaction/*"
-              element={
-                <MainLayout>
-                  <Daily socket={socket} />
-                </MainLayout>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <MainLayout>
-                  <Settings socket={socket} />
-                </MainLayout>
-              }
-            />
-          </Routes>
-        </Router>
+              <Route
+                path="/drivers"
+                element={
+                  <MainLayout>
+                    <Drivers socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/driversprofile/:driverId/*"
+                element={
+                  <MainLayout>
+                    <DriversProfile socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/drivers/settings"
+                element={
+                  <MainLayout>
+                    <DriverSettings socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/drivers/list"
+                element={
+                  <MainLayout>
+                    <DriversList socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/request/:id"
+                element={
+                  <MainLayout>
+                    <Request socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/drivers/withdrawalhistory"
+                element={
+                  <MainLayout>
+                    <WithdrawalHistory socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/daily-transaction/*"
+                element={
+                  <MainLayout>
+                    <Daily socket={socket} />
+                  </MainLayout>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <MainLayout>
+                    <Settings socket={socket} />
+                  </MainLayout>
+                }
+              />
+            </Routes>
+          </Router>
+        </PayoutProvider>
       </WithdrawalProvider>
     </DriversProvider>
   );

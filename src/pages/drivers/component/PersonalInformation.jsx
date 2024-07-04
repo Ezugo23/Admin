@@ -19,7 +19,7 @@ import {
   useToast,
   Spinner,
 } from '@chakra-ui/react';
-import { ChevronDownIcon, CloseIcon } from '@chakra-ui/icons';
+import { CloseIcon } from '@chakra-ui/icons';
 import { FaUser } from 'react-icons/fa';
 import axios from 'axios';
 
