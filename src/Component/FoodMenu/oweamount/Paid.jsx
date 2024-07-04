@@ -1,8 +1,11 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import ReactModal from 'react-modal';
 
 export default function SentWithdrawals() {
   const [orders, setOrders] = useState([]);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false); // State for the image modal
+  const [selectedImageUrl, setSelectedImageUrl] = useState(''); // State for selected image URL
 
   useEffect(() => {
     fetchOrders();
@@ -18,13 +21,23 @@ export default function SentWithdrawals() {
     }
   };
 
+  const handleImageClick = (imageUrl) => {
+    setSelectedImageUrl(imageUrl);
+    setIsImageModalOpen(true);
+  };
+
+  const handleCloseImageModal = () => {
+    setIsImageModalOpen(false);
+    setSelectedImageUrl('');
+  };
+
   const header = [
     "Restaurant’s Name",
     "Withdrawal (NGN)",
     "Account No.",
     "Account Name",
     "Bank Name",
-    " Balance (NGN)",
+    "Balance (NGN)",
     "Transaction Id",
   ];
 
@@ -64,13 +77,50 @@ export default function SentWithdrawals() {
                 <div className="center">
                   <p>₦{order.availableBalance}</p>
                 </div>
-                <div className="center" style={{color:'green'}}>
+                <div className="center" style={{ color: 'green', cursor: 'pointer', textDecoration: 'underline' }}
+                  onClick={() => handleImageClick(order.image)}>
                   <p>{order.transactionId}</p>
                 </div>
               </div>
             </div>
           ))
         )}
+
+        {/* React Modal for Image */}
+        <ReactModal
+          isOpen={isImageModalOpen}
+          onRequestClose={handleCloseImageModal}
+          contentLabel="Receipt Image"
+          style={{
+            overlay: {
+              backgroundColor: 'rgba(0, 0, 0, 0.75)'
+            },
+            content: {
+              top: '50%',
+              left: '50%',
+              right: 'auto',
+              bottom: 'auto',
+              marginRight: '-50%',
+              transform: 'translate(-50%, -50%)',
+              maxWidth: '90%',
+              maxHeight: '90%'
+            }
+          }}
+        >
+          <img src={selectedImageUrl} alt="Receipt" style={{ width: '100%', height: 'auto' }} />
+          <button
+            onClick={handleCloseImageModal}
+            style={{
+              marginTop: '10px',
+              padding: '10px',
+              backgroundColor: '#FF0000',
+              color: 'white',
+              borderRadius: '5px'
+            }}
+          >
+            Close
+          </button>
+        </ReactModal>
       </div>
     </main>
   );
