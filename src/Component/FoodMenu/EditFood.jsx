@@ -5,6 +5,7 @@ import { BsPlus } from "react-icons/bs";
 import { SpinnerRoundOutlined } from 'spinners-react';
 import axios from 'axios';
 import EditFoodModal from './EditMenu';
+import DeleteConfirmationModal from './Delete';
 
 export default function EditFood() {
   const { id } = useParams();
@@ -15,6 +16,8 @@ export default function EditFood() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedMenuId, setSelectedMenuId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,6 +48,43 @@ export default function EditFood() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleDeleteClick = (menuId) => {
+    setSelectedMenuId(menuId);
+    setShowDeleteModal(true);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    const menuId = selectedMenuId; // Retrieve the selected menu ID
+
+    try {
+      const response = await fetch(
+        `https://delivery-chimelu-new.onrender.com/api/v1/menu/delete/${menuId}`,
+        {
+          method: 'DELETE',
+        }
+      );
+
+      if (response.ok) {
+        // Remove the deleted menu item from the UI
+        const updatedData = data.filter(
+          (item) => item._id !== menuId
+        );
+        setData(updatedData);
+      } else {
+        throw new Error('Failed to delete menu');
+      }
+    } catch (error) {
+      console.error('Error deleting menu:', error);
+      alert('Failed to delete menu');
+    }
+
+    setShowDeleteModal(false);
   };
 
   const handleSearchChange = (event) => {
@@ -117,7 +157,7 @@ export default function EditFood() {
                     <td className="flex items-center gap-3" style={{ border: 'none' }}>
                       <FaEdit size={15} onClick={() => handleApproveClick(item)} /> Edit
                       <span className="action-item text-sm cursor-pointer flex items-center gap-2">
-                        <FaTrash /> Delete
+                      <FaTrash onClick={() => handleDeleteClick(item._id)} /> Delete
                       </span>
                       <button
                         style={{
@@ -167,6 +207,14 @@ export default function EditFood() {
             // Implement logic to update your data in this callback if needed
             console.log('Updated data:', updatedData);
           }}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <DeleteConfirmationModal
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
         />
       )}
     </div>
