@@ -1,8 +1,11 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Modal from "./Modal"; // Import Modal component
 
 export default function Succeed() {
   const [orders, setOrders] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedWithdrawalId, setSelectedWithdrawalId] = useState(null);
 
   useEffect(() => {
     fetchOrders();
@@ -23,7 +26,7 @@ export default function Succeed() {
       const response = await axios.put(`https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/reverse-money/${restaurantId}/${withdrawalId}`);
       if (response.status === 200) {
         alert('Refund successful');
-        fetchOrders(); // Refresh orders after refund
+        fetchOrders();
       } else {
         alert('Refund failed');
       }
@@ -31,6 +34,16 @@ export default function Succeed() {
       console.error('Error processing refund:', error);
       alert('Refund failed');
     }
+  };
+
+  const handlePayClick = (withdrawalId) => {
+    setSelectedWithdrawalId(withdrawalId);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedWithdrawalId(null);
   };
 
   const header = [
@@ -81,7 +94,12 @@ export default function Succeed() {
                 </div>
                 <div className="flex justify-between">
                   <div className="center">
-                    <button style={{width:'69px', height:'24px', color:'white', backgroundColor:"#4CAF50"}}>Pay</button>
+                    <button 
+                      style={{width:'69px', height:'24px', color:'white', backgroundColor:"#4CAF50"}}
+                      onClick={() => handlePayClick(order._id)}
+                    >
+                      Pay
+                    </button>
                   </div>
                   <div className="center">
                     <button
@@ -97,6 +115,7 @@ export default function Succeed() {
           ))
         )}
       </div>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal} withdrawalId={selectedWithdrawalId} />
     </main>
   );
 }
