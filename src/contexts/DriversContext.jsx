@@ -18,7 +18,7 @@ export const DriversProvider = ({ children }) => {
         const response = await axios.get(
           'https://delivery-chimelu-new.onrender.com/api/v1/driver'
         );
-        console.log('Fetched drivers data:', response.data.drivers);
+        // console.log('Fetched drivers data:', response.data.drivers);
 
         setDrivers(response.data.drivers);
         setTotalItems(response.data.drivers.length);
@@ -46,7 +46,7 @@ export const DriversProvider = ({ children }) => {
           },
         }
       );
-  
+
       if (response.status === 200) {
         const updatedDrivers = drivers.map((driver) =>
           driver._id === driverId
@@ -61,48 +61,60 @@ export const DriversProvider = ({ children }) => {
       console.error('Error toggling availability:', error);
     }
   };
-  
+
   const handleApprove = async (driverId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/approve-driver/${driverId}`, null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.patch(
+        `https://delivery-chimelu-new.onrender.com/api/v1/approve-driver/${driverId}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       // Fetch updated data
-      const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/driver', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        'https://delivery-chimelu-new.onrender.com/api/v1/driver',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setDrivers(response.data.drivers);
     } catch (error) {
       console.error('Error approving driver:', error);
     }
   };
-  
+
   const handleToggleStatus = async (driverId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/${driverId}/toggle-driver-status`, null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.patch(
+        `https://delivery-chimelu-new.onrender.com/api/v1/${driverId}/toggle-driver-status`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       // Fetch updated data
-      const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/driver', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        'https://delivery-chimelu-new.onrender.com/api/v1/driver',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setDrivers(response.data.drivers);
     } catch (error) {
       console.error('Error toggling driver status:', error);
     }
   };
-  
-
 
   const deleteDriver = async (driverId) => {
     try {
@@ -148,7 +160,7 @@ export const DriversProvider = ({ children }) => {
         deleteDriver,
         fetchUpdatedDrivers,
         handleApprove,
-        handleToggleStatus
+        handleToggleStatus,
       }}
     >
       {children}

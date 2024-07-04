@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
-import Modal from './modal'; // Import the Modal component
+import Modal from './modal'; // Import the existing Modal component
 import { SpinnerRoundOutlined } from 'spinners-react';
+import ReactModal from 'react-modal';
+
+ReactModal.setAppElement('#root'); // Replace '#root' with your app element id if different
 
 export default function SentPendingBal() {
   const [data, setData] = useState([]);
@@ -10,8 +13,10 @@ export default function SentPendingBal() {
   const [loading, setLoading] = useState(true);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for the Pay button modal
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false); // State for the image modal
   const [selectedItem, setSelectedItem] = useState(null); // State for selected item
+  const [selectedImageUrl, setSelectedImageUrl] = useState(''); // State for selected image URL
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,6 +65,16 @@ export default function SentPendingBal() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedItem(null);
+  };
+
+  const handleImageClick = (imageUrl) => {
+    setSelectedImageUrl(imageUrl);
+    setIsImageModalOpen(true);
+  };
+
+  const handleCloseImageModal = () => {
+    setIsImageModalOpen(false);
+    setSelectedImageUrl('');
   };
 
   const filteredData = data.filter((item) =>
@@ -139,7 +154,17 @@ export default function SentPendingBal() {
                   <tr key={item._id} className="table-row" style={{ borderBottom: 'none' }}>
                     <td style={{ border: 'none' }}>{new Date(item.createdAt).toLocaleDateString()}</td>
                     <td style={{ border: 'none' }}>₦{item.amountSent}</td>
-                    <td style={{ border: 'none' }}>{item._id.slice(-5)}</td>
+                    <td
+                      style={{
+                        border: 'none',
+                        color: 'green',
+                        textDecoration: 'underline',
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => handleImageClick(item.image)}
+                    >
+                      {item._id.slice(-5)}
+                    </td>
                     <td style={{ border: 'none' }}>
                       <button
                         onClick={() => handleApproveClick(item._id)}
@@ -196,6 +221,42 @@ export default function SentPendingBal() {
       </div>
       {/* Modal Component */}
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} />
+      
+      {/* React Modal for Image */}
+      <ReactModal
+        isOpen={isImageModalOpen}
+        onRequestClose={handleCloseImageModal}
+        contentLabel="Receipt Image"
+        style={{
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.75)'
+          },
+          content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            maxWidth: '90%',
+            maxHeight: '90%'
+          }
+        }}
+      >
+        <img src={selectedImageUrl} alt="Receipt" style={{ width: '100%', height: 'auto' }} />
+        <button
+          onClick={handleCloseImageModal}
+          style={{
+            marginTop: '10px',
+            padding: '10px',
+            backgroundColor: '#FF0000',
+            color: 'white',
+            borderRadius: '5px'
+          }}
+        >
+          Close
+        </button>
+      </ReactModal>
     </div>
   );
 }

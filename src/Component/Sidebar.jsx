@@ -65,13 +65,13 @@ const Sidebar = () => {
       </HStack>
       <Divider mt={'4'} />
       <Flex direction="column" align="start" mt={'30px'} pl={'10px'}>
-        <RouterLink to="/Dashboard" style={{ textDecoration: 'none' }}>
+        <RouterLink to="/dashboard" style={{ textDecoration: 'none' }}>
           <Flex
             alignItems="center"
             mb={4}
-            fontWeight={activeLink === '/' ? 'bold' : 'normal'}
-            color={activeLink === '/' ? 'white' : 'black'}
-            bg={activeLink === '/' ? '#4caf50' : 'transparent'}
+            fontWeight={activeLink === '/dashboard' ? 'bold' : 'normal'}
+            color={activeLink === '/dashboard' ? 'white' : 'black'}
+            bg={activeLink === '/dashboard' ? '#4caf50' : 'transparent'}
             p={2}
             borderRadius="md"
             _hover={{ bg: '#4caf50', color: 'white' }}

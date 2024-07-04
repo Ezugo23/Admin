@@ -12,6 +12,7 @@ const LandingPage = () => {
           <div className="flex justify-center md:justify-start">
             <div className="relative inline-block text-left group">
               <div>
+              <Link to="Register">
                 <button
                   type="button"
                   className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-500 text-base font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
@@ -19,12 +20,9 @@ const LandingPage = () => {
                 >
                   SignUp/SignIn
                 </button>
+                </Link>
               </div>
-              <div className="hidden group-hover:block origin-top-right absolute left-1/2 transform -translate-x-1/2 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                  <Link to="Register" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Admin</Link>
-                </div>
-              </div>
+                
             </div>
           </div>
         </div>

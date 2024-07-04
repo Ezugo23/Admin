@@ -77,15 +77,17 @@ export default function User() {
     e.preventDefault();
     const adminId = localStorage.getItem('adminId');
     const url = `https://delivery-chimelu-new.onrender.com/api/v1/admin/${adminId}`;
-
+  
     const data = new FormData();
     for (const key in formData) {
-      data.append(key, formData[key]);
+      if (key !== 'roles') { // Exclude roles
+        data.append(key, formData[key]);
+      }
     }
     if (imageFile) {
       data.append('image', imageFile);
     }
-
+  
     try {
       await axios.patch(url, data, {
         headers: {
@@ -98,7 +100,7 @@ export default function User() {
       setShowErrorModal(true);
     }
   };
-
+  
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === 'image') {

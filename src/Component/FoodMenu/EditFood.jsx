@@ -3,7 +3,9 @@ import { Link, useParams } from 'react-router-dom';
 import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { BsPlus } from "react-icons/bs";
 import { SpinnerRoundOutlined } from 'spinners-react';
-import axios from 'axios'; // Import axios for API requests
+import axios from 'axios';
+import EditFoodModal from './EditMenu';
+import DeleteConfirmationModal from './Delete';
 
 export default function EditFood() {
   const { id } = useParams();
@@ -13,13 +15,16 @@ export default function EditFood() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedMenuId, setSelectedMenuId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/menu/menusrestaurant/${id}`);
-        setData(response.data); // Assuming API returns an array of menu items
+        setData(response.data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -36,17 +41,59 @@ export default function EditFood() {
     }
   };
 
-  const handleApproveClick = () => {
-    setIsModalOpen(true); // Open the modal
+  const handleApproveClick = (menu) => {
+    setSelectedMenu(menu);
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
+    setIsModalOpen(false);
+  };
+
+  const handleDeleteClick = (menuId) => {
+    setSelectedMenuId(menuId);
+    setShowDeleteModal(true);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    const menuId = selectedMenuId; // Retrieve the selected menu ID
+
+    try {
+      const response = await fetch(
+        `https://delivery-chimelu-new.onrender.com/api/v1/menu/delete/${menuId}`,
+        {
+          method: 'DELETE',
+        }
+      );
+
+      if (response.ok) {
+        // Remove the deleted menu item from the UI
+        const updatedData = data.filter(
+          (item) => item._id !== menuId
+        );
+        setData(updatedData);
+      } else {
+        throw new Error('Failed to delete menu');
+      }
+    } catch (error) {
+      console.error('Error deleting menu:', error);
+      alert('Failed to delete menu');
+    }
+
+    setShowDeleteModal(false);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
   };
 
   const filteredData = data.filter((item) =>
-  item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase())
-);
+    item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -63,18 +110,17 @@ export default function EditFood() {
         </div>
         <div className="entries-container mb-4">
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-            <select className="w-[25rem] h-12 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm pl-12" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
+            <input
+              type="text"
+              className="w-[25rem] h-12 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm pl-4"
+              placeholder="Search by Food Name"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
             <div className="flex px-8 py-2 rounded-lg text-base text-white font-semibold bg-blue-800 gap-1 items-center cursor-pointer ml-6">
               <BsPlus className="text-lg stroke-1" />
               <p>Add a New Group</p>
             </div>
-          </div>
-          <div className="search-container ml-auto">
           </div>
         </div>
         <div className="table-container" style={{ position: 'relative', minHeight: '300px' }}>
@@ -98,25 +144,22 @@ export default function EditFood() {
                   <tr key={item._id} className="table-row cursor-pointer" style={{ borderBottom: 'none' }}>
                     <td style={{ border: 'none' }}>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                     <td style={{ border: 'none' }}>
-                    <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`}>
+                      <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`}>
                         <strong>{item.name}</strong>
                       </Link>
                     </td>
                     <td style={{ border: 'none' }}>{item.foods}</td>
                     <td style={{ border: 'none' }}>
-        <button className={`px-4 py-1 mx-1 rounded-3xl border ${item.isAvailable ? "border-[#4DB6AC] text-[#4DB6AC]" : "bg-[#FF5252] text-white"}`}>
-          {item.isAvailable ? 'Active' : 'Inactive'}
-        </button>
-      </td>
+                      <button className={`px-4 py-1 mx-1 rounded-3xl border ${item.isAvailable ? "border-[#4DB6AC] text-[#4DB6AC]" : "bg-[#FF5252] text-white"}`}>
+                        {item.isAvailable ? 'Active' : 'Inactive'}
+                      </button>
+                    </td>
                     <td className="flex items-center gap-3" style={{ border: 'none' }}>
-                    <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`} style={{ display:'flex'}}>
-                        <FaEdit size={15}/> Edit
-                      </Link>
+                      <FaEdit size={15} onClick={() => handleApproveClick(item)} /> Edit
                       <span className="action-item text-sm cursor-pointer flex items-center gap-2">
-                        <FaTrash /> Delete
+                      <FaTrash onClick={() => handleDeleteClick(item._id)} /> Delete
                       </span>
                       <button
-                        onClick={handleApproveClick}
                         style={{
                           width: "90.39px",
                           height: '25px',
@@ -154,6 +197,26 @@ export default function EditFood() {
           </div>
         </div>
       </div>
+
+      {/* Edit Food Modal */}
+      {isModalOpen && (
+        <EditFoodModal
+          closeModal={handleCloseModal}
+          selectedMenu={selectedMenu}
+          handleEditUpdate={(updatedData) => {
+            // Implement logic to update your data in this callback if needed
+            console.log('Updated data:', updatedData);
+          }}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <DeleteConfirmationModal
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
     </div>
   );
 }
