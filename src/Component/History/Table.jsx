@@ -55,7 +55,8 @@ const Table = ({ filter }) => {
   const filteredData = data.filter(item => {
     const searchLower = searchTerm.toLowerCase();
     const clientName = item.client ? item.client.split('\n')[0].toLowerCase() : '';
-    return clientName.includes(searchLower) && (!filter || item.orderStatus === filter);
+    const orderId = item.invoice.toLowerCase();
+    return (clientName.includes(searchLower) || orderId.includes(searchLower)) && (!filter || item.orderStatus === filter);
   });
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
