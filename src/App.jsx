@@ -28,12 +28,14 @@ import OweAmount from './pages/FoodSellers/Owe'
 import Payment from './Component/FoodMenu/Swift/Payment'
 import HistorySwift from './Component/FoodMenu/Swift/History'
 import HistoryRec from './Component/FoodMenu/Reciept'
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './util/http';
 
 function App() {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io('wss://swifdropp.onrender.com');
+    const newSocket = io('wss://delivery-chimelu-new.onrender.com');
 
     newSocket.on('connect', () => {
       console.log('Socket connected');
@@ -83,6 +85,7 @@ function App() {
   );
 
   return (
+    <QueryClientProvider client={queryClient}>
     <DriversProvider>
       <WithdrawalProvider>
         <Router>
@@ -253,6 +256,7 @@ function App() {
         </Router>
       </WithdrawalProvider>
     </DriversProvider>
+    </QueryClientProvider>
   );
 }
 
