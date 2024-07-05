@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { BsPlus } from 'react-icons/bs';
 import { SpinnerRoundOutlined } from 'spinners-react';
 import axios from 'axios';
+import DeleteConfirmationModal from "./Delete";
 import EditFood from './foodGroup';
 import AddFood from './addGroup';
 
 export default function FoodMenu() {
-  const { menuId, id, foodId } = useParams();
+  const { menuId, id, foodId, item } = useParams();
   const [menuData, setMenuData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedFoodItem, setSelectedFoodItem] = useState(null);
@@ -16,6 +17,8 @@ export default function FoodMenu() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchMenuData = async () => {
@@ -33,11 +36,31 @@ export default function FoodMenu() {
     fetchMenuData();
   }, [menuId]);
 
-  const handleToggleAvailability = (itemId) => {
-    const updatedItems = menuData.map((item) =>
-      item._id === itemId ? { ...item, isAvailable: !item.isAvailable } : item
-    );
-    setMenuData(updatedItems);
+  const toggleAvailability = async (itemId) => {
+    try {
+      const itemToUpdate = menuData.find((item) => item._id === itemId);
+      const newAvailability = !itemToUpdate.isAvailable;
+      const response = await axios.patch(
+        `https://delivery-chimelu-new.onrender.com/api/v1/foods/${itemId}`,
+        { isAvailable: newAvailability },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const updatedMenuData = menuData.map((item) =>
+          item._id === itemId ? { ...item, isAvailable: newAvailability } : item
+        );
+        setMenuData(updatedMenuData);
+      } else {
+        console.error('Failed to update availability status');
+      }
+    } catch (error) {
+      console.error('Error updating availability:', error);
+    }
   };
 
   const handleEditClick = (foodItem) => {
@@ -63,6 +86,34 @@ export default function FoodMenu() {
     setIsAddModalOpen(false);
   };
 
+  const handleDeleteClick = (foodItem) => {
+    setSelectedFoodItem(foodItem);
+    setShowDeleteModal(true);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.delete(`https://delivery-chimelu-new.onrender.com/api/v1/foods/${selectedFoodItem._id}`);
+      if (response.status === 200) {
+        const updatedMenuData = menuData.filter((item) => item._id !== selectedFoodItem._id);
+        setMenuData(updatedMenuData);
+        setShowDeleteModal(false);
+      } else {
+        throw new Error('Failed to delete menu');
+      }
+    } catch (error) {
+      console.error('Error deleting menu:', error);
+      alert('Failed to delete menu');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (loading) {
     return <SpinnerRoundOutlined size={50} color="green" />;
   }
@@ -86,20 +137,19 @@ export default function FoodMenu() {
   return (
     <div className="contain" style={{ marginLeft: '10px', marginTop: '45px' }}>
       <div className="main-container">
-        <div className="">
-          <div className="mb-4">
-            <p className="font-roboto font-bold text-lg leading-6 text-black">Rice</p>
+      <div className="flex justify-between items-center mb-4">
+          <p className="font-roboto font-bold text-lg leading-6 text-black">Food</p>
+          <div className="search-bar ml-auto">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="border border-gray-300 rounded px-3 py-1 focus:outline-none"
+            />
           </div>
-          <hr className="mb-4" />
         </div>
-        <div className="search-bar">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+        <hr className="mb-4" />
         <div className="table-container" style={{ position: 'relative', minHeight: '300px' }}>
           <table className="table min-w-full" style={{ borderCollapse: 'collapse' }}>
             <thead className="table-header" style={{ color: 'black' }}>
@@ -138,7 +188,7 @@ export default function FoodMenu() {
                   </td>
                   <td style={{ border: 'none' }}>
                     <div
-                      onClick={() => handleToggleAvailability(item._id)}
+                      onClick={() => toggleAvailability(item._id)}
                       className={`p-1 rounded-full cursor-pointer ml-4 mt-1 w-9 flex duration-700 ${
                         item.isAvailable ? 'justify-end bg-green-500' : 'bg-gray-200 justify-start'
                       }`}
@@ -159,10 +209,7 @@ export default function FoodMenu() {
                     <span onClick={() => handleEditClick(item)} className="action-item cursor-pointer flex items-center gap-2">
                       <FaEdit /> Edit
                     </span>
-                    <span className="action-item cursor-pointer flex items-center gap-1">
-                      <img src="/suspendLogo.svg" alt="suspend" /> Suspend
-                    </span>
-                    <span className="action-item text-sm cursor-pointer flex items-center gap-2">
+                    <span className="action-item text-sm cursor-pointer flex items-center gap-2" onClick={() => handleDeleteClick(item)}>
                       <FaTrash /> Delete
                     </span>
                   </td>
@@ -193,13 +240,18 @@ export default function FoodMenu() {
         <div className="popup-overlay overflow-y-auto">
           <div className="popup-content overflow-y-auto">
             <AddFood
-                  onClose={handleCloseAddModal}
-                  menuId={menuId}
-                  id={id}
-                  onAddFood={handleAddFood}
+              onClose={handleCloseAddModal}
+              menuId={foodId}
+              onAddFood={handleAddFood}
             />
           </div>
         </div>
+      )}
+      {showDeleteModal && (
+        <DeleteConfirmationModal
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+        />
       )}
     </div>
   );

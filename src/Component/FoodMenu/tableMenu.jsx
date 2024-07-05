@@ -16,19 +16,21 @@ export default function TableMenu() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const adminId = localStorage.getItem('adminId');
-      if (!adminId) {
-        navigate('/Login');
-        return;
-      }
-
-      try {
-        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
-        setData(response.data.restaurants);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
+      const storedData = localStorage.getItem('restaurantData');
+      if (storedData) {
+        setData(JSON.parse(storedData));
         setLoading(false);
+      } else {
+        try {
+          const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
+          const fetchedData = response.data.restaurants;
+          setData(fetchedData);
+          localStorage.setItem('restaurantData', JSON.stringify(fetchedData));
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        } finally {
+          setLoading(false);
+        }
       }
     };
 
@@ -59,6 +61,7 @@ export default function TableMenu() {
       // Fetch updated data
       const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
       setData(response.data.restaurants);
+      localStorage.setItem('restaurantData', JSON.stringify(response.data.restaurants));
     } catch (error) {
       console.error('Error approving restaurant:', error);
     }
@@ -70,6 +73,7 @@ export default function TableMenu() {
       // Fetch updated data
       const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
       setData(response.data.restaurants);
+      localStorage.setItem('restaurantData', JSON.stringify(response.data.restaurants));
     } catch (error) {
       console.error('Error toggling restaurant status:', error);
     }
@@ -83,6 +87,7 @@ export default function TableMenu() {
       // Fetch updated data
       const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
       setData(response.data.restaurants);
+      localStorage.setItem('restaurantData', JSON.stringify(response.data.restaurants));
     } catch (error) {
       console.error('Error toggling availability:', error);
     }
@@ -214,8 +219,6 @@ export default function TableMenu() {
         </div>
         <div className="pagination-con">
           <span className="text-gray-600">Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, filteredData.length)}-{Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} data</span>
-
-          {/* <span className="text-gray-600">Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, filteredData.length)}-{Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} data</span> */}
           <div className="pagination flex items-center">
             <button 
               className="px-3 py-1 mx-1 rounded hover:bg-gray-300" 
