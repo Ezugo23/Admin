@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
-import axios from 'axios'; // Import axios for making HTTP requests
-import { AiOutlineCloseCircle, AiOutlineReload } from 'react-icons/ai'; // Import icons from react-icons
+import axios from 'axios';
+import { AiOutlineCloseCircle, AiOutlineReload } from 'react-icons/ai';
 
-export default function Modal({ isOpen, onClose }) {
-  const [amount, setAmount] = useState(''); // State to hold the amount input value
-  const [file, setFile] = useState(null); // State to hold the selected file
-  const [imagePreview, setImagePreview] = useState(null); // State to hold the image preview
-  const [error, setError] = useState(null); // State to hold error message
-  const [success, setSuccess] = useState(false); // State to indicate successful submission
-  const [loading, setLoading] = useState(false); // State to indicate loading state
+export default function Modal({ isOpen, onClose, withdrawalId }) {
+  const [file, setFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
 
-    // Preview image and resize if necessary
     if (selectedFile) {
       const reader = new FileReader();
       reader.onload = () => {
@@ -22,8 +20,8 @@ export default function Modal({ isOpen, onClose }) {
         image.src = reader.result;
         image.onload = () => {
           const canvas = document.createElement('canvas');
-          const maxWidth = 200; // Max width for image preview
-          const maxHeight = 200; // Max height for image preview
+          const maxWidth = 200;
+          const maxHeight = 200;
           let width = image.width;
           let height = image.height;
 
@@ -60,58 +58,47 @@ export default function Modal({ isOpen, onClose }) {
   };
 
   const handleSubmit = async () => {
-    if (!file || !amount) {
-      setError('Please select a file and enter an amount.');
+    if (!file) {
+      setError('Please select a file.');
       return;
     }
 
-    setLoading(true); // Set loading state to true
-
-    // Prepare form data to send
-    const formData = new FormData();
-    formData.append('image', file);
-    formData.append('amountSent', amount);
-
+    setLoading(true);
     try {
-      // Make POST request to your API endpoint
-      const response = await axios.post('https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/send-restaurant-bal', formData, {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await axios.put(`https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/withdrawals/${withdrawalId}`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
-      // Handle success response
-      console.log('Response:', response.data);
-      setSuccess(true);
-      setError(null);
-      setLoading(false); // Set loading state to false
-      // Clear form data after successful payment
-      setFile(null);
-      setAmount('');
-      setImagePreview(null);
-      // Optionally handle success actions like closing modal
-      setTimeout(() => {
-        onClose();
-      }, 1500); // Close modal after 1.5 seconds on success
+      if (response.status === 200) {
+        setSuccess(true);
+        setError(null);
+        setTimeout(() => {
+          onClose();
+        }, 1500);
+      } else {
+        setError('Payment failed.');
+      }
     } catch (error) {
-      // Handle error
-      console.error('Error:', error);
-      setError('Failed to send payment. Please try again.');
-      setSuccess(false);
-      setLoading(false); // Set loading state to false on error
-      // Optionally handle error actions like showing error message to user
+      setError('Error sending payment.');
+    } finally {
+      setLoading(false);
+      setFile(null);
+      setImagePreview(null);
     }
   };
 
   const handleCloseModal = () => {
-    // Clear form data when closing modal
     setFile(null);
-    setAmount('');
     setImagePreview(null);
     onClose();
   };
 
-  if (!isOpen) return null; // Don't render if the modal is not open
+  if (!isOpen) return null;
 
   return (
     <div className="modal-backdrop" style={modalBackdropStyles}>
@@ -135,15 +122,6 @@ export default function Modal({ isOpen, onClose }) {
             <button onClick={handleReselectImage} style={editButton}><AiOutlineReload size={20} /> Reselect Image</button>
           )}
         </div>
-        <div style={second}>
-          <label style={type2}>Amount</label>
-          <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            style={amountBoxStyles}
-          />
-        </div>
         {error && (
           <div style={errorStyles}>{error}</div>
         )}
@@ -158,7 +136,6 @@ export default function Modal({ isOpen, onClose }) {
   );
 }
 
-// Styles (for simplicity)
 const modalBackdropStyles = {
   position: 'fixed',
   top: 0,
@@ -173,7 +150,7 @@ const modalBackdropStyles = {
 
 const modalContentStyles = {
   backgroundColor: 'white',
-  position: 'absolute',
+  position :'relative',
   padding: '20px',
   borderRadius: '5px',
   textAlign: 'center',
@@ -187,6 +164,7 @@ const modalContentStyles = {
 
 const background2 = {
   backgroundColor: '#F4F4F4',
+
   padding: '20px',
   borderRadius: '5px',
   textAlign: 'center',
@@ -242,23 +220,6 @@ const text = {
   marginTop: "25px",
   color: 'black'
 };
-
-const amountBoxStyles = {
-  width: '18rem',
-  height: '48.31px',
-  border: '1px solid #FFFFFF', // The original border specification
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'white',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
-};
-const second = {
-  marginTop:'15px'
-}
-const type2 = {
-   marginRight:'200px'
-}
 
 const errorStyles = {
   color: 'red',

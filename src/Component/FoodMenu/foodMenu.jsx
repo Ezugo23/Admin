@@ -1,19 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { BsPlus } from 'react-icons/bs';
 import { SpinnerRoundOutlined } from 'spinners-react';
 import axios from 'axios';
+import EditFood from './foodGroup';
+import AddFood from './addGroup';
 
 export default function FoodMenu() {
-  const { id, menuId } = useParams();
+  const { menuId, id, foodId } = useParams();
   const [menuData, setMenuData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedFoodItem, setSelectedFoodItem] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchMenuData = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
         const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/foods/menus/${menuId}`);
         setMenuData(response.data.foods);
         setLoading(false);
@@ -26,12 +33,6 @@ export default function FoodMenu() {
     fetchMenuData();
   }, [menuId]);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const navigate = useNavigate();
-
   const handleToggleAvailability = (itemId) => {
     const updatedItems = menuData.map((item) =>
       item._id === itemId ? { ...item, isAvailable: !item.isAvailable } : item
@@ -39,18 +40,27 @@ export default function FoodMenu() {
     setMenuData(updatedItems);
   };
 
-  const handleClick = (newPage) => {
-    if (newPage > 0 && newPage <= totalPages) {
-      setCurrentPage(newPage);
-    }
+  const handleEditClick = (foodItem) => {
+    setSelectedFoodItem(foodItem);
+    setIsEditModalOpen(true);
   };
 
-  const handleApproveClick = () => {
-    setIsModalOpen(true); // Open the modal
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedFoodItem(null);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
+  const handleAddButtonClick = () => {
+    setIsAddModalOpen(true);
+  };
+
+  const handleCloseAddModal = () => {
+    setIsAddModalOpen(false);
+  };
+
+  const handleAddFood = (newFoodItem) => {
+    setMenuData((prevMenuData) => [...prevMenuData, newFoodItem]);
+    setIsAddModalOpen(false);
   };
 
   if (loading) {
@@ -61,9 +71,11 @@ export default function FoodMenu() {
     return <div>No data found for this menu.</div>;
   }
 
-  const filteredData = menuData ? menuData.filter((item) =>
+  const itemsPerPage = 10;
+
+  const filteredData = menuData.filter((item) =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  ) : [];
+  );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const currentData = filteredData.slice(
@@ -79,6 +91,14 @@ export default function FoodMenu() {
             <p className="font-roboto font-bold text-lg leading-6 text-black">Rice</p>
           </div>
           <hr className="mb-4" />
+        </div>
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
         <div className="table-container" style={{ position: 'relative', minHeight: '300px' }}>
           <table className="table min-w-full" style={{ borderCollapse: 'collapse' }}>
@@ -99,7 +119,7 @@ export default function FoodMenu() {
                 <tr key={item._id} className="table-row cursor-pointer" style={{ borderBottom: 'none' }}>
                   <td style={{ border: 'none' }}>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                   <td style={{ border: 'none' }}>
-                    <img src={item.image} alt=""  style={{borderRadius:'10px', width:'35px', height:'32px'}}/>
+                    <img src={item.image} alt="" style={{ borderRadius: '10px', width: '35px', height: '32px' }} />
                   </td>
                   <td style={{ border: 'none' }}>{item.title}</td>
                   <td style={{ border: 'none' }}>
@@ -136,9 +156,9 @@ export default function FoodMenu() {
                     </button>
                   </td>
                   <td className="flex items-center gap-3" style={{ border: 'none' }}>
-                    <Link to={`/foodsellers/menu/${id}/food-group/${item._id}`} className="action-item cursor-pointer flex items-center gap-2">
+                    <span onClick={() => handleEditClick(item)} className="action-item cursor-pointer flex items-center gap-2">
                       <FaEdit /> Edit
-                    </Link>
+                    </span>
                     <span className="action-item cursor-pointer flex items-center gap-1">
                       <img src="/suspendLogo.svg" alt="suspend" /> Suspend
                     </span>
@@ -152,12 +172,35 @@ export default function FoodMenu() {
           </table>
         </div>
         <div className="pagination-con">
-          <div className="flex px-8 py-2 rounded-lg text-base text-white font-semibold bg-blue-800 gap-1 items-center cursor-pointer ml-6">
+          <div
+            className="flex px-8 py-2 rounded-lg text-base text-white font-semibold bg-blue-800 gap-1 items-center cursor-pointer ml-6"
+            onClick={handleAddButtonClick}
+          >
             <BsPlus className="text-lg stroke-1" />
             <p>Add a New Category</p>
           </div>
         </div>
       </div>
+      {isEditModalOpen && (
+        <EditFood
+          onClose={handleCloseEditModal}
+          foodId={selectedFoodItem._id}
+          id={id}
+          foodData={selectedFoodItem}
+        />
+      )}
+      {isAddModalOpen && (
+        <div className="popup-overlay overflow-y-auto">
+          <div className="popup-content overflow-y-auto">
+            <AddFood
+                  onClose={handleCloseAddModal}
+                  menuId={menuId}
+                  id={id}
+                  onAddFood={handleAddFood}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
