@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight, FaPlus } from 'react-icons/fa';
+import {
+  FaEdit,
+  FaTrash,
+  FaAngleLeft,
+  FaAngleRight,
+  FaPlus,
+} from 'react-icons/fa';
 import { RiErrorWarningLine } from 'react-icons/ri';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -17,7 +23,9 @@ const Users = () => {
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
-        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/admin/');
+        const response = await axios.get(
+          'https://delivery-chimelu-new.onrender.com/api/v1/admin/'
+        );
         setAdmins(response.data.admins);
       } catch (err) {
         setError(err.message);
@@ -38,14 +46,20 @@ const Users = () => {
   const handleToggleStatus = async (adminId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/${adminId}/toggle-admin-status`, null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.patch(
+        `https://delivery-chimelu-new.onrender.com/api/v1/${adminId}/toggle-admin-status`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setAdmins((prevAdmins) =>
         prevAdmins.map((admin) =>
-          admin._id === adminId ? { ...admin, approved: !admin.approved } : admin
+          admin._id === adminId
+            ? { ...admin, approved: !admin.approved }
+            : admin
         )
       );
     } catch (err) {
@@ -60,12 +74,17 @@ const Users = () => {
   const handleDelete = async (adminId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`https://delivery-chimelu-new.onrender.com/api/v1/admin/${adminId}/delete`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setAdmins((prevAdmins) => prevAdmins.filter((admin) => admin._id !== adminId));
+      await axios.delete(
+        `https://delivery-chimelu-new.onrender.com/api/v1/admin/${adminId}/delete`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAdmins((prevAdmins) =>
+        prevAdmins.filter((admin) => admin._id !== adminId)
+      );
       toast.success('Admin deleted successfully');
     } catch (err) {
       if (err.response && err.response.status === 401) {
@@ -76,15 +95,19 @@ const Users = () => {
     }
   };
 
-  const filteredData = admins.filter((admin) =>
-    admin.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    admin.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    admin.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    admin.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData = admins.filter(
+    (admin) =>
+      admin.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      admin.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      admin.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      admin.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const currentData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   if (loading) {
     return <div>Loading...</div>;
@@ -113,7 +136,11 @@ const Users = () => {
         <div className="entries-container mb-4">
           <label>
             Show
-            <select className="ml-2" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
+            <select
+              className="ml-2"
+              value={itemsPerPage}
+              onChange={(e) => setItemsPerPage(Number(e.target.value))}
+            >
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
@@ -153,31 +180,39 @@ const Users = () => {
                   <td>
                     <div className="name-phone-container">
                       <div className="text-sm">
-                        <div className="!text-sm">{admin.firstname} {admin.lastname}</div>
-                        <div className="text-gray-500 text-sm">{admin.phoneNumber}</div>
+                        <div className="!text-sm">
+                          {admin.firstname} {admin.lastname}
+                        </div>
+                        <div className="text-gray-500 text-sm">
+                          {admin.phoneNumber}
+                        </div>
                       </div>
                     </div>
                   </td>
                   <td>{admin.username}</td>
                   <td>{admin.email}</td>
-                  <td>{admin.userType}</td>
+                  <td>{admin.roles.join(', ')}</td>
                   <td>
-                    <span className={`status ${admin.approved ? 'status-active' : 'status-inactive'}`}>
+                    <span
+                      className={`status ${
+                        admin.approved ? 'status-active' : 'status-inactive'
+                      }`}
+                    >
                       {admin.approved ? 'Active' : 'On Hold'}
                     </span>
                   </td>
                   <td className="action-cell">
-                    <span 
+                    <span
                       className="action-item cursor-pointer flex items-center gap-3"
                       onClick={() => handleToggleStatus(admin._id)}
                     >
                       <RiErrorWarningLine size={20} />
                     </span>
-                    <span 
+                    <span
                       className="action-item text-sm cursor-pointer flex items-center gap-3"
                       onClick={() => handleDelete(admin._id)}
                     >
-                      <FaTrash /> 
+                      <FaTrash />
                     </span>
                   </td>
                 </tr>
@@ -187,12 +222,17 @@ const Users = () => {
         </div>
         <div className="pagination-con">
           <span className="text-gray-600">
-            Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, filteredData.length)}-
-            {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} entries
+            Showing{' '}
+            {Math.min(
+              currentPage * itemsPerPage - itemsPerPage + 1,
+              filteredData.length
+            )}
+            -{Math.min(currentPage * itemsPerPage, filteredData.length)} of{' '}
+            {filteredData.length} entries
           </span>
           <div className="pagination flex items-center">
-            <button 
-              className="px-3 py-1 mx-1 rounded hover:bg-gray-300" 
+            <button
+              className="px-3 py-1 mx-1 rounded hover:bg-gray-300"
               onClick={() => handleClick(currentPage - 1)}
               disabled={currentPage === 1}
             >
@@ -202,20 +242,24 @@ const Users = () => {
               <button
                 key={i + 1}
                 onClick={() => handleClick(i + 1)}
-                className={`px-3 py-1 mx-1 rounded ${currentPage === i + 1 ? 'bg-green-500 text-white' : 'hover:bg-gray-300'}`}
+                className={`px-3 py-1 mx-1 rounded ${
+                  currentPage === i + 1
+                    ? 'bg-green-500 text-white'
+                    : 'hover:bg-gray-300'
+                }`}
               >
                 {i + 1}
               </button>
             ))}
-            <button 
-              className="px-3 py-1 mx-1 rounded hover:bg-gray-300" 
+            <button
+              className="px-3 py-1 mx-1 rounded hover:bg-gray-300"
               onClick={() => handleClick(currentPage + 1)}
               disabled={currentPage === totalPages}
             >
               <FaAngleRight />
             </button>
           </div>
-        </div> 
+        </div>
       </div>
     </div>
   );

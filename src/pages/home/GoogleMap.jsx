@@ -48,7 +48,7 @@ const GoogleMapComponent = () => {
   };
 
   useEffect(() => {
-    const socket = io('wss://swifdropp.onrender.com');
+    const socket = io('wss://delivery-chimelu-new.onrender.com');
 
     socket.on('connect', () => {
       console.log('Socket connected');

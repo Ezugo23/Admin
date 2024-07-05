@@ -1,22 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import RegisterImage from '../../../Asset/image container.svg';
 import star from '../../../Asset/star 1.svg';
 import profile from '../../../Asset/BG.svg';
-import { toast } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [state, setState] = useState("");
-  const [ address, setAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassWord] = useState("");
+  const [password, setPassword] = useState("");
+  const [address, setAddress] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if any required fields are empty
+    if (!firstname || !lastname || !email || !phoneNumber || !password || !address) {
+      toast.error("All fields are required");
+      return;
+    }
+
+    // Password validation
+    if (!validatePassword(password)) {
+      toast.error("Password must be at least 8 characters long and contain at least one uppercase letter and one special character");
+      return;
+    }
 
     const bodyPassed = {
       firstname,
@@ -43,19 +55,22 @@ const Register = () => {
 
       if (response.error) {
         toast.error(response.error);
-      }
-
-      if (response.errorDetails) {
-        toast.error("All fields are required");
-      }
-
-      if (response.message) {
+      } else if (response.message === "User already exists") {
+        toast.error("User already exists");
+      } else if (response.message) {
         toast.success(response.message);
         navigate("/Login");
       }
     } catch (error) {
       console.error(error);
+      toast.error("Failed to register. Please try again.");
     }
+  };
+
+  const validatePassword = (password) => {
+    // Password must be at least 8 characters long and contain at least one uppercase letter and one special character
+    const re = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9a-zA-Z]).{8,}$/;
+    return re.test(password);
   };
 
   return (
@@ -85,8 +100,9 @@ const Register = () => {
           <h1 className="text-2xl md:text-3xl text-center mb-5">Become our partner</h1>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-wrap -mx-2">
+            <ToastContainer position="top-center" />
               <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">FirstName</label>
+                <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">First Name</label>
                 <input
                   type="text"
                   id="firstname"
@@ -96,7 +112,7 @@ const Register = () => {
                 />
               </div>
               <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">LastName</label>
+                <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">Last Name</label>
                 <input
                   type="text"
                   id="lastname"
@@ -122,7 +138,7 @@ const Register = () => {
                   id="password"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
                   value={password}
-                  onChange={(e) => setPassWord(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <div className="w-full md:w-1/2 px-2 mb-4">
@@ -136,7 +152,7 @@ const Register = () => {
                 />
               </div>
               <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="city" className="block text-sm font-medium text-gray-700">Address</label>
+                <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
                 <input
                   type="text"
                   id="address"

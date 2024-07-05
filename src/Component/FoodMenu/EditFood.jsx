@@ -3,23 +3,32 @@ import { Link, useParams } from 'react-router-dom';
 import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { BsPlus } from "react-icons/bs";
 import { SpinnerRoundOutlined } from 'spinners-react';
-import axios from 'axios'; // Import axios for API requests
+import axios from 'axios';
+import EditFoodModal from './EditMenu';
+import DeleteConfirmationModal from './Delete';
+import AddMenu from './MenuAdd';
 
 export default function EditFood() {
-  const { id } = useParams();
+  const { id, menuId } = useParams();
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedMenuId, setSelectedMenuId] = useState(null);
+  
+  // State for Add Menu Modal
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/menu/menusrestaurant/${id}`);
-        setData(response.data); // Assuming API returns an array of menu items
+        setData(response.data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -30,26 +39,101 @@ export default function EditFood() {
     fetchData();
   }, [id]);
 
+  const handleApproveClick = async (menu) => {
+    const newStatus = menu.status === 'Approved' ? 'Pending' : 'Approved';
+    const menuId = menu._id; // Assuming menu._id is the identifier for the menu item
+    
+    try {
+      const response = await axios.put(
+        `https://delivery-chimelu-new.onrender.com/api/v1/menu/updatestatus/${menuId}`,
+        { status: newStatus },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      if (response.status === 200) {
+        const updatedMenu = { ...menu, status: newStatus };
+        const updatedData = data.map(item => (item._id === menu._id ? updatedMenu : item));
+        setData(updatedData);
+      } else {
+        throw new Error('Failed to update status');
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Failed to update status');
+    }
+  };
+
+  const handleDeleteClick = (menuId) => {
+    setSelectedMenuId(menuId);
+    setShowDeleteModal(true);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleConfirmDelete = async () => {
+    const menuId = selectedMenuId;
+
+    try {
+      const response = await axios.delete(
+        `https://delivery-chimelu-new.onrender.com/api/v1/menu/delete/${menuId}`
+      );
+
+      if (response.status === 200) {
+        const updatedData = data.filter(item => item._id !== menuId);
+        setData(updatedData);
+      } else {
+        throw new Error('Failed to delete menu');
+      }
+    } catch (error) {
+      console.error('Error deleting menu:', error);
+      alert('Failed to delete menu');
+    }
+
+    setShowDeleteModal(false);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleAddMenuClick = () => {
+    setIsAddModalOpen(true);
+  };
+
+  const handleAddMenuClose = () => {
+    setIsAddModalOpen(false);
+  };
+
+  const refreshMenus = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/menu/menusrestaurant/${id}`);
+      setData(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error refreshing menus:', error);
+      setLoading(false);
+    }
+  };
+
+  const filteredData = data.filter((item) =>
+    item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   const handleClick = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
   };
-
-  const handleApproveClick = () => {
-    setIsModalOpen(true); // Open the modal
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
-  };
-
-  const filteredData = data.filter((item) =>
-  item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase())
-);
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div className="contain" style={{ marginLeft: '10px', marginTop: '45px' }}>
@@ -63,18 +147,20 @@ export default function EditFood() {
         </div>
         <div className="entries-container mb-4">
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-            <select className="w-[25rem] h-12 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm pl-12" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-            <div className="flex px-8 py-2 rounded-lg text-base text-white font-semibold bg-blue-800 gap-1 items-center cursor-pointer ml-6">
+            <input
+              type="text"
+              className="w-[25rem] h-12 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 shadow-sm pl-4"
+              placeholder="Search by Food Name"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <div
+              className="flex px-8 py-2 rounded-lg text-base text-white font-semibold bg-blue-800 gap-1 items-center cursor-pointer ml-6"
+              onClick={handleAddMenuClick}
+            >
               <BsPlus className="text-lg stroke-1" />
-              <p>Add a New Group</p>
+              <p>Add a New Menu</p>
             </div>
-          </div>
-          <div className="search-container ml-auto">
           </div>
         </div>
         <div className="table-container" style={{ position: 'relative', minHeight: '300px' }}>
@@ -98,28 +184,24 @@ export default function EditFood() {
                   <tr key={item._id} className="table-row cursor-pointer" style={{ borderBottom: 'none' }}>
                     <td style={{ border: 'none' }}>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                     <td style={{ border: 'none' }}>
-                    <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`}>
+                      <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`}>
                         <strong>{item.name}</strong>
                       </Link>
                     </td>
                     <td style={{ border: 'none' }}>{item.foods}</td>
                     <td style={{ border: 'none' }}>
-        <button className={`px-4 py-1 mx-1 rounded-3xl border ${item.isAvailable ? "border-[#4DB6AC] text-[#4DB6AC]" : "bg-[#FF5252] text-white"}`}>
-          {item.isAvailable ? 'Active' : 'Inactive'}
-        </button>
-      </td>
+                      <button className={`px-4 py-1 mx-1 rounded-3xl border ${item.status === 'Approved' ? "border-[#4DB6AC] text-[#4DB6AC]" : "bg-[#FF5252] text-white"}`}>
+                        {item.status === 'Approved' ? 'Approved' : 'Pending'}
+                      </button>
+                    </td>
                     <td className="flex items-center gap-3" style={{ border: 'none' }}>
-                      <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`} style={{ display:'flex'}}>
-                        <FaEdit size={15}/> Edit
-                      </Link>
-                      <span className="action-item cursor-pointer flex items-center gap-1">
-                        <img src="/suspendLogo.svg" alt="suspend" /> Suspend
+                      <span onClick={() => handleApproveClick(item)} className="action-item text-sm cursor-pointer flex items-center gap-2">
+                        <FaEdit size={15} /> Edit
                       </span>
-                      <span className="action-item text-sm cursor-pointer flex items-center gap-2">
+                      <span className="action-item text-sm cursor-pointer flex items-center gap-2" onClick={() => handleDeleteClick(item._id)}>
                         <FaTrash /> Delete
                       </span>
                       <button
-                        onClick={handleApproveClick}
                         style={{
                           width: "90.39px",
                           height: '25px',
@@ -130,9 +212,10 @@ export default function EditFood() {
                           fontWeight: '600',
                           lineHeight: '21.79px',
                         }}
-                      >
-                        Approve
-                      </button>
+                        onClick={() => handleApproveClick(item)} // Pass the `item` (menu) object
+                        >
+                          {item.status === 'Approved' ? 'Pending' : 'Approve'}
+                        </button>
                     </td>
                   </tr>
                 ))}
@@ -157,6 +240,34 @@ export default function EditFood() {
           </div>
         </div>
       </div>
+
+      {/* Edit Food Modal */}
+      {isModalOpen && (
+        <EditFoodModal
+          closeModal={() => setIsModalOpen(false)}
+          selectedMenu={selectedMenu}
+          handleEditUpdate={(updatedData) => {
+            // Implement logic to update your data in this callback if needed
+            console.log('Updated data:', updatedData);
+          }}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <DeleteConfirmationModal
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
+
+      {/* Add Menu Modal */}
+      {isAddModalOpen && (
+        <AddMenu
+          closeModal={handleAddMenuClose}
+          refreshMenus={refreshMenus}
+        />
+      )}
     </div>
   );
 }

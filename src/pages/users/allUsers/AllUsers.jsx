@@ -17,7 +17,7 @@ const AllUsers = () => {
     setUserStatus(isActive)
   };
   const [currentPage, setCurrentPage] = useState(1);
-  const [openModal, setOpenModal] = useState(false)
+  const [openModal, setOpenModal] = useState(false);
   const itemsPerPage = 10;
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);

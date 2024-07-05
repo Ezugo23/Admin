@@ -1,48 +1,34 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import ReactModal from 'react-modal';
 
-export default function Succeed() {
+export default function SentWithdrawals() {
   const [orders, setOrders] = useState([]);
-  const [restaurantId, setRestaurantId] = useState('');
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false); // State for the image modal
+  const [selectedImageUrl, setSelectedImageUrl] = useState(''); // State for selected image URL
 
   useEffect(() => {
     fetchOrders();
   }, []);
 
-  const fetchOrders = () => {
-    const storedRestaurantId = 'someRestaurantId'; // Example hardcoded restaurant ID
-    setRestaurantId(storedRestaurantId);
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/pending-withdrawals');
+      const sentOrders = response.data.filter(order => order.status === 'sent');
+      setOrders(sentOrders);
+    } catch (error) {
+      console.error('Error fetching sent withdrawals:', error);
+    }
+  };
 
-    const data = [
-      {
-        restaurantName: 'Restaurant A',
-        withdrawalAmount: 1500,
-        accountNo: '1234567890',
-        accountName: 'John Doe',
-        bankName: 'Bank A',
-        availableBalance: 5000,
-        transactionId: 'Paid',
-      },
-      {
-        restaurantName: 'Restaurant B',
-        withdrawalAmount: 2500,
-        accountNo: '0987654321',
-        accountName: 'Jane Smith',
-        bankName: 'Bank B',
-        availableBalance: 10000,
-        transactionId: 'Paid',
-      },
-      {
-        restaurantName: 'Restaurant C',
-        withdrawalAmount: 3500,
-        accountNo: '1122334455',
-        accountName: 'Alice Johnson',
-        bankName: 'Bank C',
-        availableBalance: 15000,
-        transactionId: 'Paid',
-      },
-    ];
+  const handleImageClick = (imageUrl) => {
+    setSelectedImageUrl(imageUrl);
+    setIsImageModalOpen(true);
+  };
 
-    setOrders(data);
+  const handleCloseImageModal = () => {
+    setIsImageModalOpen(false);
+    setSelectedImageUrl('');
   };
 
   const header = [
@@ -52,7 +38,7 @@ export default function Succeed() {
     "Account Name",
     "Bank Name",
     "Balance (NGN)",
-    "Status"
+    "Transaction Id",
   ];
 
   return (
@@ -67,11 +53,9 @@ export default function Succeed() {
             ))}
           </div>
         </div>
-        {/* Check if orders is empty, display message if no data is found */}
         {orders.length === 0 ? (
           <div className="text-center text-gray-500">Data not found</div>
         ) : (
-          // Display orders
           orders.map((order, index) => (
             <div key={index} className="flex gap-3 border-b-2 pb-2 items-center">
               <div className="flex-1 grid gap-3 grid-cols-7">
@@ -82,7 +66,7 @@ export default function Succeed() {
                   <p>₦{order.withdrawalAmount}</p>
                 </div>
                 <div className="center">
-                  <p>{order.accountNo}</p>
+                  <p>{order.accountNumber}</p>
                 </div>
                 <div className="center">
                   <p>{order.accountName}</p>
@@ -93,13 +77,50 @@ export default function Succeed() {
                 <div className="center">
                   <p>₦{order.availableBalance}</p>
                 </div>
-                <div className="center" style={{color:'green'}}>
+                <div className="center" style={{ color: 'green', cursor: 'pointer', textDecoration: 'underline' }}
+                  onClick={() => handleImageClick(order.image)}>
                   <p>{order.transactionId}</p>
                 </div>
               </div>
             </div>
           ))
         )}
+
+        {/* React Modal for Image */}
+        <ReactModal
+          isOpen={isImageModalOpen}
+          onRequestClose={handleCloseImageModal}
+          contentLabel="Receipt Image"
+          style={{
+            overlay: {
+              backgroundColor: 'rgba(0, 0, 0, 0.75)'
+            },
+            content: {
+              top: '50%',
+              left: '50%',
+              right: 'auto',
+              bottom: 'auto',
+              marginRight: '-50%',
+              transform: 'translate(-50%, -50%)',
+              maxWidth: '90%',
+              maxHeight: '90%'
+            }
+          }}
+        >
+          <img src={selectedImageUrl} alt="Receipt" style={{ width: '100%', height: 'auto' }} />
+          <button
+            onClick={handleCloseImageModal}
+            style={{
+              marginTop: '10px',
+              padding: '10px',
+              backgroundColor: '#FF0000',
+              color: 'white',
+              borderRadius: '5px'
+            }}
+          >
+            Close
+          </button>
+        </ReactModal>
       </div>
     </main>
   );

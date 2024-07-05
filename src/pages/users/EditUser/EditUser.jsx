@@ -197,7 +197,7 @@ export default function EditUser() {
                             {loading ? <p className="px-5 py-1 rounded bg-[#4CAF50] mt-[2rem]"><i class="fa-solid fa-spinner fa-spin"></i></p> : <button className="px-5 py-1 mt-[2rem] rounded hover:bg-gray-300 bg-[#4CAF50]" onClick={handleImageChange}>Change photo</button>}
                         </div>
                         }
-                        <button onClick={() => document.getElementById('fileInput').click()} className="btn">Choose an image</button>
+                        {activePage === 'Personal Info' && <button onClick={() => document.getElementById('fileInput').click()} className="bg-gray-300 p-2 mt-2">Choose an image</button>}
                 </div>
                 {activePage === 'Personal Info' && <UsersInfo values={values} setValues={setValues} handleSubmit={handleSubmit} data={!!data} isPending={isPending} isError={isError} error={error} loading={loadingUpdate} />}
                 {activePage === 'Change Password' && <ChangePassword isSuccess={isSuccess} message={message} newPassword={newPassword} setNewPassword={setNewPassword} handleChangePassword={handleChangePassword} loading={loadingPassword}/>}
