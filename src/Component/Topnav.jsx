@@ -24,8 +24,6 @@ const TopNav = () => {
   const notificationRef = useRef(null);
   const bellIconRef = useRef(null);
 
-  const toggleNotification = () => setIsNotificationOpen(!isNotificationOpen);
-
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('adminId');
@@ -34,7 +32,7 @@ const TopNav = () => {
 
   const handleClickOutside = (event) => {
     if (
-      notificationRef.current && 
+      notificationRef.current &&
       !notificationRef.current.contains(event.target) &&
       bellIconRef.current &&
       !bellIconRef.current.contains(event.target)
@@ -50,7 +48,32 @@ const TopNav = () => {
     });
   };
 
+  const fetchNotifications = async () => {
+    try {
+      const response = await fetch('https://delivery-chimelu-new.onrender.com/api/v1/admin/get/notifications');
+      if (response.ok) {
+        const data = await response.json();
+        setNotifications(data);
+      } else {
+        console.error('Error fetching notifications:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+  const toggleNotification = () => {
+    setIsNotificationOpen((prevState) => {
+      if (!prevState) {
+        fetchNotifications();
+      }
+      return !prevState;
+    });
+  };
+
   useEffect(() => {
+    fetchNotifications();
+
     const newSocket = io('wss://delivery-chimelu-new.onrender.com');
 
     newSocket.on('connect', () => {
@@ -58,7 +81,7 @@ const TopNav = () => {
     });
 
     newSocket.on('newNotification', (message) => {
-      console.log('New order received:', message);
+      console.log('New notification received:', message);
       setNotifications((prevNotifications) => [
         ...prevNotifications,
         message,
@@ -130,6 +153,7 @@ const TopNav = () => {
                   {notifications.map((notification, index) => (
                     <Box mb={2} key={index}>
                       {notification.message}
+                      <Divider mt={2} mb={2} borderWidth="2px" />
                     </Box>
                   ))}
                 </Box>
