@@ -5,6 +5,7 @@ import 'react-dropdown-tree-select/dist/styles.css';
 import { FiX } from 'react-icons/fi';
 import ImageCropper from './imageCropper';
 import { useRef } from 'react';
+import { useParams } from 'react-router-dom';
 
 /*export default function AddFood({ onClose, menuId, id, onAddFood }) {
   const [foodData, setFoodData] = useState({
@@ -322,7 +323,7 @@ import { useRef } from 'react';
 }*/
 
 
-export default function AddFood({ onClose, menuId, id, onAddFood }) {
+export default function AddFood({ onClose, onAddFood, restaurantId }) {
   const [foodData, setFoodData] = useState({
     image: '',
     category: '',
@@ -341,6 +342,7 @@ export default function AddFood({ onClose, menuId, id, onAddFood }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const previewImageRef = useRef(null);
+  const { menuId, id } = useParams();
 
   useEffect(() => {
     // Fetch categories from API
@@ -362,7 +364,7 @@ export default function AddFood({ onClose, menuId, id, onAddFood }) {
         const sideMenuOptions = data.map((sideMenu) => ({
           value: sideMenu._id,
           label: sideMenu.requiredCount
-            ? `${sideMenu.name}-x${sideMenu.requiredCount}`
+            ? `${sideMenu.name} - x${sideMenu.requiredCount}`
             : sideMenu.name,
         }));
         setSideMenus(sideMenuOptions);
@@ -427,12 +429,7 @@ export default function AddFood({ onClose, menuId, id, onAddFood }) {
   const handleSaveClick = () => {
     setLoading(true);
 
-    if (
-      !foodData.image ||
-      !foodData.foodName ||
-      !foodData.details ||
-      !foodData.price
-    ) {
+    if (!foodData.image || !foodData.foodName || !foodData.details || !foodData.price) {
       setErrorMessage('Please fill in all required fields.');
       setLoading(false);
       return;
@@ -441,6 +438,7 @@ export default function AddFood({ onClose, menuId, id, onAddFood }) {
     const formData = new FormData();
     formData.append('category', String(foodData.category));
     formData.append('menus', String(menuId));
+    formData.append('restaurant', String(id)); // Adding restaurant ID
     foodData.sideMenu.forEach((additiveId) => {
       formData.append('additiveIds', additiveId);
     });
@@ -450,19 +448,27 @@ export default function AddFood({ onClose, menuId, id, onAddFood }) {
     formData.append('description', foodData.details);
     formData.append('discount', foodData.discount);
 
-    fetch(`https://delivery-chimelu-new.onrender.com/api/v1/foods/${menuId}`, {
+    // Log formData values
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
+    fetch(`https://delivery-chimelu-new.onrender.com/api/v1/foods/${id}`, {
       method: 'POST',
       body: formData,
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to add food');
+          return response.json().then((data) => {
+            throw new Error(data.message || 'Failed to add food');
+          });
         }
         return response.json();
       })
       .then((data) => {
         setShowSuccessMessage(true);
-        onAddFood(data); // Call the onAddFood function with the new food item data
+        onAddFood(data);
+
         setTimeout(() => {
           setShowSuccessMessage(false);
           onClose();
@@ -470,7 +476,11 @@ export default function AddFood({ onClose, menuId, id, onAddFood }) {
       })
       .catch((error) => {
         console.error('Error adding food:', error);
-        setErrorMessage('Failed to add food. Please try again.');
+        if (error.message.includes('already an ongoing discount')) {
+          setErrorMessage('There is already an ongoing discount for this menu item.');
+        } else {
+          setErrorMessage('Failed to add food. Please try again.');
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -549,31 +559,29 @@ export default function AddFood({ onClose, menuId, id, onAddFood }) {
         <input
           type="text"
           id="foodName"
-          className="h-8 w-full border-2"
+          value={foodData.foodName}
           onChange={handleFoodNameChange}
+          className="w-full p-2 border border-gray-300 rounded-md mt-1"
         />
       </div>
-
       <div className="w-full mt-1">
-        <label htmlFor="sideMenu">Side items</label>
+        <label htmlFor="details">Details</label>
+        <textarea
+          id="details"
+          value={foodData.details}
+          onChange={handleDetailsChange}
+          className="w-full p-2 border border-gray-300 rounded-md mt-1"
+        />
+      </div>
+      <div className="w-full mt-1">
+        <label htmlFor="sideMenu">Side Menu</label>
         <Select
           id="sideMenu"
           options={sideMenus}
-          isMulti
           onChange={handleSideMenuChange}
+          isMulti
         />
       </div>
-
-      <div className="w-full mt-1">
-        <label htmlFor="details">Details</label>
-        <input
-          type="text"
-          id="details"
-          className="h-8 w-full border-2"
-          onChange={handleDetailsChange}
-        />
-      </div>
-
       <div className="w-full mt-1">
         <label htmlFor="discount">Discount</label>
         <Select
@@ -582,27 +590,27 @@ export default function AddFood({ onClose, menuId, id, onAddFood }) {
           onChange={handleDiscountChange}
         />
       </div>
-
       <div className="w-full mt-1">
         <label htmlFor="price">Price</label>
         <input
-          type="text"
+          type="number"
           id="price"
-          className="h-8 w-full border-2"
+          value={foodData.price}
           onChange={handlePriceChange}
+          className="w-full p-2 border border-gray-300 rounded-md mt-1"
         />
       </div>
-      <div className="flex justify-center mt-1">
-        <button
-          className="bg-black w-1/2 h-12 rounded-md text-white"
-          onClick={handleSaveClick}
-          disabled={loading}
-        >
-          {loading ? 'Saving...' : 'Save'}
-        </button>
-      </div>
+      <button
+        onClick={handleSaveClick}
+        className="w-full py-2 px-4 bg-blue-500 text-white rounded-md mt-3"
+        disabled={loading}
+      >
+        {loading ? 'Saving...' : 'Save'}
+      </button>
       {showSuccessMessage && (
-        <p className="text-green-500 text-sm mt-1">Food item added successfully!</p>
+        <p className="text-green-500 text-sm mt-1">
+          Food added successfully!
+        </p>
       )}
       <ImageCropper
         isOpen={isModalOpen}
@@ -613,4 +621,3 @@ export default function AddFood({ onClose, menuId, id, onAddFood }) {
     </div>
   );
 }
-

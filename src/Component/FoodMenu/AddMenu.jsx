@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { FiX } from 'react-icons/fi'; // Import the close icon
-
+import { FiX } from 'react-icons/fi';
 export default function AddMenu({ setShowAddBackdrop, fetchSideItems }) {
   const [values, setValues] = useState({
     name: "",

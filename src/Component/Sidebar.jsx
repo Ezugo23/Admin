@@ -53,7 +53,7 @@ const Sidebar = () => {
       color="black"
       p={4}
       minW="250px"
-      height="100vh"
+      height="full"
       position="relative"
       overflowY="auto"
     >
