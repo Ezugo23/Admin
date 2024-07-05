@@ -40,7 +40,7 @@ export default function Payment() {
       alert('Payment processed successfully');
     } catch (error) {
       console.error('Error processing payment:', error);
-      alert('Failed to process payment');
+      alert('Failed to process payment or admin not authorixed to pay');
     }
   };
 
