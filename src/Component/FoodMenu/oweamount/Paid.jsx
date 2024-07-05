@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useContext, useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
+import { WithdrawalContext } from '../../../contexts/WithdrawalContext';
 
 export default function SentWithdrawals() {
-  const [orders, setOrders] = useState([]);
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false); // State for the image modal
-  const [selectedImageUrl, setSelectedImageUrl] = useState(''); // State for selected image URL
+  const {
+    restaurantTransactions,
+    restaurantLoading,
+    fetchRestaurantTransactions,
+  } = useContext(WithdrawalContext);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [selectedImageUrl, setSelectedImageUrl] = useState('');
 
   useEffect(() => {
-    fetchOrders();
+    fetchRestaurantTransactions();
   }, []);
 
-  const fetchOrders = async () => {
-    try {
-      const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/pending-withdrawals');
-      const sentOrders = response.data.filter(order => order.status === 'sent');
-      setOrders(sentOrders);
-    } catch (error) {
-      console.error('Error fetching sent withdrawals:', error);
-    }
-  };
+  const sentOrders = restaurantTransactions.filter(
+    (order) => order.status === 'sent'
+  );
 
   const handleImageClick = (imageUrl) => {
     setSelectedImageUrl(imageUrl);
@@ -32,18 +30,21 @@ export default function SentWithdrawals() {
   };
 
   const header = [
-    "Restaurant’s Name",
-    "Withdrawal (NGN)",
-    "Account No.",
-    "Account Name",
-    "Bank Name",
-    "Balance (NGN)",
-    "Transaction Id",
+    "Restaurant's Name",
+    'Withdrawal (NGN)',
+    'Account No.',
+    'Account Name',
+    'Bank Name',
+    'Balance (NGN)',
+    'Transaction Id',
   ];
 
   return (
     <main>
-      <div className="flex flex-col mt-4 px-3 pb-5 gap-4" style={{ paddingBottom: "100px" }}>
+      <div
+        className="flex flex-col mt-4 px-3 pb-5 gap-4"
+        style={{ paddingBottom: '100px' }}
+      >
         <div className="flex gap-3 items-center">
           <div className="flex-1 font-semibold text-gray-800 grid gap-3 grid-cols-7">
             {header.map((data, key) => (
@@ -53,11 +54,16 @@ export default function SentWithdrawals() {
             ))}
           </div>
         </div>
-        {orders.length === 0 ? (
+        {restaurantLoading ? (
+          <div className="text-center text-gray-500">Loading...</div>
+        ) : sentOrders.length === 0 ? (
           <div className="text-center text-gray-500">Data not found</div>
         ) : (
-          orders.map((order, index) => (
-            <div key={index} className="flex gap-3 border-b-2 pb-2 items-center">
+          sentOrders.map((order, index) => (
+            <div
+              key={index}
+              className="flex gap-3 border-b-2 pb-2 items-center"
+            >
               <div className="flex-1 grid gap-3 grid-cols-7">
                 <div className="center">
                   <p>{order.restaurantName}</p>
@@ -77,8 +83,15 @@ export default function SentWithdrawals() {
                 <div className="center">
                   <p>₦{order.availableBalance}</p>
                 </div>
-                <div className="center" style={{ color: 'green', cursor: 'pointer', textDecoration: 'underline' }}
-                  onClick={() => handleImageClick(order.image)}>
+                <div
+                  className="center"
+                  style={{
+                    color: 'green',
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                  }}
+                  onClick={() => handleImageClick(order.image)}
+                >
                   <p>{order.transactionId}</p>
                 </div>
               </div>
@@ -93,7 +106,7 @@ export default function SentWithdrawals() {
           contentLabel="Receipt Image"
           style={{
             overlay: {
-              backgroundColor: 'rgba(0, 0, 0, 0.75)'
+              backgroundColor: 'rgba(0, 0, 0, 0.75)',
             },
             content: {
               top: '50%',
@@ -103,11 +116,15 @@ export default function SentWithdrawals() {
               marginRight: '-50%',
               transform: 'translate(-50%, -50%)',
               maxWidth: '90%',
-              maxHeight: '90%'
-            }
+              maxHeight: '90%',
+            },
           }}
         >
-          <img src={selectedImageUrl} alt="Receipt" style={{ width: '100%', height: 'auto' }} />
+          <img
+            src={selectedImageUrl}
+            alt="Receipt"
+            style={{ width: '100%', height: 'auto' }}
+          />
           <button
             onClick={handleCloseImageModal}
             style={{
@@ -115,7 +132,7 @@ export default function SentWithdrawals() {
               padding: '10px',
               backgroundColor: '#FF0000',
               color: 'white',
-              borderRadius: '5px'
+              borderRadius: '5px',
             }}
           >
             Close
