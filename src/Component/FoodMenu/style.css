@@ -409,3 +409,12 @@ cursor: pointer;
 .close-icon-food:hover {
 color: red; /* Change the color of the close icon on hover */
 }
+.bgTrans {
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+}
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Full height of the viewport */
+}
