@@ -24,7 +24,7 @@ export default function Test() {
         <Route path="side-items/:id" element={<Side />} /> 
         <Route path="resturant-information/:id" element={<Main />} />
         <Route path="add-menu/:id" element={<Edit />} />
-        <Route path="food-menu/:menuId" element={<Food />} />
+        <Route path="food-menu/:menuId/:foodname" element={<Food />} />
         <Route path="order-history/:id" element={<History />} />
       </Routes>
     </div>

@@ -9,7 +9,7 @@ import DeleteConfirmationModal from './Delete';
 import AddMenu from './MenuAdd';
 
 export default function EditFood() {
-  const { id, menuId } = useParams();
+  const { id } = useParams();
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -19,8 +19,6 @@ export default function EditFood() {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedMenuId, setSelectedMenuId] = useState(null);
-  
-  // State for Add Menu Modal
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   useEffect(() => {
@@ -40,30 +38,24 @@ export default function EditFood() {
   }, [id]);
 
   const handleApproveClick = async (menu) => {
-    const newStatus = menu.status === 'Approved' ? 'Pending' : 'Approved';
-    const menuId = menu._id; // Assuming menu._id is the identifier for the menu item
-    
     try {
-      const response = await axios.put(
-        `https://delivery-chimelu-new.onrender.com/api/v1/menu/updatestatus/${menuId}`,
-        { status: newStatus },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-  
+      // Toggle availability status
+      const response = await axios.put(`https://delivery-chimelu-new.onrender.com/api/v1/menu/availability/${menu._id}`);
       if (response.status === 200) {
-        const updatedMenu = { ...menu, status: newStatus };
-        const updatedData = data.map(item => (item._id === menu._id ? updatedMenu : item));
+        // Update local state to reflect the change
+        const updatedData = data.map(item => {
+          if (item._id === menu._id) {
+            return { ...item, available: !item.available }; // Toggle availability
+          }
+          return item;
+        });
         setData(updatedData);
       } else {
-        throw new Error('Failed to update status');
+        throw new Error('Failed to update availability');
       }
     } catch (error) {
-      console.error('Error updating status:', error);
-      alert('Failed to update status');
+      console.error('Error updating availability:', error);
+      alert('Failed to update availability');
     }
   };
 
@@ -184,14 +176,14 @@ export default function EditFood() {
                   <tr key={item._id} className="table-row cursor-pointer" style={{ borderBottom: 'none' }}>
                     <td style={{ border: 'none' }}>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                     <td style={{ border: 'none' }}>
-                      <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}`}>
+                      <Link to={`/foodsellers/menu/${id}/food-menu/${item._id}/${item.name}`}>
                         <strong>{item.name}</strong>
                       </Link>
                     </td>
                     <td style={{ border: 'none' }}>{item.foods}</td>
                     <td style={{ border: 'none' }}>
-                      <button className={`px-4 py-1 mx-1 rounded-3xl border ${item.status === 'Approved' ? "border-[#4DB6AC] text-[#4DB6AC]" : "bg-[#FF5252] text-white"}`}>
-                        {item.status === 'Approved' ? 'Approved' : 'Pending'}
+                      <button className={`px-4 py-1 mx-1 rounded-3xl border ${item.available ? "border-[#4DB6AC] text-[#4DB6AC]" : "bg-[#FF5252] text-white"}`}>
+                        {item.available ? 'Available' : 'Not Available'}
                       </button>
                     </td>
                     <td className="flex items-center gap-3" style={{ border: 'none' }}>
@@ -212,10 +204,10 @@ export default function EditFood() {
                           fontWeight: '600',
                           lineHeight: '21.79px',
                         }}
-                        onClick={() => handleApproveClick(item)} // Pass the `item` (menu) object
-                        >
-                          {item.status === 'Approved' ? 'Pending' : 'Approve'}
-                        </button>
+                        onClick={() => handleApproveClick(item)}
+                      >
+                        {item.available ? 'Menu' : 'Menu'}
+                      </button>
                     </td>
                   </tr>
                 ))}
