@@ -1,61 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { FaAngleLeft, FaAngleRight, FaEdit } from 'react-icons/fa';
+import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { SpinnerRoundOutlined } from 'spinners-react';
 import './Order.css';
+import { WithdrawalContext } from '../../contexts/WithdrawalContext';
 
 const Table = ({ filter }) => {
-  const [data, setData] = useState([]);
+  const { orders, ordersLoading, error } = useContext(WithdrawalContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('https://delivery-chimelu-new.onrender.com/api/v1/orders/');
-        const result = await response.json();
-        const formattedData = result.map(order => {
-          const date = new Date(order.orderDate);
-          return {
-            id: order._id,
-            Date: date.toLocaleDateString(),
-            Time: date.toLocaleTimeString(),
-            client: order.userId ? `${order.userId.username}\n${order.deliveryAddress.address}` : 'N/A',
-            seller: order.restaurantId ? `${order.restaurantId.restaurantName}\n${order.restaurantId.address}` : 'N/A',
-            invoice: `W${order.orderId}`,
-            driver: order.assignedDriver ? {
-              name: order.assignedDriver.username,
-              image: order.assignedDriver.image,
-              phoneNumber: order.assignedDriver.phoneNumber
-            } : {
-              name: 'N/A',
-              image: '',
-              phoneNumber: 'N/A'
-            },
-            fee: order.grandTotal,
-            orderStatus: order.orderStatus
-          };
-        });
-        setData(formattedData);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredData = data.filter(item => {
+  const filteredData = orders.filter((item) => {
     const searchLower = searchTerm.toLowerCase();
-    const clientName = item.client ? item.client.split('\n')[0].toLowerCase() : '';
-    return clientName.includes(searchLower) && (!filter || item.orderStatus === filter);
+    const clientName = item.client
+      ? item.client.split('\n')[0].toLowerCase()
+      : '';
+    const orderId = item.invoice.toLowerCase();
+    return (
+      (clientName.includes(searchLower) || orderId.includes(searchLower)) &&
+      (!filter || item.orderStatus === filter)
+    );
   });
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -66,14 +35,25 @@ const Table = ({ filter }) => {
     }
   };
 
-  const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const currentData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="contain">
       <div className="main-container">
         <div className="entries-container mb-4">
-          <label>Show
-            <select className="ml-2" onChange={(e) => setItemsPerPage(Number(e.target.value))}>
+          <label>
+            Show
+            <select
+              className="ml-2"
+              onChange={(e) => setItemsPerPage(Number(e.target.value))}
+            >
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
@@ -92,9 +72,16 @@ const Table = ({ filter }) => {
           </div>
         </div>
         <div className="table-container">
-          {loading ? (
-           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-               <SpinnerRoundOutlined size={50} color="green" />
+          {ordersLoading ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
+              }}
+            >
+              <SpinnerRoundOutlined size={50} color="green" />
             </div>
           ) : (
             <table className="table min-w-full">
@@ -117,14 +104,30 @@ const Table = ({ filter }) => {
                       <br />
                       {item.Time}
                     </td>
-                    <td dangerouslySetInnerHTML={{ __html: item.client.replace(/\n/g, '<br />') }}></td>
-                    <td dangerouslySetInnerHTML={{ __html: item.seller.replace(/\n/g, '<br />') }}></td>
+                    <td
+                      dangerouslySetInnerHTML={{
+                        __html: item.client.replace(/\n/g, '<br />'),
+                      }}
+                    ></td>
+                    <td
+                      dangerouslySetInnerHTML={{
+                        __html: item.seller.replace(/\n/g, '<br />'),
+                      }}
+                    ></td>
                     <td className="invoice-column">
-                      <Link to={`receipt/${item.id}`} className="link">{item.invoice}</Link>
+                      <Link to={`receipt/${item.id}`} className="link">
+                        {item.invoice}
+                      </Link>
                     </td>
                     <td>
                       <div className="flex flex-col items-start">
-                        {item.driver.image ? <img src={item.driver.image} alt={item.driver.name} className="w-8 h-8 rounded-full mr-2" /> : null}
+                        {item.driver.image ? (
+                          <img
+                            src={item.driver.image}
+                            alt={item.driver.name}
+                            className="w-8 h-8 rounded-full mr-2"
+                          />
+                        ) : null}
                         <p>{item.driver.name}</p>
                         <p>{item.driver.phoneNumber}</p>
                       </div>
@@ -138,7 +141,15 @@ const Table = ({ filter }) => {
           )}
         </div>
         <div className="pagination-con">
-          <span className="text-gray-600">Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, filteredData.length)}-{Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} data</span>
+          <span className="text-gray-600">
+            Showing{' '}
+            {Math.min(
+              currentPage * itemsPerPage - itemsPerPage + 1,
+              filteredData.length
+            )}
+            -{Math.min(currentPage * itemsPerPage, filteredData.length)} of{' '}
+            {filteredData.length} data
+          </span>
           <div className="pagination flex items-center">
             <button
               className="px-3 py-1 mx-1 rounded hover:bg-gray-300"
@@ -151,7 +162,11 @@ const Table = ({ filter }) => {
               <button
                 key={i + 1}
                 onClick={() => handleClick(i + 1)}
-                className={`px-3 py-1 mx-1 rounded ${currentPage === i + 1 ? 'bg-green-500 text-white' : 'hover:bg-gray-300'}`}
+                className={`px-3 py-1 mx-1 rounded ${
+                  currentPage === i + 1
+                    ? 'bg-green-500 text-white'
+                    : 'hover:bg-gray-300'
+                }`}
               >
                 {i + 1}
               </button>
