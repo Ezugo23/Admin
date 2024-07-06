@@ -35,7 +35,7 @@ export default function PaymentMethods({id}) {
                 <div className="bg-[#4CAF50] text-white rounded-3xl p-4 flex gap-7 justify-between">
                 <div>
                     <p className="flex items-center gap-3 cursor-pointer" onClick={handleToggle}>Balance {showFirstImage ? <span><IoEyeOutline /></span> : <span><IoEyeOffOutline /></span>}</p>
-                    {showFirstImage ? <h3 className="font-bold text-xl tracking-wide">#{dataCard.wallet?.balance.toLocaleString()}</h3> : <h3 className="font-bold text-xl">XXXX</h3>}
+                    {showFirstImage ? <h3 className="font-bold text-xl tracking-wide">₦{dataCard.wallet?.balance.toLocaleString()}</h3> : <h3 className="font-bold text-xl">XXXX</h3>}
                     <button className="px-5 py-2 rounded-md mt-[1rem] text-xs hover:bg-gray-300 bg-white text-[#4CAF50]">Add Money</button>
                 </div>
                 <div className="text-center">
