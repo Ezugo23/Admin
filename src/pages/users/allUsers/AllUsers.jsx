@@ -46,6 +46,7 @@ const AllUsers = () => {
     content = <p className="text-center absolute left-[45%] top-[50%] bg-red-400 text-white p-6 text-md">Failed to fetch all users. Please try again.</p>
   }
   if(data) {
+    console.log(data);
     content = <div className="main-container">
     <div className="entries-container mb-4">
       <label>
