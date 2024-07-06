@@ -34,6 +34,7 @@ import { PayoutProvider } from './contexts/PayoutContext';
 
 function App() {
   const [socket, setSocket] = useState(null);
+  const [userImage, setUserImage] = useState('');
 
   useEffect(() => {
     const newSocket = io('wss://delivery-chimelu-new.onrender.com');
@@ -69,7 +70,7 @@ function App() {
       </Box>
       <Flex direction="column" flex="1" overflow="hidden">
         <Box as="header" flex="0 0 auto">
-          <TopNav />
+          <TopNav userImage={userImage} setUserImage={setUserImage} />
         </Box>
         <Box
           as="main"

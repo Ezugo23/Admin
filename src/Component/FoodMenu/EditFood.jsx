@@ -45,7 +45,7 @@ export default function EditFood() {
         // Update local state to reflect the change
         const updatedData = data.map(item => {
           if (item._id === menu._id) {
-            return { ...item, available: !item.available }; // Toggle availability
+            return { ...item, isAvailable: !item.isAvailable }; // Toggle availability
           }
           return item;
         });
@@ -127,6 +127,18 @@ export default function EditFood() {
     }
   };
 
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem('menusData'));
+    if (storedData && storedData.length > 0) {
+      setData(storedData);
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('menusData', JSON.stringify(data));
+  }, [data]);
+
   return (
     <div className="contain" style={{ marginLeft: '10px', marginTop: '45px' }}>
       <div className="main-container">
@@ -182,8 +194,11 @@ export default function EditFood() {
                     </td>
                     <td style={{ border: 'none' }}>{item.foods}</td>
                     <td style={{ border: 'none' }}>
-                      <button className={`px-4 py-1 mx-1 rounded-3xl border ${item.available ? "border-[#4DB6AC] text-[#4DB6AC]" : "bg-[#FF5252] text-white"}`}>
-                        {item.available ? 'Available' : 'Not Available'}
+                      <button className={`
+                        px-4 py-1 mx-1 rounded-3xl border 
+                        ${item.isAvailable ? "border-[#4DB6AC] text-[#4DB6AC]" : "bg-[#FF5252] text-white"}
+                      `}>
+                        {item.isAvailable ? 'Available' : 'Not Available'}
                       </button>
                     </td>
                     <td className="flex items-center gap-3" style={{ border: 'none' }}>
@@ -206,7 +221,7 @@ export default function EditFood() {
                         }}
                         onClick={() => handleApproveClick(item)}
                       >
-                        {item.available ? 'Menu' : 'Menu'}
+                        {item.isAvailable ? 'Menu' : 'Menu'}
                       </button>
                     </td>
                   </tr>
@@ -216,48 +231,34 @@ export default function EditFood() {
           )}
         </div>
         <div className="pagination-con">
-          <span className="text-gray-600">Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, data.length)}-{Math.min(currentPage * itemsPerPage, data.length)} of {data.length} data</span>
-          <div className="pagination flex items-center">
-            <button className="px-3 py-1 mx-1 rounded hover:bg-gray-300" onClick={() => handleClick(currentPage - 1)} disabled={currentPage === 1}>
+          <span className="text-gray-600">Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, filteredData.length)} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} entries</span>
+          <div className="pagination-btns">
+            <button
+              className="pagination-btns"
+              disabled={currentPage === 1}
+              onClick={() => handleClick(currentPage - 1)}
+            >
               <FaAngleLeft />
             </button>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button key={i + 1} onClick={() => handleClick(i + 1)} className={`px-3 py-1 mx-1 rounded ${currentPage === i + 1 ? 'bg-green-500 text-white' : 'hover:bg-gray-300'}`}>
-                {i + 1}
-              </button>
-            ))}
-            <button className="px-3 py-1 mx-1 rounded hover:bg-gray-300" onClick={() => handleClick(currentPage + 1)} disabled={currentPage === totalPages}>
+            <button
+              className="pagination-btns"
+              disabled={currentPage >= totalPages}
+              onClick={() => handleClick(currentPage + 1)}
+            >
               <FaAngleRight />
             </button>
           </div>
         </div>
       </div>
-
-      {/* Edit Food Modal */}
+      {isAddModalOpen && <AddMenu isOpen={isAddModalOpen} onClose={handleAddMenuClose} onAdd={refreshMenus} />}
       {isModalOpen && (
-        <EditFoodModal
-          closeModal={() => setIsModalOpen(false)}
-          selectedMenu={selectedMenu}
-          handleEditUpdate={(updatedData) => {
-            // Implement logic to update your data in this callback if needed
-            console.log('Updated data:', updatedData);
-          }}
-        />
+        <EditFoodModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} menu={selectedMenu} onUpdate={refreshMenus} />
       )}
-
-      {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <DeleteConfirmationModal
-          onCancel={handleCancelDelete}
+          isOpen={showDeleteModal}
+          onClose={handleCancelDelete}
           onConfirm={handleConfirmDelete}
-        />
-      )}
-
-      {/* Add Menu Modal */}
-      {isAddModalOpen && (
-        <AddMenu
-          closeModal={handleAddMenuClose}
-          refreshMenus={refreshMenus}
         />
       )}
     </div>
