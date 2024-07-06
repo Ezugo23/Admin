@@ -16,6 +16,11 @@ export default function TableMenu() {
 
   useEffect(() => {
     const fetchData = async () => {
+      const adminId = localStorage.getItem('adminId');
+      if (!adminId) {
+        navigate('/Login');
+        return;
+      }
       const storedData = localStorage.getItem('restaurantData');
       if (storedData) {
         setData(JSON.parse(storedData));

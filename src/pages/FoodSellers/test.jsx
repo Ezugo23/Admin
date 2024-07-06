@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Menu from '../../Component/FoodMenu/Menu';
 import Personal from '../../Component/FoodMenu/Personal';
 import Password from '../../Component/FoodMenu/Password';
@@ -12,6 +13,15 @@ import History from '../../Component/FoodMenu/HistoryOrder'
 import MainPayment from '../../Component/Payment/Main'
 export default function Test() {
   const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const adminId = localStorage.getItem('adminId');
+    if (!adminId) {
+      navigate('/Login');
+    }
+  }, [navigate]);
   return (
     <>
        <div className="flex" style={{justifyContent:'space-between'}}>

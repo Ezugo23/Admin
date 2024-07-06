@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaAngleLeft, FaAngleRight, FaEdit } from 'react-icons/fa';
 import { SpinnerRoundOutlined } from 'spinners-react';
 import './Order.css';
@@ -10,9 +10,15 @@ const Table = ({ filter }) => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
+      const adminId = localStorage.getItem('adminId');
+      if (!adminId) {
+        navigate('/Login');
+        return;
+      }
       try {
         const response = await fetch('https://delivery-chimelu-new.onrender.com/api/v1/orders/');
         const result = await response.json();

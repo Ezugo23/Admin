@@ -9,6 +9,7 @@ import {
 } from 'react-icons/fa';
 import { RiErrorWarningLine } from 'react-icons/ri';
 import { toast, ToastContainer } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import './administrators/styles/users.css';
 
@@ -19,9 +20,15 @@ const Users = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAdmins = async () => {
+      const adminId = localStorage.getItem('adminId');
+      if (!adminId) {
+        navigate('/Login');
+        return;
+      }
       try {
         const response = await axios.get(
           'https://delivery-chimelu-new.onrender.com/api/v1/admin/'
