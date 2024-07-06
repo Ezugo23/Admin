@@ -1,6 +1,6 @@
-const PaginationButton = ({currentPage, setCurrentPage, filteredAdmins, itemsPerPage, indexOfFirstItem, indexOfLastItem}) => {
+const PaginationButton = ({currentPage, setCurrentPage, filteredUsers, itemsPerPage, indexOfFirstItem, indexOfLastItem}) => {
 
-const totalItems = filteredAdmins.length;
+const totalItems = filteredUsers.length;
 const totalPages = Math.ceil(totalItems / itemsPerPage);
   const showingFrom = totalItems === 0 ? 0 : indexOfFirstItem + 1;
   const showingTo = Math.min(indexOfLastItem, totalItems);
