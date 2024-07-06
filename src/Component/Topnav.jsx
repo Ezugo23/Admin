@@ -15,14 +15,18 @@ import { BsBoxArrowRight } from 'react-icons/bs';
 import { FiAlignLeft, FiBell } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
+import axios from 'axios';
 import notificationSound from '../../public/Sound Effect Twinkle.mp3'; // Adjust the path as necessary
 
 const TopNav = () => {
   const navigate = useNavigate();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [userImage, setUserImage] = useState(''); // State to store the user's image URL
   const notificationRef = useRef(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const bellIconRef = useRef(null);
+  const [adminData, setAdminData] = useState(null);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -62,6 +66,21 @@ const TopNav = () => {
     }
   };
 
+  const fetchUserImage = async () => {
+    const adminId = localStorage.getItem('adminId');
+    if (!adminId) {
+      navigate('/Login');
+      return;
+    }
+    try {
+      const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/admin/${adminId}`);
+      setAdminData(response.data.admin);
+      setImagePreviewUrl(response.data.admin.image);
+    } catch (error) {
+      console.error('Error fetching admin data:', error);
+    }
+  };
+
   const toggleNotification = () => {
     setIsNotificationOpen((prevState) => {
       if (!prevState) {
@@ -73,6 +92,7 @@ const TopNav = () => {
 
   useEffect(() => {
     fetchNotifications();
+    fetchUserImage(); // Fetch user image on component mount
 
     const newSocket = io('wss://delivery-chimelu-new.onrender.com');
 
@@ -163,9 +183,10 @@ const TopNav = () => {
           <Avatar
             size="sm"
             name="User Avatar"
-            src="https://bit.ly/dan-abramov"
+            src={imagePreviewUrl || 'default_avatar_url_here'} // Replace with your default avatar URL
             mr={6}
             w={'50'}
+            h={'12'}
           />
 
           {/* Menu Button */}
