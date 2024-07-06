@@ -78,9 +78,9 @@ const [searchTerm, setSearchTerm] = useState("");
       {currentOrders.map((order, index) => (
         <tr key={order.id} className={`cursor-pointer text-xs hover:bg-stone-200 ${index % 2 === 0 ? 'bg-gray-100' : ''}`}>
           <td className="p-2 align-middle">{index + 1}</td>
-          <td className="p-2 align-middle">{order.orderDate}</td>
+          <td className="p-2 align-middle">{new Date(order.orderDate).toLocaleString('en', {day: '2-digit', month: '2-digit', year: 'numeric'}).replace(/\//g, '.')} - {new Date(order.orderDate).toLocaleString('en', {hour: '2-digit', minute: '2-digit'})}</td>
           <td className="p-2 align-middle">{order.restaurantName}</td>
-          <td className="p-2 align-middle border-r-2"><img src={order.invoice} alt="invoice logo"/></td>
+          <td className="p-2 align-middle border-r-2"><img src='/invoice.svg' alt="invoice logo"/></td>
           <td className="p-2 align-middle">{order.pickUpLocation}</td>
           <td className="p-2 align-middle border-r-2">{order.dropOffLocation}</td>
           <td className="p-2 align-middle">{order.grandTotal}</td>

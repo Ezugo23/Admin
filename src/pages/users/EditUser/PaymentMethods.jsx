@@ -35,12 +35,13 @@ export default function PaymentMethods({id}) {
                 <div className="bg-[#4CAF50] text-white rounded-3xl p-4 flex gap-7 justify-between">
                 <div>
                     <p className="flex items-center gap-3 cursor-pointer" onClick={handleToggle}>Balance {showFirstImage ? <span><IoEyeOutline /></span> : <span><IoEyeOffOutline /></span>}</p>
-                    {showFirstImage ? <h3 className="font-bold text-xl tracking-wide">#{dataCard.wallet?.balance}</h3> : <h3 className="font-bold text-xl">XXXX</h3>}
+                    {showFirstImage ? <h3 className="font-bold text-xl tracking-wide">#{dataCard.wallet?.balance.toLocaleString()}</h3> : <h3 className="font-bold text-xl">XXXX</h3>}
                     <button className="px-5 py-2 rounded-md mt-[1rem] text-xs hover:bg-gray-300 bg-white text-[#4CAF50]">Add Money</button>
                 </div>
                 <div className="text-center">
-                    <p className="flex items-center gap-3">Account Number <span onClick={handleCopy} className="cursor-pointer"><img src="/copy-logo.svg" alt="" /></span></p>
+                    <p className="flex items-center gap-3 text-slate-200">Account Number <span onClick={handleCopy} className="cursor-pointer"><img src="/copy-logo.svg" alt="" /></span></p>
                     <h3>{dataCard.wallet.accountNumber}</h3>
+                    <h6 className="text-xs mt-1">{dataCard.wallet.accountName}</h6>
                     <h2 className="font-medium">{dataCard.wallet.bankName}</h2>
                 </div>
             </div>
@@ -73,11 +74,11 @@ export default function PaymentMethods({id}) {
                     <div className="flex items-center gap-2">
                         <div className={`rounded-full h-3 w-3 ${transaction.transactionName === 'Topup' ? 'bg-[#4CAF50]' : 'bg-[#FF5252]'}`}></div>
                         <div>
-                            <p>{transaction.transactionName || 'Order'}</p>
-                            <p className="text-xs mt-1">{transaction.timestamp}</p>
+                            <p className="font-medium">{transaction.transactionName || 'Order'} {transaction.transactionName === 'Order' ? '#' + transaction.orderId : ''}</p>
+                            <p className="text-xs mt-1">{new Date(transaction.timestamp).toLocaleString('en', {hour: '2-digit', minute: '2-digit'})} {new Date(transaction.timestamp).toLocaleString('en', {weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'})}</p>
                         </div>
                     </div>
-                    <p className={`font-medium ${transaction.transactionName === 'Topup' ? 'text-[#4CAF50]' : 'text-[#FF5252]'}`}>{transaction.amount}</p>
+                    <p className={`font-medium ${transaction.transactionName === 'Topup' ? 'text-[#4CAF50]' : 'text-[#FF5252]'}`}>&#8358;{transaction.amount}</p>
                 </div>
             )) : <p className="text-center text-gray-500 text-xl flex justify-center items-center">No transaction history available</p>}
         </div>
