@@ -9,7 +9,7 @@ import EditFood from './foodGroup';
 import AddFood from './addGroup';
 
 export default function FoodMenu() {
-  const { menuId, id, foodId, item } = useParams();
+  const { menuId, id, foodId, foodname } = useParams();
   const [menuData, setMenuData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedFoodItem, setSelectedFoodItem] = useState(null);
@@ -125,8 +125,8 @@ export default function FoodMenu() {
   const itemsPerPage = 10;
 
   const filteredData = menuData.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  item.title && item.title.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const currentData = filteredData.slice(
@@ -138,7 +138,7 @@ export default function FoodMenu() {
     <div className="contain" style={{ marginLeft: '10px', marginTop: '45px' }}>
       <div className="main-container">
       <div className="flex justify-between items-center mb-4">
-          <p className="font-roboto font-bold text-lg leading-6 text-black">Food</p>
+          <p className="font-roboto font-bold text-lg leading-6 text-black">{foodname}</p>
           <div className="search-bar ml-auto">
             <input
               type="text"
