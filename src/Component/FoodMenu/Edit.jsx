@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { BsCheck } from "react-icons/bs";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { FiX } from 'react-icons/fi';
-import './style.css';
+import './Discount.css';
 
 export default function Edit({ onClose, discount }) {
   const [open, setOpen] = useState(false);

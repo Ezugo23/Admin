@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { BiCalendar } from "react-icons/bi";
 import { BsCheck } from "react-icons/bs";
 import { TiArrowSortedDown } from "react-icons/ti";
-import './style.css';
+import './Discount.css';
 import { FiX } from 'react-icons/fi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
