@@ -77,7 +77,7 @@ export default function Main() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (activeTab === "withdrawal") {
-      fetch(`https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/withdrawals/${restaurantId}`,{
+      fetch(`https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/withdrawals/${id}`,{
         headers: {
         }
       })
