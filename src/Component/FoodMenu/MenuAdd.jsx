@@ -49,12 +49,8 @@ export default function AddMenu({ onClose, refreshMenus }) {
     
             setShowSuccessMessage(true);
             setMenuName('');
-            refreshMenus(); // Refresh menu list
-    
-            // Close modal after a brief delay
-            setTimeout(() => {
-                onClose(); // Close modal
-            }, 1000); // 1 second delay before closing modal
+            refreshMenus(); // Refre
+                onClose();  // 1 second delay before closing modal
         } catch (error) {
             console.error('Error adding menu:', error);
             setErrorMessage('Failed to add menu');
