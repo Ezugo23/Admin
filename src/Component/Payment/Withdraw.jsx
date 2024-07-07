@@ -84,12 +84,9 @@ export default function Withdraw({ onClose }) {
         accountName: accountName
     };
 
-    const token = localStorage.getItem('token');
-
-    axios.post(`https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/withdraw/${restaurantId}`, data, {
+    axios.post(`https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/withdraw/${id}`, data, {
         headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+            'Content-Type': 'application/json'
         }
     })
         .then(response => {
