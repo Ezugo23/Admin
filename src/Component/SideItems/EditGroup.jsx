@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FiX } from 'react-icons/fi';
 import Select from 'react-select';
 import axios from 'axios';
-import '../FoodMenu/style.css';
+import './style.css';
 import { useParams } from 'react-router-dom';
 
 export default function EditBackdrop({ toggleEditBackdrop, groupId }) {

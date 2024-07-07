@@ -1,16 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  Box,
-  Flex,
-  Icon,
-  Badge,
-  Avatar,
-  Divider,
-  Menu,
-  MenuButton,
-  MenuList,
-  IconButton,
-} from '@chakra-ui/react';
+import { Box, Flex, Icon, Badge, Avatar, Divider, Menu, MenuButton, MenuList, IconButton } from '@chakra-ui/react';
 import { BsBoxArrowRight } from 'react-icons/bs';
 import { FiAlignLeft, FiBell } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
@@ -69,7 +58,7 @@ const TopNav = () => {
   const fetchUserImage = async () => {
     const adminId = localStorage.getItem('adminId');
     if (!adminId) {
-      navigate('/Login');
+      navigate('/login');
       return;
     }
     try {
@@ -78,6 +67,10 @@ const TopNav = () => {
       setImagePreviewUrl(response.data.admin.image);
     } catch (error) {
       console.error('Error fetching admin data:', error);
+      if (error.response && error.response.status === 404) {
+        console.error('Admin not found');
+        // Handle admin not found case, maybe redirect or show a message
+      }
     }
   };
 
