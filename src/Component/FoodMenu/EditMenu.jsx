@@ -3,7 +3,7 @@ import './style.css';
 import axios from 'axios';
 import { FiX } from 'react-icons/fi';
 
-export default function EditFoodModal({ onClose, menu, onUpdate }) {
+export default function EditFoodModal({ onClose, menu, onUpdate, refreshMenus }) {
   const [menuName, setMenuName] = useState('');
 
   useEffect(() => {
@@ -25,6 +25,7 @@ export default function EditFoodModal({ onClose, menu, onUpdate }) {
       } else {
         throw new Error('Failed to update menu');
       }
+      refreshMenus();
     } catch (error) {
       console.error('Error updating menu:', error);
       alert('Failed to update menu');
