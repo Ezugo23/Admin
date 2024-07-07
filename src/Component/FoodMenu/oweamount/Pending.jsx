@@ -1,32 +1,28 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Modal from "./Modal"; // Import Modal component
+// Succeed.js
+
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import Modal from './Modal';
+import { WithdrawalContext } from '../../../contexts/WithdrawalContext';
 
 export default function Succeed() {
-  const [orders, setOrders] = useState([]);
+  const { pendingWithdrawals, fetchRestaurantTransactions } =
+    useContext(WithdrawalContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedWithdrawalId, setSelectedWithdrawalId] = useState(null);
 
   useEffect(() => {
-    fetchOrders();
+    fetchRestaurantTransactions();
   }, []);
-
-  const fetchOrders = async () => {
-    try {
-      const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/pending-withdrawals');
-      const pendingOrders = response.data.filter(order => order.status === 'pending');
-      setOrders(pendingOrders);
-    } catch (error) {
-      console.error('Error fetching pending withdrawals:', error);
-    }
-  };
 
   const handleRefund = async (restaurantId, withdrawalId) => {
     try {
-      const response = await axios.put(`https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/reverse-money/${restaurantId}/${withdrawalId}`);
+      const response = await axios.put(
+        `https://delivery-chimelu-new.onrender.com/api/v1/restaurantWallet/reverse-money/${restaurantId}/${withdrawalId}`
+      );
       if (response.status === 200) {
         alert('Refund successful');
-        fetchOrders();
+        fetchRestaurantTransactions();
       } else {
         alert('Refund failed');
       }
@@ -47,18 +43,21 @@ export default function Succeed() {
   };
 
   const header = [
-    "Restaurant’s Name",
-    "Withdrawal (NGN)",
-    "Account No.",
-    "Account Name",
-    "Bank Name",
-    "Transaction Id",
-    "Action"
+    "Restaurant's Name",
+    'Withdrawal (NGN)',
+    'Account No.',
+    'Account Name',
+    'Bank Name',
+    'Transaction Id',
+    'Action',
   ];
 
   return (
     <main>
-      <div className="flex flex-col mt-4 px-3 pb-5 gap-4" style={{ paddingBottom: "100px" }}>
+      <div
+        className="flex flex-col mt-4 px-3 pb-5 gap-4"
+        style={{ paddingBottom: '100px' }}
+      >
         <div className="flex gap-3 items-center">
           <div className="flex-1 font-semibold text-gray-800 grid gap-3 grid-cols-8">
             {header.map((data, key) => (
@@ -68,11 +67,14 @@ export default function Succeed() {
             ))}
           </div>
         </div>
-        {orders.length === 0 ? (
+        {pendingWithdrawals.length === 0 ? (
           <div className="text-center text-gray-500">Data not found</div>
         ) : (
-          orders.map((order, index) => (
-            <div key={index} className="flex gap-4 border-b-2 pb-2 items-center">
+          pendingWithdrawals.map((order, index) => (
+            <div
+              key={index}
+              className="flex gap-4 border-b-2 pb-2 items-center"
+            >
               <div className="flex-1 grid gap-3 grid-cols-8">
                 <div className="center">
                   <p>{order.restaurantName}</p>
@@ -89,13 +91,18 @@ export default function Succeed() {
                 <div className="center">
                   <p>{order.bankName}</p>
                 </div>
-                <div className="center" style={{color:'orange'}}>
+                <div className="center" style={{ color: 'orange' }}>
                   <p>{order.transactionId}</p>
                 </div>
                 <div className="flex justify-between">
                   <div className="center">
-                    <button 
-                      style={{width:'69px', height:'24px', color:'white', backgroundColor:"#4CAF50"}}
+                    <button
+                      style={{
+                        width: '69px',
+                        height: '24px',
+                        color: 'white',
+                        backgroundColor: '#4CAF50',
+                      }}
                       onClick={() => handlePayClick(order._id)}
                     >
                       Pay
@@ -103,8 +110,15 @@ export default function Succeed() {
                   </div>
                   <div className="center">
                     <button
-                      style={{width:'69px', height:'24px', color:'white', backgroundColor:"#4DB6AC"}}
-                      onClick={() => handleRefund(order.restaurantId, order._id)}
+                      style={{
+                        width: '69px',
+                        height: '24px',
+                        color: 'white',
+                        backgroundColor: '#4DB6AC',
+                      }}
+                      onClick={() =>
+                        handleRefund(order.restaurantId, order._id)
+                      }
                     >
                       Refund
                     </button>
@@ -115,7 +129,11 @@ export default function Succeed() {
           ))
         )}
       </div>
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal} withdrawalId={selectedWithdrawalId} />
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        withdrawalId={selectedWithdrawalId}
+      />
     </main>
   );
 }
