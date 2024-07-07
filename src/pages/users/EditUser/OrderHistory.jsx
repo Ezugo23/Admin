@@ -89,7 +89,7 @@ const [searchTerm, setSearchTerm] = useState("");
                     </td>
           <td className="p-2 align-middle">{order.pickUpLocation}</td>
           <td className="p-2 align-middle border-r-2">{order.dropOffLocation}</td>
-          <td className="p-1 align-middle">{order.grandTotal}</td>
+          <td className="p-1 align-middle">₦{order.grandTotal}</td>
           <td className="p-1 align-middle">{order.orderStatus}</td>
         </tr>
       ))}

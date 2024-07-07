@@ -105,12 +105,20 @@ const AllUsers = () => {
                     <img src={user.image} alt="Profile" className="image" />
                   </td>
                   <td>
-                    <Link to={`/users/${user._id}`} className="user-link">
+                    <Link to={`/users/editUser/${user._id}`} className="user-link">
                       {user.firstname} {user.lastname}
                     </Link>
                   </td>
-                  <td>{user.phoneNumber}</td>
-                  <td>{user.email}</td>
+                  <td>
+                    <Link to={`/users/editUser/${user._id}`} className="user-link">
+                      {user.phoneNumber}
+                    </Link>
+                  </td>
+                  <td>
+                    <Link to={`/users/editUser/${user._id}`} className="user-link">
+                      {user.email}
+                    </Link>
+                  </td>
                   <td>
                     <button
                       className={`px-4 py-1 mx-1 rounded-3xl border ${
@@ -122,8 +130,11 @@ const AllUsers = () => {
                       {user.isActive === true ? <p>Active</p> : <p>Suspend</p>}
                     </button>
                   </td>
-                  <td>{user.totalPaid}</td>
-
+                  <td>
+                    <Link to={`/users/editUser/${user._id}`} className="user-link">
+                      ₦{user.totalPaid}
+                    </Link>
+                  </td>
                   <td className="flex items-center gap-3">
                     <Link
                       to={`/users/editUser/${user._id}`}
