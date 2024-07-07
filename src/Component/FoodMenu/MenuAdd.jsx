@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './style.css';
+import './sty.css';
 import { FiX } from 'react-icons/fi';
 import { Link, useParams } from 'react-router-dom';
 
-export default function AddMenu({ closeModal, refreshMenus }) {
+export default function AddMenu({ onClose, refreshMenus }) {
     const [menuName, setMenuName] = useState('');
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -14,7 +14,7 @@ export default function AddMenu({ closeModal, refreshMenus }) {
 
     const handleOutsideClick = (event) => {
         if (popupRef.current && !popupRef.current.contains(event.target)) {
-            closeModal();
+            onClose();
         }
     };
 
@@ -53,7 +53,7 @@ export default function AddMenu({ closeModal, refreshMenus }) {
             refreshMenus(); // Refresh menu list
             setTimeout(() => {
                 setShowMessageBeforeClose(true);
-                setTimeout(() => closeModal(), 1000); // Close modal after 3 seconds
+                setTimeout(() => onClose(), 1000); // Close modal after 3 seconds
             }, 1000); // Show message for 3 seconds before closing modal
         } catch (error) {
             console.error('Error adding menu:', error);
@@ -67,7 +67,7 @@ export default function AddMenu({ closeModal, refreshMenus }) {
         <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="fixed inset-0 bg-black opacity-25"></div>
             <div ref={popupRef} className="bg-white p-5 rounded-lg shadow-lg relative z-50">
-                <FiX className="popup-close" onClick={closeModal} />
+                <FiX className="popup-close" onClick={onClose} />
                 <div className="w-72 p-5 flex items-center flex-col rounded-2xl border-2">
                     <p className="text-lg font-bold">Add New Menu</p>
                     <div className="w-full mt-7">

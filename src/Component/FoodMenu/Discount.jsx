@@ -5,7 +5,7 @@ import Add from "./Add"; // Assuming the Add component is in the same directory
 import Edit from "./Edit";
 import { Spinner } from "react-bootstrap";
 // import DeleteConfirmationModal from '../Others/DeleteConfirmationModal';
-import "./style.css";
+import "./Discount.css";
 
 const Discount = () => {
   const [discounts, setDiscounts] = useState([]);

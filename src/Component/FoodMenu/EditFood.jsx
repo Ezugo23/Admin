@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import { MdAirplanemodeActive } from "react-icons/md";
+import { MdAirplanemodeInactive } from "react-icons/md";
 import { BsPlus } from "react-icons/bs";
 import { SpinnerRoundOutlined } from 'spinners-react';
 import axios from 'axios';
@@ -15,7 +17,7 @@ export default function EditFood() {
   const [loading, setLoading] = useState(true);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedMenuId, setSelectedMenuId] = useState(null);
@@ -59,6 +61,22 @@ export default function EditFood() {
     }
   };
 
+  const handleEditClick = (menu) => {
+    setSelectedMenu(menu);
+    setShowEditModal(true);
+  };
+
+  const handleEditUpdate = (updatedMenuData) => {
+    const updatedData = data.map((item) => {
+      if (item._id === updatedMenuData._id) {
+        return updatedMenuData;
+      }
+      return item;
+    });
+    setData(updatedData);
+    setShowEditModal(false);
+  };
+
   const handleDeleteClick = (menuId) => {
     setSelectedMenuId(menuId);
     setShowDeleteModal(true);
@@ -100,18 +118,6 @@ export default function EditFood() {
 
   const handleAddMenuClose = () => {
     setIsAddModalOpen(false);
-  };
-
-  const refreshMenus = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/menu/menusrestaurant/${id}`);
-      setData(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error refreshing menus:', error);
-      setLoading(false);
-    }
   };
 
   const filteredData = data.filter((item) =>
@@ -202,64 +208,77 @@ export default function EditFood() {
                       </button>
                     </td>
                     <td className="flex items-center gap-3" style={{ border: 'none' }}>
-                      <span onClick={() => handleApproveClick(item)} className="action-item text-sm cursor-pointer flex items-center gap-2">
+                      <span  onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleEditClick(item);
+                        }} className="action-item text-sm cursor-pointer flex items-center gap-2">
                         <FaEdit size={15} /> Edit
                       </span>
                       <span className="action-item text-sm cursor-pointer flex items-center gap-2" onClick={() => handleDeleteClick(item._id)}>
-                        <FaTrash /> Delete
+                        <FaTrash size={15} /> Delete
                       </span>
-                      <button
-                        style={{
-                          width: "90.39px",
-                          height: '25px',
-                          backgroundColor: '#4CAF50',
-                          color: "white",
-                          fontFamily: 'Open Sans',
-                          fontSize: '16px',
-                          fontWeight: '600',
-                          lineHeight: '21.79px',
-                        }}
-                        onClick={() => handleApproveClick(item)}
-                      >
-                        {item.isAvailable ? 'Menu' : 'Menu'}
-                      </button>
+                      <span className="action-item text-sm cursor-pointer flex items-center gap-2" onClick={() => handleApproveClick(item)}>
+                        {item.isAvailable ? (
+                          <>
+                          <MdAirplanemodeActive size={17}/>
+                            Activate
+                          </>
+                        ) : (
+                          <>
+                          <MdAirplanemodeInactive size={17} />
+                            Deactivate
+                          </>
+                        )}
+                      </span>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           )}
-        </div>
-        <div className="pagination-con">
-          <span className="text-gray-600">Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, filteredData.length)} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} entries</span>
-          <div className="pagination-btns">
+          <div className="pagination-container" style={{ marginTop: '10px' }}>
             <button
-              className="pagination-btns"
-              disabled={currentPage === 1}
+              className={`pagination-button ${currentPage === 1 ? 'disabled' : ''}`}
               onClick={() => handleClick(currentPage - 1)}
+              disabled={currentPage === 1}
             >
               <FaAngleLeft />
             </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                className={`pagination-button ${currentPage === i + 1 ? 'active' : ''}`}
+                onClick={() => handleClick(i + 1)}
+              >
+                {i + 1}
+              </button>
+            ))}
             <button
-              className="pagination-btns"
-              disabled={currentPage >= totalPages}
+              className={`pagination-button ${currentPage === totalPages ? 'disabled' : ''}`}
               onClick={() => handleClick(currentPage + 1)}
+              disabled={currentPage === totalPages}
             >
               <FaAngleRight />
             </button>
           </div>
         </div>
       </div>
-      {isAddModalOpen && <AddMenu isOpen={isAddModalOpen} onClose={handleAddMenuClose} onAdd={refreshMenus} />}
-      {isModalOpen && (
-        <EditFoodModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} menu={selectedMenu} onUpdate={refreshMenus} />
-      )}
+      {showEditModal && selectedMenu && (
+  <EditFoodModal
+    menu={selectedMenu}
+    onClose={() => setShowEditModal(false)}
+    onUpdate={handleEditUpdate}
+  />
+)}
       {showDeleteModal && (
         <DeleteConfirmationModal
-          isOpen={showDeleteModal}
-          onClose={handleCancelDelete}
           onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
         />
+      )}
+      {isAddModalOpen && (
+        <AddMenu onClose={handleAddMenuClose} />
       )}
     </div>
   );
