@@ -23,20 +23,20 @@ export default function EditFood() {
   const [selectedMenuId, setSelectedMenuId] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/menu/menusrestaurant/${id}`);
-        setData(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`https://delivery-chimelu-new.onrender.com/api/v1/menu/menusrestaurant/${id}`);
+      setData(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setLoading(false);
+    }
+  };
 
-    fetchData();
+  useEffect(() => {
+    fetchData(); // Initial data fetch
   }, [id]);
 
   const handleApproveClick = async (menu) => {
@@ -60,6 +60,10 @@ export default function EditFood() {
       alert('Failed to update availability');
     }
   };
+
+  const refreshMenus = () => {
+    fetchData(); // Refetch menu data
+};
 
   const handleEditClick = (menu) => {
     setSelectedMenu(menu);
@@ -269,6 +273,7 @@ export default function EditFood() {
     menu={selectedMenu}
     onClose={() => setShowEditModal(false)}
     onUpdate={handleEditUpdate}
+    refreshMenus={refreshMenus}
   />
 )}
       {showDeleteModal && (
@@ -278,7 +283,7 @@ export default function EditFood() {
         />
       )}
       {isAddModalOpen && (
-        <AddMenu onClose={handleAddMenuClose} />
+        <AddMenu onClose={handleAddMenuClose}  refreshMenus={refreshMenus}/>
       )}
     </div>
   );

@@ -30,12 +30,11 @@ export default function AddMenu({ onClose, refreshMenus }) {
             setErrorMessage('Menu name is required');
             return;
         }
-
+    
         setLoading(true);
         setErrorMessage('');
-
+    
         try {
-            setLoading(true); 
             const response = await fetch(`https://delivery-chimelu-new.onrender.com/api/v1/menu/${id}`, {
                 method: 'POST',
                 headers: {
@@ -43,18 +42,19 @@ export default function AddMenu({ onClose, refreshMenus }) {
                 },
                 body: JSON.stringify({ name: menuName })
             });
-
+    
             if (!response.ok) {
                 throw new Error('Failed to add menu');
             }
-
+    
             setShowSuccessMessage(true);
             setMenuName('');
             refreshMenus(); // Refresh menu list
+    
+            // Close modal after a brief delay
             setTimeout(() => {
-                setShowMessageBeforeClose(true);
-                setTimeout(() => onClose(), 1000); // Close modal after 3 seconds
-            }, 1000); // Show message for 3 seconds before closing modal
+                onClose(); // Close modal
+            }, 1000); // 1 second delay before closing modal
         } catch (error) {
             console.error('Error adding menu:', error);
             setErrorMessage('Failed to add menu');
