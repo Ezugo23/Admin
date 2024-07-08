@@ -79,7 +79,7 @@ const Login = () => {
       console.log(error);
       toast.error("Failed to login. Please try again.");
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
