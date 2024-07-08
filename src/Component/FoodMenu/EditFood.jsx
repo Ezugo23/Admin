@@ -202,7 +202,8 @@ export default function EditFood() {
                         <strong>{item.name}</strong>
                       </Link>
                     </td>
-                    <td style={{ border: 'none' }}>{item.foods}</td>
+                    <td style={{ border: 'none' }}>{item.numberOfItems}</td>
+                    {/* <td style={{ border: 'none' }}>{item.foods}</td> */}
                     <td style={{ border: 'none' }}>
                       <button className={`
                         px-4 py-1 mx-1 rounded-3xl border 

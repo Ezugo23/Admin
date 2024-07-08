@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaAngleLeft, FaAngleRight, FaEdit } from 'react-icons/fa';
+import { FaAngleLeft, FaAngleRight } from 'react-icons/fa';
 import { SpinnerRoundOutlined } from 'spinners-react';
 import './Order.css';
 
@@ -41,7 +41,8 @@ const Table = ({ filter }) => {
               phoneNumber: 'N/A'
             },
             fee: order.grandTotal,
-            orderStatus: order.orderStatus
+            orderStatus: order.orderStatus,
+            orderId: order.orderId, // Ensure orderId is part of the data
           };
         });
         setData(formattedData);
@@ -60,8 +61,7 @@ const Table = ({ filter }) => {
 
   const filteredData = data.filter(item => {
     const searchLower = searchTerm.toLowerCase();
-    const clientName = item.client ? item.client.split('\n')[0].toLowerCase() : '';
-    return clientName.includes(searchLower) && (!filter || item.orderStatus === filter);
+    return item.orderId.toString().toLowerCase().includes(searchLower) && (!filter || item.orderStatus === filter);
   });
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
