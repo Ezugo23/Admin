@@ -5,7 +5,7 @@ import Personal from '../../Component/FoodMenu/Personal';
 import Table from '../../Component/FoodMenu/tableMenu';
 import Password from '../../Component/FoodMenu/Password';
 import Test from './test'
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 export default function Sellers() {
   return (
@@ -16,7 +16,7 @@ export default function Sellers() {
         {/* Route for the Menu component */}
         <Route path="/" element={<Table />} />
         
-        <Route path="menu/*" element={<Test />} />
+        <Route path="menu/:id/*" element={<Test />} />
         {/* Route for the Personal component */}
       </Routes>
     </>

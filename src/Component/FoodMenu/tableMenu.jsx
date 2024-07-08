@@ -1,47 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import Pro from './Pro'
-//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-//import { faStar } from '@fortawesome/free-solid-svg-icons';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
-import { FaEdit } from 'react-icons/fa';
-import { FaAngleLeft, FaAngleRight, FaTrash } from 'react-icons/fa6';
-
-
-
-const data = [
-  // Your data array
-  { id: 3000, sellerName: "James Samuel Jackson", address: "No 4 Ubajjfjfjfjf Asaba", swiftBalance: "$345.45", totalOrders: 356, withdraw: "$345.55", rating: 1111 },
-  { id: 30001, sellerName: "Moon", address: "No 5 Uba Asaba", swiftBalance: "$545.45", totalOrders: 456, withdraw: "$445.55", rating: 2111 },
-  { id: 30002, sellerName: "Sun", address: "No 6 Uba Asaba", swiftBalance: "$645.45", totalOrders: 556, withdraw: "$545.55", rating: 3111 },
-  { id: 30003, sellerName: "Planet", address: "No 7 Uba Asaba", swiftBalance: "$745.45", totalOrders: 656, withdraw: "$645.55", rating: 4111 },
-  { id: 30004, sellerName: "Galaxy", address: "No 8 Uba Asaba", swiftBalance: "$845.45", totalOrders: 756, withdraw: "$745.55", rating: 5111 },
-  { id: 30005, sellerName: "Comet", address: "No 9 Uba Asaba", swiftBalance: "$945.45", totalOrders: 856, withdraw: "$845.55", rating: 6111 },
-  { id: 30006, sellerName: "Asteroid", address: "No 10 Uba Asaba", swiftBalance: "$1045.45", totalOrders: 956, withdraw: "$945.55", rating: 7111 },
-  { id: 30007, sellerName: "Meteor", address: "No 11 Uba Asaba", swiftBalance: "$1145.45", totalOrders: 1056, withdraw: "$1045.55", rating: 8111 },
-  { id: 30008, sellerName: "Black Hole", address: "No 12 Uba Asaba", swiftBalance: "$1245.45", totalOrders: 1156, withdraw: "$1145.55", rating: 9111 },
-  { id: 30009, sellerName: "Nebula", address: "No 13 Uba Asaba", swiftBalance: "$1345.45", totalOrders: 1256, withdraw: "$1245.55", rating: 10111 },
-  { id: 30000, sellerName: "Star", address: "No 4 Uba Asaba", swiftBalance: "$345.45", totalOrders: 356, withdraw: "$345.55", rating: 1111 },
-  { id: 30001, sellerName: "Moon", address: "No 5 Uba Asaba", swiftBalance: "$545.45", totalOrders: 456, withdraw: "$445.55", rating: 2111 },
-  { id: 30002, sellerName: "Sun", address: "No 6 Uba Asaba", swiftBalance: "$645.45", totalOrders: 556, withdraw: "$545.55", rating: 3111 },
-  { id: 30003, sellerName: "Planet", address: "No 7 Uba Asaba", swiftBalance: "$745.45", totalOrders: 656, withdraw: "$645.55", rating: 4111 },
-  { id: 30004, sellerName: "Galaxy", address: "No 8 Uba Asaba", swiftBalance: "$845.45", totalOrders: 756, withdraw: "$745.55", rating: 5111 },
-  { id: 30005, sellerName: "Comet", address: "No 9 Uba Asaba", swiftBalance: "$945.45", totalOrders: 856, withdraw: "$845.55", rating: 6111 },
-  { id: 30006, sellerName: "Asteroid", address: "No 10 Uba Asaba", swiftBalance: "$1045.45", totalOrders: 956, withdraw: "$945.55", rating: 7111 },
-  { id: 30007, sellerName: "Meteor", address: "No 11 Uba Asaba", swiftBalance: "$1145.45", totalOrders: 1056, withdraw: "$1045.55", rating: 8111 },
-  { id: 30008, sellerName: "Black Hole", address: "No 12 Uba Asaba", swiftBalance: "$1245.45", totalOrders: 1156, withdraw: "$1145.55", rating: 9111 },
-  { id: 30009, sellerName: "Nebula", address: "No 13 Uba Asaba", swiftBalance: "$1345.45", totalOrders: 1256, withdraw: "$1245.55", rating: 10111 },
-  { id: 30000, sellerName: "Star", address: "No 4 Uba Asaba", swiftBalance: "$345.45", totalOrders: 356, withdraw: "$345.55", rating: 1111 },
-  { id: 30001, sellerName: "Moon", address: "No 5 Uba Asaba", swiftBalance: "$545.45", totalOrders: 456, withdraw: "$445.55", rating: 2111 },
-  { id: 30002, sellerName: "Sun", address: "No 6 Uba Asaba", swiftBalance: "$645.45", totalOrders: 556, withdraw: "$545.55", rating: 3111 },
-  { id: 30003, sellerName: "Planet", address: "No 7 Uba Asaba", swiftBalance: "$745.45", totalOrders: 656, withdraw: "$645.55", rating: 4111 },
-
-];
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight } from 'react-icons/fa';
+import { RiErrorWarningLine } from 'react-icons/ri';
+import { Switch } from '@chakra-ui/react';
+import { SpinnerRoundOutlined } from 'spinners-react';
 
 export default function TableMenu() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const adminId = localStorage.getItem('adminId');
+      if (!adminId) {
+        navigate('/Login');
+        return;
+      }
+      const storedData = localStorage.getItem('restaurantData');
+      if (storedData) {
+        setData(JSON.parse(storedData));
+        setLoading(false);
+      } else {
+        try {
+          const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
+          const fetchedData = response.data.restaurants;
+          setData(fetchedData);
+          localStorage.setItem('restaurantData', JSON.stringify(fetchedData));
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000); // Set the timer to 3 seconds (3000 milliseconds)
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleClick = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -49,7 +54,56 @@ export default function TableMenu() {
     }
   };
 
-  const currentData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const handleRowClick = (id, hasData) => {
+    if (hasData) {
+      navigate(`menu/${id}/personal/${id}`);
+    }
+  };
+
+  const handleApprove = async (id) => {
+    try {
+      await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/approve-restaurant/${id}`);
+      // Fetch updated data
+      const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
+      setData(response.data.restaurants);
+      localStorage.setItem('restaurantData', JSON.stringify(response.data.restaurants));
+    } catch (error) {
+      console.error('Error approving restaurant:', error);
+    }
+  };
+
+  const handleToggleStatus = async (id) => {
+    try {
+      await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/${id}/toggle-restaurant-status`);
+      // Fetch updated data
+      const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
+      setData(response.data.restaurants);
+      localStorage.setItem('restaurantData', JSON.stringify(response.data.restaurants));
+    } catch (error) {
+      console.error('Error toggling restaurant status:', error);
+    }
+  };
+
+  const handleToggleAvailability = async (id, isAvailable) => {
+    try {
+      await axios.patch(`https://delivery-chimelu-new.onrender.com/api/v1/restaurant/available/${id}`, {
+        isAvailable: !isAvailable
+      });
+      // Fetch updated data
+      const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/restaurant/');
+      setData(response.data.restaurants);
+      localStorage.setItem('restaurantData', JSON.stringify(response.data.restaurants));
+    } catch (error) {
+      console.error('Error toggling availability:', error);
+    }
+  };
+
+  const filteredData = data.filter((item) =>
+    item.restaurantName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const currentData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <div className="contain">
@@ -61,8 +115,9 @@ export default function TableMenu() {
       </div>
       <div className="main-container">
         <div className="entries-container mb-4">
-          <label>Show 
-            <select className="ml-2">
+          <label>
+            Show
+            <select className="ml-2" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
               <option value="10">10</option>
               <option value="25">25</option>
               <option value="50">50</option>
@@ -72,58 +127,103 @@ export default function TableMenu() {
           </label>
           <div className="search-container ml-auto">
             <label htmlFor="search">Search:</label>
-            <input id="search" type="text" />
+            <input
+              id="search"
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
-        <div className="table-container">
-          <table className="table min-w-full">
-            <thead className="table-header">
-              <tr>
-                <th>ID</th>
-                <th>SELLER NAME</th>
-                <th>SWIFTBALANCE</th>
-                <th>TOTAL ORDERS</th>
-                <th>WITHDRAW</th>
-                <th>RATING</th>
-                <th>STATUS</th>
-                <th>ACTION</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentData.map((item) => (
-                <tr key={item.id} className="table-row">
-                  <td>{item.id}</td>
-                  <td >
-                          <strong>{item.sellerName}</strong>
-                          <br />
-                          {item.address}
-                        </td>
-                  <td>{item.swiftBalance}</td>
-                  <td>{item.totalOrders}</td>
-                  <td>{item.withdraw}</td>
-                  <td>{item.rating}</td>
-                  <td >
-                          <button className="w-[80px] h-[25px] font-roboto font-normal text-[12px] leading-[14.06px] text-center text-[#4DB6AC] border border-[#4DB6AC] rounded-md active:bg-[#4DB6AC]">
-                            save
-                          </button>
-                        </td>
-                  <td className="action-cell">
-                    <Link     to={'menu/personal'}>
-                    <span className="action-item cursor-pointer flex items-center gap-3">
-                      <FaEdit /> 
-                    </span>
-                    </Link>
-                    <span className="action-item cursor-pointer flex items-center gap-3">
-                      <FaTrash /> 
-                    </span>
-                  </td>
+        <div className="table-container" style={{ position: 'relative', minHeight: '300px' }}>
+          {loading ? (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+              <SpinnerRoundOutlined size={50} color="green" />
+            </div>
+          ) : (
+            <table className="table min-w-full" style={{ borderCollapse: 'collapse' }}>
+              <thead className="table-header" style={{ backgroundColor: 'green', color: 'white' }}>
+                <tr>
+                  <th style={{ color: 'white', border: 'none' }}>S/N</th>
+                  <th style={{ color: 'white', border: 'none' }}>SELLER NAME</th>
+                  <th style={{ color: 'white', border: 'none' }}>SWIFTBALANCE</th>
+                  <th style={{ color: 'white', border: 'none' }}>TOTAL ORDERS</th>
+                  <th style={{ color: 'white', border: 'none' }}>AVAILABLE BALANCE</th>
+                  <th style={{ color: 'white', border: 'none' }}>RATING</th>
+                  <th style={{ color: 'white', border: 'none' }}>STATUS</th>
+                  <th style={{ color: 'white', border: 'none' }}>ACTION</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {currentData.map((item, index) => {
+                  const hasData = item.totalOrders > 0 || item.totalItems > 0; // Check if the restaurant has orders or items
+                  const serialNumber = (currentPage - 1) * itemsPerPage + index + 1; // Calculate the serial number
+
+                  let statusText = 'Pending';
+                  let statusColorClass = 'bg-orange-500 text-white';
+
+                  if (item.approved) {
+                    if (item.isActive) {
+                      statusText = 'Active';
+                      statusColorClass = 'bg-green-500 text-white';
+                    } else {
+                      statusText = 'Suspended';
+                      statusColorClass = 'bg-red-500 text-white';
+                    }
+                  }
+
+                  return (
+                    <tr key={item._id} className="table-row cursor-pointer" onClick={() => handleRowClick(item._id, hasData)} style={{ borderBottom: 'none' }}>
+                      <td style={{ border: 'none' }}>{serialNumber}</td>
+                      <td style={{ border: 'none' }}>
+                        <strong>{item.restaurantName}</strong>
+                        <br />
+                        {item.address}
+                      </td>
+                      <td style={{ border: 'none' }}>₦{item.wallet.swiftWallet}</td>
+                      <td style={{ border: 'none' }}>{item.totalOrders}</td>
+                      <td style={{ border: 'none' }}>₦{item.wallet.availableBalance}</td>
+                      <td style={{ border: 'none' }}>{item.averageRating}</td>
+                      <td style={{ border: 'none' }}>
+                        <button className={`w-[80px] h-[25px] font-roboto font-normal text-[12px] leading-[14.06px] text-center border rounded-md ${statusColorClass}`}>
+                          {statusText}
+                        </button>
+                      </td>
+                      <td className="action-cell" style={{ border: 'none' }}>
+                        <span
+                          className="action-item cursor-pointer flex items-center gap-3"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Switch
+                            isChecked={item.isAvailable}
+                            onChange={() => handleToggleAvailability(item._id, item.isAvailable)}
+                          />
+                        </span>
+                        <span
+                          className={`action-item cursor-pointer flex items-center gap-3 ${!hasData ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            item.approved ? handleToggleStatus(item._id) : handleApprove(item._id);
+                          }}
+                        >
+                          <RiErrorWarningLine size={20} />
+                        </span>
+                        <span
+                          className="action-item cursor-pointer flex items-center gap-3"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <FaTrash size={15} />
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
         <div className="pagination-con">
-          <span className="text-gray-600">Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, data.length)}-{Math.min(currentPage * itemsPerPage, data.length)} of {data.length} data</span>
+          <span className="text-gray-600">Showing {Math.min(currentPage * itemsPerPage - itemsPerPage + 1, filteredData.length)}-{Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} data</span>
           <div className="pagination flex items-center">
             <button 
               className="px-3 py-1 mx-1 rounded hover:bg-gray-300" 
