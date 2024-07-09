@@ -254,6 +254,36 @@ const Sidebar = () => {
                   - Swift Amount
                 </Flex>
               </RouterLink>
+              <RouterLink
+                to="/foodsellers/categories"
+                style={{ textDecoration: 'none' }}
+              >
+                <Flex
+                  alignItems="center"
+                  mb={2}
+                  fontWeight={
+                    activeLink === '/foodsellers/categories'
+                      ? 'bold'
+                      : 'normal'
+                  }
+                  color={
+                    activeLink === '/foodsellers/categories'
+                      ? 'white'
+                      : 'black'
+                  }
+                  bg={
+                    activeLink === '/foodsellers/categories'
+                      ? '#4caf50'
+                      : 'transparent'
+                  }
+                  p={2}
+                  pl={6}
+                  borderRadius="md"
+                  _hover={{ bg: '#4caf50', color: 'white' }}
+                >
+                  - Categories
+                </Flex>
+              </RouterLink>
             </AccordionPanel>
           </AccordionItem>
           <AccordionItem isExpanded={isDriversExpanded}>

@@ -61,7 +61,8 @@ const Table = ({ filter }) => {
 
   const filteredData = data.filter(item => {
     const searchLower = searchTerm.toLowerCase();
-    return item.orderId.toString().toLowerCase().includes(searchLower) && (!filter || item.orderStatus === filter);
+    // Ensure orderId is defined before accessing toString()
+    return item.orderId && item.orderId.toString().toLowerCase().includes(searchLower) && (!filter || item.orderStatus === filter);
   });
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
