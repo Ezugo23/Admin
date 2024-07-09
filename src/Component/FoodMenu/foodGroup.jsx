@@ -21,7 +21,7 @@ export default function EditFood({ onClose, foodId, id }) {
 
   const [previewImage, setPreviewImage] = useState(null);
   const [categories, setCategories] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const [menus, setMenus] = useState([]);
   const [sideMenus, setSideMenus] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -65,11 +65,6 @@ export default function EditFood({ onClose, foodId, id }) {
         setCategories(categoryOptions);
       })
       .catch((error) => console.error('Error fetching categories:', error));
-    const storedRestaurantId = localStorage.getItem('userId');
-    if (!storedRestaurantId) {
-      navigate('/signin');
-      return;
-    }
 
     fetch(
       `https://delivery-chimelu-new.onrender.com/api/v1/menu/menusrestaurant/${id}`
@@ -188,7 +183,6 @@ export default function EditFood({ onClose, foodId, id }) {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log('Food data updated successfully:', data);
         setFoodData(data.updatedFood);
         onClose();
         window.location.reload();
@@ -197,6 +191,9 @@ export default function EditFood({ onClose, foodId, id }) {
       .catch((error) => {
         console.error('Error updating food data:', error);
         // Handle error
+      })
+      .finally(() => {
+        setLoading(false); // Reset loading state after request completes (success or error)
       });
   };
 
@@ -336,9 +333,10 @@ export default function EditFood({ onClose, foodId, id }) {
         <div className="mt-3 center">
           <button
             onClick={handleSaveClick}
-            className="px-2 py-1 rounded-md bg-green-500 text-white font-semibold shadow-md"
+            className="w-full py-2 px-4 bg-blue-500 text-white rounded-md mt-3"
+        disabled={loading}
           >
-            Save
+             {loading ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>

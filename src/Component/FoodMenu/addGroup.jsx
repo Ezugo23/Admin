@@ -146,15 +146,10 @@ export default function AddFood({ onClose, onAddFood, restaurantId }) {
       })
       .then((data) => {
         setShowSuccessMessage(true);
-        onAddFood(data); // Update local state with new food data
-
-        setTimeout(() => {
-          setShowSuccessMessage(false);
-          onClose();
-        }, 2000);
+        onAddFood(data); 
+        window.location.reload();
       })
       .catch((error) => {
-        console.error('Error adding food:', error);
         if (error.message.includes('already an ongoing discount')) {
           setErrorMessage('There is already an ongoing discount for this menu item.');
         } else {

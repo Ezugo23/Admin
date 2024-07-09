@@ -28,6 +28,7 @@ import OweAmount from './pages/FoodSellers/Owe'
 import Payment from './Component/FoodMenu/Swift/Payment'
 import HistorySwift from './Component/FoodMenu/Swift/History'
 import HistoryRec from './Component/FoodMenu/Reciept'
+import Category from './Component/FoodMenu/Category/CategoryTable'
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './util/http';
 import { PayoutProvider } from './contexts/PayoutContext';
@@ -147,6 +148,14 @@ function App() {
                 element={
                   <MainLayout>
                     <Payment socket={socket} />
+                  </MainLayout>
+                }
+              />
+               <Route
+                path="/foodsellers/categories"
+                element={
+                  <MainLayout>
+                    <Category socket={socket} />
                   </MainLayout>
                 }
               />
