@@ -11,6 +11,7 @@ import Edit from '../../Component/FoodMenu/EditFood'
 import Food from '../../Component/FoodMenu/foodMenu'
 import History from '../../Component/FoodMenu/HistoryOrder'
 import MainPayment from '../../Component/Payment/Main'
+import Dispute from '../../Component/FoodMenu/Dispute'
 export default function Test() {
   const { id } = useParams();
 
@@ -38,6 +39,7 @@ export default function Test() {
         <Route path="food-menu/:menuId/:foodname" element={<Food />} />
         <Route path="order-history/:id" element={<History />} />
         <Route path="payout-management/:id" element={<MainPayment />} />
+        <Route path="dispute/:id" element={<Dispute />} />
       </Routes>
     </div>
     </>
