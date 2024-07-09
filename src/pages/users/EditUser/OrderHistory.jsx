@@ -3,6 +3,7 @@ import PaginationButton from "../allUsers/paginationButton";
 import { useQuery } from "@tanstack/react-query";
 import { getOrderHistory } from "../../../util/http";
 import "../administrators/styles/users.css";
+import { Link } from "react-router-dom";
 
 export default function OrderHistory({id}) {
 const [searchTerm, setSearchTerm] = useState("");
@@ -72,6 +73,7 @@ const [searchTerm, setSearchTerm] = useState("");
         <th className="p-2 align-middle">Pickup Location</th>
         <th className="p-2 align-middle border-r-2">Drop off Location</th>
         <th className="p-2 align-middle">Amount</th>
+        <th className="p-2 align-middle">Order status</th>
       </tr>
     </thead>
     <tbody>
@@ -80,10 +82,15 @@ const [searchTerm, setSearchTerm] = useState("");
           <td className="p-2 align-middle">{index + 1}</td>
           <td className="p-2 align-middle">{new Date(order.orderDate).toLocaleString('en', {day: '2-digit', month: '2-digit', year: 'numeric'}).replace(/\//g, '.')} - {new Date(order.orderDate).toLocaleString('en', {hour: '2-digit', minute: '2-digit'})}</td>
           <td className="p-2 align-middle">{order.restaurantName}</td>
-          <td className="p-2 align-middle border-r-2"><img src='/invoice.svg' alt="invoice logo"/></td>
+          <td className="p-2 align-middle border-r-2">
+                      <Link to={`/ordersHistory/receipt/${order.id}`} className="invoice-link">
+                        <img src='/invoice.svg' alt="invoice logo"/>
+                      </Link>
+                    </td>
           <td className="p-2 align-middle">{order.pickUpLocation}</td>
           <td className="p-2 align-middle border-r-2">{order.dropOffLocation}</td>
-          <td className="p-2 align-middle">{order.grandTotal}</td>
+          <td className="p-1 align-middle">₦{order.grandTotal}</td>
+          <td className="p-1 align-middle">{order.orderStatus}</td>
         </tr>
       ))}
     </tbody>

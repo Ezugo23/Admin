@@ -323,7 +323,7 @@ const Reciept = () => {
                   border: 'solid #3B5998 0.5px',
                   textAlign: 'center',
                   cursor: 'pointer',
-                  backgroundColor: 'white'
+                  backgroundColor: 'green'
                 }}
               >
                 {acceptingOrder ? (

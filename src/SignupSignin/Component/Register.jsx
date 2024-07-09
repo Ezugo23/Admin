@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import RegisterImage from '../../../Asset/image container.svg';
-import star from '../../../Asset/star 1.svg';
-import profile from '../../../Asset/BG.svg';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate } from "react-router-dom";
@@ -18,13 +15,11 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if any required fields are empty
     if (!firstname || !lastname || !email || !phoneNumber || !password || !address) {
       toast.error("All fields are required");
       return;
     }
 
-    // Password validation
     if (!validatePassword(password)) {
       toast.error("Password must be at least 8 characters long and contain at least one uppercase letter and one special character");
       return;
@@ -68,111 +63,88 @@ const Register = () => {
   };
 
   const validatePassword = (password) => {
-    // Password must be at least 8 characters long and contain at least one uppercase letter and one special character
     const re = /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9a-zA-Z]).{8,}$/;
     return re.test(password);
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center bg-gray-100 text-black">
-      <div className="flex flex-col md:flex-row justify-between items-center gap-5 w-full p-5 bg-white shadow-lg rounded-lg">
-        <div className="flex flex-col items-center bg-green-500 text-white p-5 rounded-lg">
-          <img src={RegisterImage} alt="Register" className="bg-white rounded-lg mb-5" />
-          <div className="flex space-x-2 mb-5">
-            <img src={star} alt="Star" />
-            <img src={star} alt="Star" />
-            <img src={star} alt="Star" />
-            <img src={star} alt="Star" />
-            <img src={star} alt="Star" />
-          </div>
-          <div className="w-3/4 text-center">
-            <p>"We love SwifDrop! We've been getting and managing orders seamlessly. It's definitely a restaurant's dream come true."</p>
-            <div className="flex items-center mt-5">
-              <img src={profile} alt="Profile" className="mr-3" />
-              <div>
-                <div>Fiyin Oladejo</div>
-                <p className="text-sm">Founder, Tasty Natives</p>
-              </div>
+    <div className="w-full flex flex-col items-center justify-center bg-gray-100 text-black py-10">
+      <div className="w-full max-w-2xl bg-white p-8 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold text-center mb-6">Register as Admin</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">First Name</label>
+              <input
+                type="text"
+                id="firstname"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
+                value={firstname}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">Last Name</label>
+              <input
+                type="text"
+                id="lastname"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
+                value={lastname}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+              <input
+                type="email"
+                id="email"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+              <input
+                type="password"
+                id="password"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">Phone Number</label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
+              <input
+                type="text"
+                id="address"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
             </div>
           </div>
-        </div>
-        <div className="w-full md:w-1/2 p-5">
-          <h1 className="text-2xl md:text-3xl text-center mb-5">Become our partner</h1>
-          <form onSubmit={handleSubmit}>
-            <div className="flex flex-wrap -mx-2">
-            <ToastContainer position="top-center" />
-              <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">First Name</label>
-                <input
-                  type="text"
-                  id="firstname"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
-                  value={firstname}
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
-              </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">Last Name</label>
-                <input
-                  type="text"
-                  id="lastname"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
-                  value={lastname}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">Phone Number</label>
-                <input
-                  type="tel"
-                  id="phoneNumber"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                />
-              </div>
-              <div className="w-full md:w-1/2 px-2 mb-4">
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
-                <input
-                  type="text"
-                  id="address"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500 p-2"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="text-center">
-              <button type="submit" className="px-28 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" style={{marginTop:'25px', marginLeft:'40px'}}>SignUp</button>
-            </div>
-          </form>
-          <div className="text-center mt-5">
-            <div className="flex justify-center space-x-2">
-              <h5>Already have an account?</h5>
-              <Link to='/Login' className="text-green-500 hover:underline">LogIn</Link>
-            </div>
+          <div className="text-center mt-6">
+            <button type="submit" className="px-6 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">Sign Up</button>
+          </div>
+        </form>
+        <div className="text-center mt-6">
+          <div className="flex justify-center space-x-2">
+            <span>Already have an account?</span>
+            <Link to='/Login' className="text-green-500 hover:underline">Log In</Link>
           </div>
         </div>
+        <ToastContainer position="top-center" />
       </div>
     </div>
   );

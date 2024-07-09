@@ -86,9 +86,7 @@ const TopNav = () => {
   useEffect(() => {
     fetchNotifications();
     fetchUserImage(); // Fetch user image on component mount
-
     const newSocket = io('wss://delivery-chimelu-new.onrender.com');
-
     newSocket.on('connect', () => {
       console.log('Socket connected');
     });

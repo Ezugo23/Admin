@@ -62,22 +62,6 @@ export default function EditUser() {
     }, [data]);
     
 
-    // const {mutate} = useMutation({
-    //     mutationFn: updateUserInfo,
-    //     onSuccess: (response) => {
-    //         queryClient.invalidateQueries(['users', id]);
-    //         console.log('Update success:', response);
-    //         navigate('/users/allusers');
-    //     },
-    // })
-   
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     console.log(values.firstname);
-    //     mutate({id, user: {values}});
-    //     console.log(values.firstname)
-        
-    //   }
     const handleChangePassword = async (e) => {
         setLoadingPassword(true)
         e.preventDefault();
@@ -185,7 +169,7 @@ export default function EditUser() {
                                 <h4>Success Orders</h4>
                             </div>
                             <div className="text-center">
-                                <p className="text-[#FF5252] font-semibold">{values.totalPaid}</p>
+                                <p className="text-[#FF5252] font-semibold">₦{values.totalPaid}</p>
                                 <h4>Total Paid</h4>
                             </div>
                         </div>
