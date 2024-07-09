@@ -33,7 +33,7 @@ const AllUsers = () => {
   let filteredUsers = [];
   if (data) {
     filteredUsers = data.filter((user) =>
-      user.firstname.toLowerCase().includes(searchTerm.toLowerCase())
+      user.firstname.toLowerCase().includes(searchTerm.toLowerCase()) || user.lastname.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
 

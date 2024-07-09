@@ -70,7 +70,7 @@ export default function PaymentMethods({id}) {
             {isError && <p className="mt-5 text-center absolute left-[55%] top-[50%] bg-red-400 text-white p-6 text-md">Failed to fetch transaction history. Please try again.</p>}
             <p className="font-medium my-5 mt-[3rem]">Recent transactions</p>
             {data && data.length > 0 ? data.map(transaction => (
-                <div className="flex justify-between mb-4">
+                <div key={transaction._id} className="flex justify-between mb-4">
                     <div className="flex items-center gap-2">
                         <div className={`rounded-full h-3 w-3 ${transaction.transactionName === 'Topup' ? 'bg-[#4CAF50]' : 'bg-[#FF5252]'}`}></div>
                         <div>
