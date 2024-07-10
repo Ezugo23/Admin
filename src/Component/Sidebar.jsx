@@ -45,7 +45,7 @@ const Sidebar = () => {
   const handleSellersToggle = () => setIsSellersExpanded(!isSellersExpanded);
   const handleDriversToggle = () => setIsDriversExpanded(!isDriversExpanded);
   const handleTransactionsToggle = () =>
-    setIsTransactionsExpanded(!isTransactionsExpanded);
+    setIsTransactionsExpanded(!isTransactionsExpanded)
 
   return (
     <Box
