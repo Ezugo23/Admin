@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {
-  FaEdit,
-  FaTrash,
-  FaAngleLeft,
-  FaAngleRight,
-  FaPlus,
-} from 'react-icons/fa';
+import { FaEdit, FaTrash, FaAngleLeft, FaAngleRight, FaPlus } from 'react-icons/fa';
 import { RiErrorWarningLine } from 'react-icons/ri';
 import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
-import './administrators/styles/users.css';
+import Modal from './Modal';
 
 const Users = () => {
   const [admins, setAdmins] = useState([]);
@@ -20,6 +14,9 @@ const Users = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedAdmin, setSelectedAdmin] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,9 +27,7 @@ const Users = () => {
         return;
       }
       try {
-        const response = await axios.get(
-          'https://delivery-chimelu-new.onrender.com/api/v1/admin/'
-        );
+        const response = await axios.get('https://delivery-chimelu-new.onrender.com/api/v1/admin/');
         setAdmins(response.data.admins);
       } catch (err) {
         setError(err.message);
@@ -42,20 +37,30 @@ const Users = () => {
     };
 
     fetchAdmins();
-  }, []);
+  }, [navigate]);
 
-  const handleClick = (newPage) => {
-    if (newPage > 0 && newPage <= totalPages) {
-      setCurrentPage(newPage);
-    }
+  const handleAddRoleClick = (admin) => {
+    console.log("Clicked on admin: ", admin);
+    setSelectedAdmin(admin);
+    setShowModal(true);
   };
 
-  const handleToggleStatus = async (adminId) => {
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedAdmin(null);
+  };
+
+  const handleSaveRole = async ({ roles }) => {
+    console.log("Saving roles: ", roles);
+    if (!selectedAdmin || !roles) {
+      console.log("Admin or roles missing.");
+      return;
+    }
     try {
       const token = localStorage.getItem('token');
       await axios.patch(
-        `https://delivery-chimelu-new.onrender.com/api/v1/${adminId}/toggle-admin-status`,
-        null,
+        `http://localhost:8080/api/v1/admin/${selectedAdmin._id}`,
+        { roles },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -64,41 +69,53 @@ const Users = () => {
       );
       setAdmins((prevAdmins) =>
         prevAdmins.map((admin) =>
-          admin._id === adminId
-            ? { ...admin, approved: !admin.approved }
-            : admin
+          admin._id === selectedAdmin._id ? { ...admin, roles } : admin
         )
       );
-    } catch (err) {
-      if (err.response && err.response.status === 401) {
-        toast.error('Admin not authorized');
-      } else {
-        setError(err.message);
-      }
+      setShowModal(false);
+    } catch (error) {
+      console.error('Error updating roles:', error);
     }
   };
+  
 
-  const handleDelete = async (adminId) => {
+  const handleToggleStatus = async (adminId) => {
     try {
+      const admin = admins.find(admin => admin._id === adminId);
+      const newStatus = !admin.approved;
       const token = localStorage.getItem('token');
-      await axios.delete(
-        `https://delivery-chimelu-new.onrender.com/api/v1/admin/${adminId}/delete`,
+      await axios.patch(
+        `http://localhost:8080/api/v1/admin/${adminId}`,
+        { approved: newStatus },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      setAdmins((prevAdmins) =>
-        prevAdmins.filter((admin) => admin._id !== adminId)
+      setAdmins(prevAdmins =>
+        prevAdmins.map(admin =>
+          admin._id === adminId ? { ...admin, approved: newStatus } : admin
+        )
       );
+      toast.success('Status updated successfully');
+    } catch (err) {
+      toast.error('Error updating status');
+    }
+  };
+
+  const handleDelete = async (adminId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:8080/api/v1/admin/${adminId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setAdmins(prevAdmins => prevAdmins.filter(admin => admin._id !== adminId));
       toast.success('Admin deleted successfully');
     } catch (err) {
-      if (err.response && err.response.status === 401) {
-        toast.error('Admin not authorized');
-      } else {
-        setError(err.message);
-      }
+      toast.error('Error deleting admin');
     }
   };
 
@@ -123,11 +140,6 @@ const Users = () => {
   if (error) {
     return <div>Error: {error}</div>;
   }
-
-  const filteredAdmins = admins.filter((admin) =>
-    admin.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  // const currentAdmins = filteredAdmins.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <div className="contain">
@@ -179,7 +191,7 @@ const Users = () => {
               </tr>
             </thead>
             <tbody>
-              {currentData.map((admin, index) => (
+              {currentData.map((admin) => (
                 <tr key={admin._id} className="table-row">
                   <td>
                     <img src={admin.image} alt="Profile" className="image" />
@@ -216,10 +228,16 @@ const Users = () => {
                       <RiErrorWarningLine size={20} />
                     </span>
                     <span
-                      className="action-item text-sm cursor-pointer flex items-center gap-3"
+                      className="action-item cursor-pointer"
+                      onClick={() => handleAddRoleClick(admin)}
+                    >
+                      <FaEdit size={20} />
+                    </span>
+                    <span
+                      className="action-item cursor-pointer"
                       onClick={() => handleDelete(admin._id)}
                     >
-                      <FaTrash />
+                      <FaTrash size={20} />
                     </span>
                   </td>
                 </tr>
@@ -227,47 +245,33 @@ const Users = () => {
             </tbody>
           </table>
         </div>
-        <div className="pagination-con">
-          <span className="text-gray-600">
-            Showing{' '}
-            {Math.min(
-              currentPage * itemsPerPage - itemsPerPage + 1,
-              filteredData.length
-            )}
-            -{Math.min(currentPage * itemsPerPage, filteredData.length)} of{' '}
-            {filteredData.length} entries
+        <div className="pagination-container">
+          <button
+            className="pagination-button"
+            onClick={() => handleClick(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <FaAngleLeft />
+          </button>
+          <span className="pagination-text">
+            Page {currentPage} of {totalPages}
           </span>
-          <div className="pagination flex items-center">
-            <button
-              className="px-3 py-1 mx-1 rounded hover:bg-gray-300"
-              onClick={() => handleClick(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              <FaAngleLeft />
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => handleClick(i + 1)}
-                className={`px-3 py-1 mx-1 rounded ${
-                  currentPage === i + 1
-                    ? 'bg-green-500 text-white'
-                    : 'hover:bg-gray-300'
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-            <button
-              className="px-3 py-1 mx-1 rounded hover:bg-gray-300"
-              onClick={() => handleClick(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              <FaAngleRight />
-            </button>
-          </div>
+          <button
+            className="pagination-button"
+            onClick={() => handleClick(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            <FaAngleRight />
+          </button>
         </div>
       </div>
+      {showModal && (
+        <Modal
+          selectedAdmin={selectedAdmin}
+          handleCloseModal={handleCloseModal}
+          handleSaveRole={handleSaveRole}
+        />
+      )}
     </div>
   );
 };

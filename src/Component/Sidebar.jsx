@@ -62,6 +62,17 @@ const Sidebar = () => {
         <Text fontSize="1.125rem" fontWeight={'600'}>
           Swifdrop
         </Text>
+        <div
+          // onClick={handleToggleAvailability}
+          className={`p-1 rounded-full cursor-pointer w-9 flex duration-700 ${
+          
+            
+               'bg-gray-200 justify-start'
+          }`}
+          style={{ height: '1.5rem', width: '3rem' }} // Ensure consistent size for the toggle button
+        >
+          <div className="h-4 w-4 bg-white rounded-full"></div>
+        </div>
       </HStack>
       <Divider mt={'4'} />
       <Flex direction="column" align="start" mt={'30px'} pl={'10px'}>
